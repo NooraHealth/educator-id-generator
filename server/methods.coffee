@@ -1,8 +1,5 @@
 Meteor.methods
 
-  "getSegmentId": ()->
-    return Meteor.settings.SEGMENT_ID
-
   "sendToSalesforce" : ( id )->
 
     #callback = Meteor.bindEnvironment ( err, ret ) ->
@@ -30,15 +27,4 @@ Meteor.methods
       #"Added_to_IVR__c" : patient.has_been_input_to_ivr_system,
       #"test" : patient.is_test
     #}, callback
-
-  "updatePatient": ( query )->
-    #Salesforce.sobject "Patient__c"
-      #.update query, ( err, ret )->
-        #if err
-          #console.log "Error updating document", err
-        #else
-          #console.log "Patient updated!"
-
-
-
 
