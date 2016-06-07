@@ -7,33 +7,36 @@ var AddEducatorPage = React.createClass({
 
   getInitialState() {
     return {
-      name: 'Add Name'
+      first_name: '',
+      last_name: '',
+      phone: '',
+      department: '',
     };
   },
 
   _onSubmit() {
-    const name = this.state.name;
+    const first_name = this.state.first_name;
+    const last_name = this.state.last_name;
+    const phone = this.state.phone;
+    const department = this.state.department;
+
     Meteor.call("getUniqueId", function(error, result){
-      console.log("in the meteor callback method");
-      console.log(error);
-      console.log(result);
       swal({
         type: "success",
-        title: "Unique Id",
-        text: result
+        title: "Unique Id: " + result,
       });
-    });
 
+      let educator = {
+        first_name: first_name,
+        last_name: last_name,
+        phone: phone,
+        department: department,
+        uniqueId: result
+      };
 
-    let educator = {
-      name: name,
-      uniqueId: uniqueId
-    };
+      Meteor.call( "insertEducator", educator);
+    })
 
-    console.log("New educator: ", educator);
-    //Meteor.call( "insertEducator", educator);
-
-    FlowRouter.go("/");
   },
 
   setState(field) {
@@ -69,8 +72,33 @@ var AddEducatorPage = React.createClass({
         <Form onSubmit={ this._onSubmit } >
           <Form.Input 
             type='text' 
-            key= 'new_educator_name'
-            value={ this.state.name }
+            key= 'educator_first_name'
+            placeholder="First Name"
+            value={ this.state.first_name }
+            onChange={ this.handleChange }
+            
+          />
+          <Form.Input 
+            type='text' 
+            key= 'educator_last_name'
+            placeholder="Last Name"
+            value={ this.state.last_name }
+            onChange={ this.handleChange }
+            
+          />
+          <Form.Input 
+            type='number' 
+            key= 'educator_phone'
+            value={ this.state.phone }
+            placeholder="Phone"
+            onChange={ this.handleChange }
+            
+          />
+          <Form.Input 
+            type='text' 
+            key= 'educator_department'
+            placeholder="Department"
+            value={ this.state.department }
             onChange={ this.handleChange }
             
           />

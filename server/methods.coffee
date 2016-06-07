@@ -5,7 +5,10 @@ Meteor.methods
 
   "getFacilities": () ->
 
-  "insertEducator": ->
+  "insertEducator": (educator) ->
+    console.log "About to insert this educator"
+    console.log educator
+    Meteor.insert educator
 
   "getUniqueId": ->
     result = UniqueID.findAndModify({
