@@ -6,6 +6,10 @@ import React from 'react';
 var AddEducatorPage = React.createClass({
 
   getInitialState() {
+    Meteor.call("getFacilities", function( error, result ){
+      console.log("in the facilities callback");
+      console.log(result);
+    });
     return {
       first_name: '',
       last_name: '',

@@ -6,15 +6,17 @@
 Educators = new Mongo.Collection Meteor.settings.public.educators_collection
 
 EducatorsSchema = new SimpleSchema
-  name:
+  last_name:
     type:String
-    label: "Name"
+  first_name:
+    type:String
+  department:
+    type:String
+  phone:
+    type: Number
   uniqueId:
     type: Number
     label: "Unique Id"
-  date_added:
-    type: String
-    max: 20
 
 Educators.attachSchema EducatorsSchema
 

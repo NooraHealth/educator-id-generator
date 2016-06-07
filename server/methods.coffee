@@ -1,14 +1,24 @@
 { Educators } = require "../imports/api/collections/educators.coffee"
 { UniqueID } = require "../imports/api/collections/unique_id.coffee"
+#{ Facility } = require "../imports/api/salesforce/Facility.coffee"
 
 Meteor.methods
 
   "getFacilities": () ->
+    console.log "About to fin facilities"
+    console.log Facility
+    #result = Facility.find({}, ['Id', 'Name'], {}, (error, result) ->
+      #console.log "in the facilityes callback"
+      #console.log error
+      #console.log result
+    #)
+
+    console.log result
 
   "insertEducator": (educator) ->
     console.log "About to insert this educator"
     console.log educator
-    Meteor.insert educator
+    Educators.insert educator
 
   "getUniqueId": ->
     result = UniqueID.findAndModify({

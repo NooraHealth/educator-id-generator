@@ -24,7 +24,6 @@ ground:db
 interwebs:framework7
 fortawesome:fontawesome
 momentjs:moment
-tuul:salesforce
 percolatestudio:segment.io
 arillo:flow-router-helpers
 kadira:flow-router
@@ -34,3 +33,4 @@ victoransel:react-linkedstate-mixin
 aldeed:collection2
 static-html
 fongandrew:find-and-modify
+tuul:salesforce
