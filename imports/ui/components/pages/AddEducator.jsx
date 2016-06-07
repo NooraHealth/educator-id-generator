@@ -39,33 +39,19 @@ var AddEducatorPage = React.createClass({
 
   },
 
-  setState(field) {
-    return ( event ) => {
-      console.log("about to set the state of the input");
-      console.log("this");
-      console.log(this.state);
+  handleChange(field) {
+    return (event) => {
+      console.log("in the handleChange");
       console.log(event.target.value);
-      console.log(field);
-      this.setState({ [field]: event.target.value });
-      console.log("this after");
       console.log(this.state);
-      this.setState({ "name": event.target.value });
-      console.log("this after after");
-      console.log(this.state);
+      console.log(this);
+      this.setState({ [field]: event.target.value});
     }
-
-  },
-
-  handleChange(event) {
-    console.log("in the handleChange");
-    console.log(event.target.value);
-    console.log(this.state);
-    console.log(this);
-    this.setState({"name": event.target.value});
   },
     
   render() {
     console.log("Rerendering the form");
+    console.log(this);
     console.log(this.state);
     return (
       <div>
@@ -75,7 +61,7 @@ var AddEducatorPage = React.createClass({
             key= 'educator_first_name'
             placeholder="First Name"
             value={ this.state.first_name }
-            onChange={ this.handleChange }
+            onChange={ this.handleChange("first_name") }
             
           />
           <Form.Input 
@@ -83,7 +69,7 @@ var AddEducatorPage = React.createClass({
             key= 'educator_last_name'
             placeholder="Last Name"
             value={ this.state.last_name }
-            onChange={ this.handleChange }
+            onChange={ this.handleChange("last_name") }
             
           />
           <Form.Input 
@@ -91,7 +77,7 @@ var AddEducatorPage = React.createClass({
             key= 'educator_phone'
             value={ this.state.phone }
             placeholder="Phone"
-            onChange={ this.handleChange }
+            onChange={ this.handleChange("phone") }
             
           />
           <Form.Input 
@@ -99,8 +85,7 @@ var AddEducatorPage = React.createClass({
             key= 'educator_department'
             placeholder="Department"
             value={ this.state.department }
-            onChange={ this.handleChange }
-            
+            onChange={ this.handleChange("department") }
           />
         </Form>
       </div>
