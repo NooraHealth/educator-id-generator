@@ -1,5 +1,34 @@
+{ Educators } = require "../imports/api/collections/educators.coffee"
+{ UniqueID } = require "../imports/api/collections/unique_id.coffee"
+
 Meteor.methods
 
+  "getFacilities": () ->
+
+  "insertEducator": ->
+
+  "getUniqueId": ->
+    result = UniqueID.findAndModify({
+      query: { _id: Meteor.settings.UNIQUE_ID_DOC_ID }
+      update: { $inc: { currentUniqueID: 1 } }
+    }, (error, result)->
+      console.log "This is the result"
+      console.log result
+    )
+    console.log "This is the result outside"
+    console.log result.currentUniqueID
+    return result.currentUniqueID
+    #incrementAndRetrieveUniqueId = Meteor.wrapAsync( UniqueID.findAndModify )
+    #result = incrementAndRetrieveUniqueId({
+      #query: {_id: Meteor.settings.UNIQUE_ID_DOC_ID}
+      #update: { $inc: { currentId: 1  }}
+    #})
+    #console.log "The result from wrap async"
+    #console.log result
+    #return result.currentUniqueID
+
+    #Meteor.call "sendToSalesforce", id
+    
   "sendToSalesforce" : ( id )->
 
     #callback = Meteor.bindEnvironment ( err, ret ) ->

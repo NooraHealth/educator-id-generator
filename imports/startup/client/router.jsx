@@ -5,7 +5,7 @@ import { mount } from 'react-mounter';
 
 import { MainLayout } from '../../ui/layout.jsx';
 import { HomePage } from '../../ui/components/pages/Home.jsx';
-import { NewEducatorPage } from '../../ui/components/pages/NewEducator.jsx';
+import { AddEducatorPage } from '../../ui/components/pages/AddEducator.jsx';
 import { Logo } from '../../ui/components/Headers/Logo.jsx';
 import { BackButton } from '../../ui/components/Headers/BackButton.jsx';
 

@@ -11,14 +11,9 @@ var HomePage = React.createClass({
     return (
       <div className="list-block inset">
         <p><a 
-          href="/newPatient"
+          href="/addEducator"
           className="button button-round button-fill large-button"
-          > New Patient
-        </a></p>
-        <p><a 
-          href="/trackPatients"
-          className="button button-round button-fill large-button"
-          > Track Patients
+          > Add Educator
         </a></p>
       </div>
     )
