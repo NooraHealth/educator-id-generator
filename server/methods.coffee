@@ -6,14 +6,9 @@ Meteor.methods
 
   "getFacilities": () ->
     console.log "About to fin facilities"
-    console.log Facility
-    #result = Facility.find({}, ['Id', 'Name'], {}, (error, result) ->
-      #console.log "in the facilityes callback"
-      #console.log error
-      #console.log result
-    #)
-
+    result = Salesforce.query "SELECT Id, Name FROM Facility__c"
     console.log result
+    return result.response.records
 
   "insertEducator": (educator) ->
     console.log "About to insert this educator"
