@@ -14,6 +14,7 @@ FlowRouter.route('/', {
     console.log("about to render home");
     console.log(MainLayout);
     console.log(HomePage);
+
     mount( MainLayout, {
       header: <Logo key='logo'/>,
       content: <HomePage key='homepage'/>
@@ -25,9 +26,23 @@ FlowRouter.route('/addEducator', {
   action: function(){
     //Perf.start();
     //BlazeLayout.render("trackPatients");
-    mount( MainLayout, {
-      header: <BackButton key='back_button'/>,
-      content: <AddEducatorPage key='add_educator_page' />
+    Meteor.call("getFacilities", ( error, results )=> {
+      if( !error ) {
+        console.log("got the facilities");
+        mount( MainLayout, {
+          header: <BackButton key='back_button'/>,
+          content: <AddEducatorPage key='add_educator_page' facilities={ results }/>
+        });
+      } else {
+
+        swal({
+          type: "error",
+          title: "Error",
+          text: "Error retrieving facilities from salesforce"
+        });
+
+        FlowRouter.go("/");
+      }
     });
   }
 });

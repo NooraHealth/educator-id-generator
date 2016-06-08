@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Input } from '../Input.jsx';
+import { Select } from '../Select.jsx';
 
 var Form = React.createClass({
   propTypes: {
@@ -38,6 +39,7 @@ var Form = React.createClass({
   
 
 Form.Input = Input;
+Form.Select = Select;
 
 export { Form };
 

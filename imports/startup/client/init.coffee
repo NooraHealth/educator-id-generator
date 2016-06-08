@@ -1,7 +1,7 @@
 
-Meteor.startup ()->
+{ App } = require '../../api/App.coffee'
 
-  App = new Framework7(
-    material: true
-    router:false
-  )
+Meteor.startup ()->
+  App.initialize()
+
+

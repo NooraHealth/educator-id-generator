@@ -9,7 +9,9 @@ var MainLayout = React.createClass({
           { this.props.header }
         </header>
         <main>
-          { this.props.content }
+          <div className="views">
+            { this.props.content }
+          </div>
         </main>
       </div>
     )

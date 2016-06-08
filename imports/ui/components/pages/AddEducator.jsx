@@ -2,19 +2,27 @@
 
 import { Form } from '../../components/form/base/Form.jsx';
 import React from 'react';
+import Select from 'react-select';
+import { App } from '../../../api/App.coffee'
 
 var AddEducatorPage = React.createClass({
 
+  propTypes: { 
+    facilities: React.PropTypes.array
+  },
+
+  defaultProps() {
+    return {
+      facilities: []
+    }
+  },
+
   getInitialState() {
-    Meteor.call("getFacilities", function( error, result ){
-      console.log("in the facilities callback");
-      console.log(result);
-    });
     return {
       first_name: '',
       last_name: '',
       phone: '',
-      department: '',
+      department: ''
     };
   },
 
@@ -45,20 +53,26 @@ var AddEducatorPage = React.createClass({
 
   handleChange(field) {
     return (event) => {
-      console.log("in the handleChange");
-      console.log(event.target.value);
-      console.log(this.state);
-      console.log(this);
       this.setState({ [field]: event.target.value});
     }
   },
     
+  componentDidMount() {
+    App.getF7App().addView("#add_educator_view");
+  },
+
   render() {
     console.log("Rerendering the form");
     console.log(this);
     console.log(this.state);
+    let facility_options = this.props.facilities.map( function( facility, i ){
+      return {
+        label: facility.Name,
+        value: facility.Id
+      }
+    });
     return (
-      <div>
+      <div id="add_educator_view" className="view view-main">
         <Form onSubmit={ this._onSubmit } >
           <Form.Input 
             type='text' 
@@ -90,6 +104,11 @@ var AddEducatorPage = React.createClass({
             placeholder="Department"
             value={ this.state.department }
             onChange={ this.handleChange("department") }
+          />
+          <Select 
+            name= 'facility_select'
+            options={ facility_options }
+            onChange={ this.handleChange("facility") }
           />
         </Form>
       </div>
