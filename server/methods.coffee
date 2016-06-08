@@ -48,12 +48,14 @@ Meteor.methods
       else
         console.log "Success inserting into salesforce"
         console.log ret
-        #Salesforce.sobject("Facility_Role__c")
-        #.create {
-          #"Facility__c" : educator.first_name + " " educator.last_name,
-          #"Contact__c" : ret.Id,
-          #"Is_Trainee__c": true,
-        #}, callback
+        Salesforce.sobject("Facility_Role__c")
+        .create {
+          "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",
+          "Facility__c" : educator.facility,
+          "Contact__c" : ret.id,
+          "Department__c": educator.department,
+          "Role_With_Noora_Program__c": Meteor.settings.FACILITY_ROLE_TYPE,
+        }
 
     educator = Educators.findOne { _id : id }
     result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c WHERE Id = '#{educator.facility}'"
@@ -69,6 +71,7 @@ Meteor.methods
       "Department" : educator.department,
       "AccountId" : account,
       "Trainee_Id__c": educator.uniqueId,
+      "RecordTypeId": Meteor.settings.CONTACT_RECORD_TYPE,
       "Is_Nurse_Educator_Trainee__c": true,
     }, callback
 
