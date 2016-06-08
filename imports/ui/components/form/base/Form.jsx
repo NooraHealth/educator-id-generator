@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Input } from '../Input.jsx';
-import { Select } from '../Select.jsx';
 
 var Form = React.createClass({
   propTypes: {
@@ -13,7 +12,8 @@ var Form = React.createClass({
   defaultProps(){
     return {
       onSubmit: function(){},
-      children: [] 
+      children: [],
+      submitButtonContent: "SUBMIT"
     }
   },
 
@@ -31,7 +31,7 @@ var Form = React.createClass({
         <ul>
           { children }
         </ul>
-        <p><a key='submitbutton' className="button button-round button-fill button-big" onClick={ onSubmit }>{ submitButtonContent }</a></p>
+        <p><a key='submitbutton' className="button button-round button-fill button-big" onClick={ onSubmit }>{ this.props.submitButtonContent }</a></p>
       </div>
     )
   }
@@ -39,7 +39,6 @@ var Form = React.createClass({
   
 
 Form.Input = Input;
-Form.Select = Select;
 
 export { Form };
 

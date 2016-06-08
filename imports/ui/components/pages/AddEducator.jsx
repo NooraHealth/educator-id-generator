@@ -33,10 +33,10 @@ var AddEducatorPage = React.createClass({
     const department = this.state.department;
     const facility = this.state.facility;
 
-    Meteor.call("getUniqueId", function(error, result){
+    Meteor.call("getUniqueId", function(error, uniqueId){
       swal({
         type: "success",
-        title: "Unique Id: " + result,
+        title: "Unique Id: " + uniqueId,
       });
 
       let educator = {
@@ -45,14 +45,10 @@ var AddEducatorPage = React.createClass({
         phone: phone,
         department: department,
         facility: facility,
-        uniqueId: result
+        uniqueId: uniqueId
       };
 
       Meteor.call( "insertEducator", educator, ( error, id ) => {
-        console.log("Inserted educator??");
-        console.log(error);
-        console.log(id);
-
         if( error ) {
           swal({
             type: "error",
@@ -65,12 +61,10 @@ var AddEducatorPage = React.createClass({
               swal({
                 type: "error",
                 text: error.message,
-                title: "Error inserting educator into Mongo"
+                title: "Error uploading educator with id " + uniqueId + " to salesforce"
               });
             }
-            console.log("Created Educator?");
-            console.log(error);
-            console.log(result);
+            FlowRouter.go("/");
           });
         }
 
@@ -106,7 +100,7 @@ var AddEducatorPage = React.createClass({
     });
     return (
       <div id="add_educator_view" className="view view-main">
-        <Form onSubmit={ this._onSubmit } >
+        <Form onSubmit={ this._onSubmit } submitButtonContent="GET EDUCATOR ID" >
           <Select 
             name= 'facility_select'
             value= { this.state.facility }
