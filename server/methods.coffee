@@ -41,13 +41,13 @@ Meteor.methods
     
   "createEducatorInSalesforce" : ( id )->
 
-    callback = Meteor.bindEnvironment ( err, ret ) ->
+    callback = Meteor.bindEnvironment ( insertType, err, ret ) ->
+      console.log "In the callback"
+      console.log insertType
       if err
         console.log "Error inserting educator into Salesforce"
         console.log err
-      else
-        console.log "Success inserting into salesforce"
-        console.log ret
+      else if insertType == "Contact"
         Salesforce.sobject("Facility_Role__c")
         .create {
           "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",
@@ -55,7 +55,7 @@ Meteor.methods
           "Contact__c" : ret.id,
           "Department__c": educator.department,
           "Role_With_Noora_Program__c": Meteor.settings.FACILITY_ROLE_TYPE,
-        }
+        }, callback.bind(this, "Facility_Role")
 
     educator = Educators.findOne { _id : id }
     result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c WHERE Id = '#{educator.facility}'"
@@ -73,5 +73,5 @@ Meteor.methods
       "Trainee_Id__c": educator.uniqueId,
       "RecordTypeId": Meteor.settings.CONTACT_RECORD_TYPE,
       "Is_Nurse_Educator_Trainee__c": true,
-    }, callback
+    }, callback.bind(this, "Contact")
 
