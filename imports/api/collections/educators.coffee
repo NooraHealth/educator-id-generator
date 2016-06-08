@@ -16,6 +16,9 @@ EducatorsSchema = new SimpleSchema
     type:String
   phone:
     type: Number
+  errors_inserting_to_salesforce:
+    type: [String]
+    optional: true
   uniqueId:
     type: Number
     label: "Unique Id"

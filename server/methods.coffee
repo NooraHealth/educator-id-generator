@@ -5,16 +5,10 @@
 Meteor.methods
 
   "getFacilities": () ->
-    console.log "About to fin facilities"
     result = Salesforce.query "SELECT Id, Name FROM Facility__c"
-    console.log result
     return result.response.records
 
   "insertEducator": (educator) ->
-    console.log "About to insert this educator"
-    console.log educator
-    #syncInsert = Meteor.wrapAsync Educators.insert
-    #result = syncInsert educator
     return Educators.insert educator
 
   "getUniqueId": ->
@@ -25,28 +19,21 @@ Meteor.methods
       console.log "This is the result"
       console.log result
     )
-    console.log "This is the result outside"
-    console.log result.currentUniqueID
     return result.currentUniqueID
-    #incrementAndRetrieveUniqueId = Meteor.wrapAsync( UniqueID.findAndModify )
-    #result = incrementAndRetrieveUniqueId({
-      #query: {_id: Meteor.settings.UNIQUE_ID_DOC_ID}
-      #update: { $inc: { currentId: 1  }}
-    #})
-    #console.log "The result from wrap async"
-    #console.log result
-    #return result.currentUniqueID
 
-    #Meteor.call "sendToSalesforce", id
-    
   "createEducatorInSalesforce" : ( id )->
+    educator = Educators.findOne { _id : id }
+    console.log "About to send this contact to Salesforce"
+    console.log educator
 
+    result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c WHERE Id = '#{educator.facility}'"
+    account = result?.response?.records?[0]?.Delivery_Partner__c
+    
     callback = Meteor.bindEnvironment ( insertType, err, ret ) ->
-      console.log "In the callback"
-      console.log insertType
       if err
         console.log "Error inserting educator into Salesforce"
         console.log err
+        Educators.update { _id: id }, { $push: { errors_inserting_to_salesforce: insertType }}
       else if insertType == "Contact"
         Salesforce.sobject("Facility_Role__c")
         .create {
@@ -56,12 +43,9 @@ Meteor.methods
           "Department__c": educator.department,
           "Role_With_Noora_Program__c": Meteor.settings.FACILITY_ROLE_TYPE,
         }, callback.bind(this, "Facility_Role")
+      else
+        Educators.update { _id: id }, { $set: { errors_inserting_to_salesforce: [] }}
 
-    educator = Educators.findOne { _id : id }
-    result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c WHERE Id = '#{educator.facility}'"
-    account = result?.response?.records?[0]?.Delivery_Partner__c
-    console.log account
-    
     #insert into the Salesforce database
     Salesforce.sobject("Contact")
     .create {
