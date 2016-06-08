@@ -31,6 +31,7 @@ var AddEducatorPage = React.createClass({
     const last_name = this.state.last_name;
     const phone = this.state.phone;
     const department = this.state.department;
+    const facility = this.state.facility;
 
     Meteor.call("getUniqueId", function(error, result){
       swal({
@@ -43,10 +44,37 @@ var AddEducatorPage = React.createClass({
         last_name: last_name,
         phone: phone,
         department: department,
+        facility: facility,
         uniqueId: result
       };
 
-      Meteor.call( "insertEducator", educator);
+      Meteor.call( "insertEducator", educator, ( error, id ) => {
+        console.log("Inserted educator??");
+        console.log(error);
+        console.log(id);
+
+        if( error ) {
+          swal({
+            type: "error",
+            text: error.message,
+            title: "Error inserting educator into Mongo"
+          });
+        } else {
+          Meteor.call("createEducatorInSalesforce", id, ( error, result ) => {
+            if( error ) {
+              swal({
+                type: "error",
+                text: error.message,
+                title: "Error inserting educator into Mongo"
+              });
+            }
+            console.log("Created Educator?");
+            console.log(error);
+            console.log(result);
+          });
+        }
+
+      });
     })
 
   },
@@ -81,6 +109,7 @@ var AddEducatorPage = React.createClass({
         <Form onSubmit={ this._onSubmit } >
           <Select 
             name= 'facility_select'
+            value= { this.state.facility }
             options={ facility_options }
             onChange={ this.handleChange("facility") }
             placeholder="Facility... Type to search"

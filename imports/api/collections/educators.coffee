@@ -12,6 +12,8 @@ EducatorsSchema = new SimpleSchema
     type:String
   department:
     type:String
+  facility:
+    type:String
   phone:
     type: Number
   uniqueId:

@@ -13,7 +13,9 @@ Meteor.methods
   "insertEducator": (educator) ->
     console.log "About to insert this educator"
     console.log educator
-    Educators.insert educator
+    #syncInsert = Meteor.wrapAsync Educators.insert
+    #result = syncInsert educator
+    return Educators.insert educator
 
   "getUniqueId": ->
     result = UniqueID.findAndModify({
@@ -37,31 +39,36 @@ Meteor.methods
 
     #Meteor.call "sendToSalesforce", id
     
-  "sendToSalesforce" : ( id )->
+  "createEducatorInSalesforce" : ( id )->
 
-    #callback = Meteor.bindEnvironment ( err, ret ) ->
-      #if err
-        #console.log "Error inserting patient into Salesforce"
-        #console.log err
-      #else
-        #console.log "Success inserting into salesforce"
-        #console.log ret
-        #console.log "setting the salesforce_id"
-        #Patients.update { _id: id } , { $set: { salesforce_id: ret.id } }
-        #console.log Patients.findOne { _id: id }
+    callback = Meteor.bindEnvironment ( err, ret ) ->
+      if err
+        console.log "Error inserting educator into Salesforce"
+        console.log err
+      else
+        console.log "Success inserting into salesforce"
+        console.log ret
+        #Salesforce.sobject("Facility_Role__c")
+        #.create {
+          #"Facility__c" : educator.first_name + " " educator.last_name,
+          #"Contact__c" : ret.Id,
+          #"Is_Trainee__c": true,
+        #}, callback
 
-    #patient = Patients.findOne { _id : id }
-    ##insert into the Salesforce database
-    #Salesforce.sobject("Patient__c")
-    #.create {
-      #"Name" : patient.phone,
-      #"Language__c" : patient.language,
-      #"Subscribed_to_IVR__c": patient.subscribes_to_ivr,
-      #"Hospital__c" : patient.hospital,
-      #"Date_first_class__c": patient.date_first_class,
-      #"Date_took_practical__c" : patient.date_took_practical,
-      #"Date_added__c" : patient.date_added,
-      #"Added_to_IVR__c" : patient.has_been_input_to_ivr_system,
-      #"test" : patient.is_test
-    #}, callback
+    educator = Educators.findOne { _id : id }
+    result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c WHERE Id = '#{educator.facility}'"
+    account = result?.response?.records?[0]?.Delivery_Partner__c
+    console.log account
+    
+    #insert into the Salesforce database
+    Salesforce.sobject("Contact")
+    .create {
+      "LastName" : educator.last_name,
+      "FirstName" : educator.first_name,
+      "MobilePhone" : educator.phone,
+      "Department" : educator.department,
+      "AccountId" : account,
+      "Trainee_Id__c": educator.uniqueId,
+      "Is_Nurse_Educator_Trainee__c": true,
+    }, callback
 
