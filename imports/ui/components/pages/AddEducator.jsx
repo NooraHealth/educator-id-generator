@@ -53,7 +53,12 @@ var AddEducatorPage = React.createClass({
 
   handleChange(field) {
     return (event) => {
-      this.setState({ [field]: event.target.value});
+      console.log("Got a change event");
+      console.log(event);
+      if(field == "facility") 
+        this.setState({ [field]: event.value});
+      else
+        this.setState({ [field]: event.target.value});
     }
   },
     
@@ -74,6 +79,12 @@ var AddEducatorPage = React.createClass({
     return (
       <div id="add_educator_view" className="view view-main">
         <Form onSubmit={ this._onSubmit } >
+          <Select 
+            name= 'facility_select'
+            options={ facility_options }
+            onChange={ this.handleChange("facility") }
+            placeholder="Facility... Type to search"
+          />
           <Form.Input 
             type='text' 
             key= 'educator_first_name'
@@ -104,11 +115,6 @@ var AddEducatorPage = React.createClass({
             placeholder="Department"
             value={ this.state.department }
             onChange={ this.handleChange("department") }
-          />
-          <Select 
-            name= 'facility_select'
-            options={ facility_options }
-            onChange={ this.handleChange("facility") }
           />
         </Form>
       </div>
