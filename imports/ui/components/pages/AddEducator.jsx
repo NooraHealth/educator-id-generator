@@ -3,7 +3,6 @@
 import { Form } from '../../components/form/base/Form.jsx';
 import React from 'react';
 import Select from 'react-select';
-import Spinner from 'react-spinkit';
 import { App } from '../../../api/App.coffee'
 import { EducatorsSchema } from '../../../api/collections/educators.coffee'
 
@@ -26,16 +25,18 @@ var AddEducatorPage = React.createClass({
       last_name: '',
       phone: '',
       department: '',
-      loaded: false
+      loading: false
     };
   },
 
   _onSubmit() {
+    this.setState({ loading: true });
     const first_name = this.state.first_name;
     const last_name = this.state.last_name;
     const phone = this.state.phone;
     const department = this.state.department;
     const facility = this.state.facility;
+    var _this = this;
 
     let educator = {
       first_name: first_name,
@@ -50,7 +51,7 @@ var AddEducatorPage = React.createClass({
       EducatorsSchema.validate(educator);
       swal({
         type: "info",
-        closeOnConfirm: false,
+        closeOnConfirm: true,
         showLoaderOnConfirm: true,
         showCancelButton: true,
         text: "Are you sure you want to register this educator?",
@@ -64,6 +65,7 @@ var AddEducatorPage = React.createClass({
               title: "Sorry!",
               text: "There has been an error retrieving a unique ID"
             });
+            _this.setState({ loading: false });
           } else {
             educator.uniqueId = uniqueId;
             Meteor.call( "insertEducator", educator, ( error, id ) => {
@@ -73,6 +75,7 @@ var AddEducatorPage = React.createClass({
                   text: error.message,
                   title: "Error inserting educator into database"
                 });
+                _this.setState({ loading: false });
               } else {
                 Meteor.call("createEducatorInSalesforce", id, ( error, result ) => {
                   swal({
@@ -89,6 +92,7 @@ var AddEducatorPage = React.createClass({
     } catch(error) {
       console.log("REsult of validation");
       console.log(error);
+      this.setState({ loading: false });
       swal({
         type: "error",
         title: "Oops!",
@@ -120,9 +124,13 @@ var AddEducatorPage = React.createClass({
       }
     });
 
+    let submitText = "GET EDUCATOR ID";
+    if( this.state.loading )
+      submitText = "...loading..."
+
     return (
       <div id="add_educator_view" className="view view-main">
-        <Form onSubmit={ this._onSubmit } submitButtonContent="GET EDUCATOR ID" >
+        <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
           <Select 
             name= 'facility_select'
             value= { this.state.facility }

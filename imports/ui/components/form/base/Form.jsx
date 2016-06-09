@@ -6,7 +6,8 @@ import { Input } from '../Input.jsx';
 var Form = React.createClass({
   propTypes: {
     onSubmit: React.PropTypes.func, 
-    submitButtonContent: React.PropTypes.string
+    submitButtonContent: React.PropTypes.string,
+    disabled: React.PropTypes.bool
   },
 
   defaultProps(){
@@ -31,7 +32,7 @@ var Form = React.createClass({
         <ul>
           { children }
         </ul>
-        <p><a key='submitbutton' className="button button-round button-fill button-big" onClick={ onSubmit }>{ this.props.submitButtonContent }</a></p>
+        <p><a key='submitbutton' className="button button-round button-fill button-big" onClick={ onSubmit } disabled={ this.props.disabled }>{ this.props.submitButtonContent }</a></p>
       </div>
     )
   }
