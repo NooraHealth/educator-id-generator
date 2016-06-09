@@ -15,6 +15,8 @@ Meteor.methods
     return result.response.records
 
   "insertEducator": (educator) ->
+    console.log "about to insert this educator"
+    console.log educator
     return Educators.insert educator
 
   "getUniqueId": ->
@@ -29,9 +31,6 @@ Meteor.methods
 
   "createEducatorInSalesforce" : ( id )->
     educator = Educators.findOne { _id : id }
-    console.log "About to send this contact to Salesforce"
-    console.log educator
-
     result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c WHERE Id = '#{educator.facility}'"
     account = result?.response?.records?[0]?.Delivery_Partner__c
     

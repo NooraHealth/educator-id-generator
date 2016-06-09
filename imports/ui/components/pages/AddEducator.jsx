@@ -27,11 +27,16 @@ var AddEducatorPage = React.createClass({
   },
 
   _onSubmit() {
-    const first_name = this.state.first_name;
-    const last_name = this.state.last_name;
+    let first_name = this.state.first_name;
+    let last_name = this.state.last_name;
     const phone = this.state.phone;
     const department = this.state.department;
     const facility = this.state.facility;
+
+    if( !last_name || last_name == "" ) {
+      last_name = first_name
+      first_name = ""
+    }
 
     Meteor.call("getUniqueId", function(error, uniqueId){
       swal({

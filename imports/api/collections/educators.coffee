@@ -10,6 +10,7 @@ EducatorsSchema = new SimpleSchema
     type:String
   first_name:
     type:String
+    optional: true
   department:
     type:String
   facility:
