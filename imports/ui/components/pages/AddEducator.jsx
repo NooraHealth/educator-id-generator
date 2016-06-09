@@ -89,9 +89,6 @@ var AddEducatorPage = React.createClass({
   },
 
   render() {
-    console.log("Rerendering the form");
-    console.log(this);
-    console.log(this.state);
     let facility_options = this.props.facilities.map( function( facility, i ){
       return {
         label: facility.name,
