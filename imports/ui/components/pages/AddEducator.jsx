@@ -3,8 +3,10 @@
 import { Form } from '../../components/form/base/Form.jsx';
 import React from 'react';
 import Select from 'react-select';
+import Spinner from 'react-spinkit';
 import { App } from '../../../api/App.coffee'
 import { EducatorsSchema } from '../../../api/collections/educators.coffee'
+
 
 var AddEducatorPage = React.createClass({
 
@@ -23,7 +25,8 @@ var AddEducatorPage = React.createClass({
       first_name: '',
       last_name: '',
       phone: '',
-      department: ''
+      department: '',
+      loaded: false
     };
   },
 
@@ -53,6 +56,7 @@ var AddEducatorPage = React.createClass({
         text: "Are you sure you want to register this educator?",
         title: "Confirm"
       }, function() {
+        //Meteor.setTimeout(function(){ swal("SOMETHING"); }, 1000);
         Meteor.call("getUniqueId", function(error, uniqueId){
           if( error ) {
             swal({
@@ -115,6 +119,7 @@ var AddEducatorPage = React.createClass({
         value: facility.salesforce_id
       }
     });
+
     return (
       <div id="add_educator_view" className="view view-main">
         <Form onSubmit={ this._onSubmit } submitButtonContent="GET EDUCATOR ID" >
