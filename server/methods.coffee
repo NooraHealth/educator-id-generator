@@ -33,16 +33,22 @@ Meteor.methods
     educator = Educators.findOne { _id : id }
     result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c WHERE Id = '#{educator.facility}'"
     account = result?.response?.records?[0]?.Delivery_Partner__c
+
+    lastName = educator.last_name
+    firstName = educator.first_name
+    if not lastName or lastName is ""
+      lastName = educator.first_name
+      firstName = ""
     
     callback = Meteor.bindEnvironment ( insertType, err, ret ) ->
       if err
-        console.log "Error inserting educator into Salesforce"
+        console.log "Error inserting #{ insertType } into Salesforce"
         console.log err
         Educators.update { _id: id }, { $push: { errors_inserting_to_salesforce: insertType }}
       else if insertType == "Contact"
         Salesforce.sobject("Facility_Role__c")
         .create {
-          "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",
+          "Name" : "Educator Trainee -- #{ firstName } #{ lastName }",
           "Facility__c" : educator.facility,
           "Contact__c" : ret.id,
           "Department__c": educator.department,
@@ -54,8 +60,8 @@ Meteor.methods
     #insert into the Salesforce database
     Salesforce.sobject("Contact")
     .create {
-      "LastName" : educator.last_name,
-      "FirstName" : educator.first_name,
+      "LastName" : lastName,
+      "FirstName" : firstName,
       "MobilePhone" : educator.phone,
       "Department" : educator.department,
       "AccountId" : account,

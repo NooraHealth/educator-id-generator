@@ -8,9 +8,9 @@ Educators = new Mongo.Collection Meteor.settings.public.educators_collection
 EducatorsSchema = new SimpleSchema
   last_name:
     type:String
+    optional: true
   first_name:
     type:String
-    optional: true
   department:
     type:String
   facility:
@@ -22,8 +22,10 @@ EducatorsSchema = new SimpleSchema
     optional: true
   uniqueId:
     type: Number
+    optional: true
     label: "Unique Id"
 
 Educators.attachSchema EducatorsSchema
 
 module.exports.Educators = Educators
+module.exports.EducatorsSchema = EducatorsSchema

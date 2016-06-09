@@ -28,6 +28,8 @@ FlowRouter.route('/addEducator', {
     //Perf.start();
     //BlazeLayout.render("trackPatients");
     let facilities = Facilities.find().fetch();
+    console.log("Getting the facilities");
+    console.log(facilities);
     mount( MainLayout, {
       header: <BackButton key='back_button'/>,
       content: <AddEducatorPage key='add_educator_page' facilities={ facilities }/>

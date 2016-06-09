@@ -4,6 +4,7 @@ import { Form } from '../../components/form/base/Form.jsx';
 import React from 'react';
 import Select from 'react-select';
 import { App } from '../../../api/App.coffee'
+import { EducatorsSchema } from '../../../api/collections/educators.coffee'
 
 var AddEducatorPage = React.createClass({
 
@@ -27,55 +28,69 @@ var AddEducatorPage = React.createClass({
   },
 
   _onSubmit() {
-    let first_name = this.state.first_name;
-    let last_name = this.state.last_name;
+    const first_name = this.state.first_name;
+    const last_name = this.state.last_name;
     const phone = this.state.phone;
     const department = this.state.department;
     const facility = this.state.facility;
 
-    if( !last_name || last_name == "" ) {
-      last_name = first_name
-      first_name = ""
-    }
+    let educator = {
+      first_name: first_name,
+      last_name: last_name,
+      phone: phone,
+      department: department,
+      facility: facility,
+    };
 
-    Meteor.call("getUniqueId", function(error, uniqueId){
+    try {
+      EducatorsSchema.clean(educator);
+      EducatorsSchema.validate(educator);
       swal({
-        type: "success",
-        title: "Unique Id: " + uniqueId,
+        type: "info",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true,
+        showCancelButton: true,
+        text: "Are you sure you want to register this educator?",
+        title: "Confirm"
+      }, function() {
+        Meteor.call("getUniqueId", function(error, uniqueId){
+          if( error ) {
+            swal({
+              type: "error",
+              title: "Sorry!",
+              text: "There has been an error retrieving a unique ID"
+            });
+          } else {
+            educator.uniqueId = uniqueId;
+            Meteor.call( "insertEducator", educator, ( error, id ) => {
+              if( error ) {
+                swal({
+                  type: "error",
+                  text: error.message,
+                  title: "Error inserting educator into database"
+                });
+              } else {
+                Meteor.call("createEducatorInSalesforce", id, ( error, result ) => {
+                  swal({
+                    type: "success",
+                    title: "Nurse Educator Id " + uniqueId
+                  });
+                  FlowRouter.go("/");
+                });
+              }
+            });
+          }
+        });
       });
-
-      let educator = {
-        first_name: first_name,
-        last_name: last_name,
-        phone: phone,
-        department: department,
-        facility: facility,
-        uniqueId: uniqueId
-      };
-
-      Meteor.call( "insertEducator", educator, ( error, id ) => {
-        if( error ) {
-          swal({
-            type: "error",
-            text: error.message,
-            title: "Error inserting educator into Mongo"
-          });
-        } else {
-          Meteor.call("createEducatorInSalesforce", id, ( error, result ) => {
-            if( error ) {
-              swal({
-                type: "error",
-                text: error.message,
-                title: "Error uploading educator with id " + uniqueId + " to salesforce"
-              });
-            }
-            FlowRouter.go("/");
-          });
-        }
-
+    } catch(error) {
+      console.log("REsult of validation");
+      console.log(error);
+      swal({
+        type: "error",
+        title: "Oops!",
+        text: error.message
       });
-    })
-
+    }
   },
 
   handleChange(field) {
