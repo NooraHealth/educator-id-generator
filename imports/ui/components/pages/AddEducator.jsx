@@ -94,8 +94,8 @@ var AddEducatorPage = React.createClass({
     console.log(this.state);
     let facility_options = this.props.facilities.map( function( facility, i ){
       return {
-        label: facility.Name,
-        value: facility.Id
+        label: facility.name,
+        value: facility.salesforce_id
       }
     });
     return (

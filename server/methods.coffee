@@ -1,10 +1,16 @@
 { Educators } = require "../imports/api/collections/educators.coffee"
 { UniqueID } = require "../imports/api/collections/unique_id.coffee"
-#{ Facility } = require "../imports/api/salesforce/Facility.coffee"
+{ Facilities } = require "../imports/api/collections/facilities.coffee"
 
 Meteor.methods
 
-  "getFacilities": () ->
+  "updateFacilitiesInMongo": ->
+    facilities = Meteor.call("getFacilitiesFromSalesforce")
+    for facility in facilities
+      if not Facilities.findOne { salesforce_id: facility.Id }
+        Facilities.insert { name: facility.Name, salesforce_id: facility.Id }
+
+  "getFacilitiesFromSalesforce": () ->
     result = Salesforce.query "SELECT Id, Name FROM Facility__c"
     return result.response.records
 

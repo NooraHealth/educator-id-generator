@@ -8,6 +8,7 @@ import { HomePage } from '../../ui/components/pages/Home.jsx';
 import { AddEducatorPage } from '../../ui/components/pages/AddEducator.jsx';
 import { Logo } from '../../ui/components/Headers/Logo.jsx';
 import { BackButton } from '../../ui/components/Headers/BackButton.jsx';
+import { Facilities } from '../../api/collections/facilities.coffee';
 
 FlowRouter.route('/', {
   action: function(){
@@ -26,23 +27,12 @@ FlowRouter.route('/addEducator', {
   action: function(){
     //Perf.start();
     //BlazeLayout.render("trackPatients");
-    Meteor.call("getFacilities", ( error, results )=> {
-      if( !error ) {
-        console.log("got the facilities");
-        mount( MainLayout, {
-          header: <BackButton key='back_button'/>,
-          content: <AddEducatorPage key='add_educator_page' facilities={ results }/>
-        });
-      } else {
-
-        swal({
-          type: "error",
-          title: "Error",
-          text: "Error retrieving facilities from salesforce"
-        });
-
-        FlowRouter.go("/");
-      }
+    let facilities = Facilities.find().fetch();
+    console.log("The facilities");
+    console.log(facilities);
+    mount( MainLayout, {
+      header: <BackButton key='back_button'/>,
+      content: <AddEducatorPage key='add_educator_page' facilities={ facilities }/>
     });
   }
 });
