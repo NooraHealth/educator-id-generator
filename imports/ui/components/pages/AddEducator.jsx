@@ -56,7 +56,12 @@ var AddEducatorPage = React.createClass({
         showCancelButton: true,
         text: "Are you sure you want to register this educator?",
         title: "Confirm"
-      }, function() {
+      }, function( isConfirm ) {
+        if( !isConfirm ) {
+          _this.setState({ loading: false });
+          return;
+        }
+
         //Meteor.setTimeout(function(){ swal("SOMETHING"); }, 1000);
         Meteor.call("getUniqueId", function(error, uniqueId){
           if( error ) {
