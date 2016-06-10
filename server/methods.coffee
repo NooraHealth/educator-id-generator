@@ -60,7 +60,7 @@ Meteor.methods
     #insert into the Salesforce database
     Salesforce.sobject("Contact")
     .create {
-      "astName" : lastName,
+      "LastName" : lastName,
       "FirstName" : firstName,
       "MobilePhone" : educator.phone,
       "Department" : educator.department,

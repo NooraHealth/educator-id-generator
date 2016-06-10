@@ -95,8 +95,6 @@ var AddEducatorPage = React.createClass({
         });
       });
     } catch(error) {
-      console.log("REsult of validation");
-      console.log(error);
       this.setState({ loading: false });
       swal({
         type: "error",
@@ -108,8 +106,6 @@ var AddEducatorPage = React.createClass({
 
   handleChange(field) {
     return (event) => {
-      console.log("Got a change event");
-      console.log(event);
       if(field == "facility") 
         this.setState({ [field]: event.value});
       else
@@ -119,6 +115,12 @@ var AddEducatorPage = React.createClass({
     
   componentDidMount() {
     App.getF7App().addView("#add_educator_view");
+  },
+
+  onEvent( type ) {
+    return function( e ) {
+      console.log(type);
+    }
   },
 
   render() {
@@ -134,7 +136,12 @@ var AddEducatorPage = React.createClass({
       submitText = "...loading..."
 
     return (
-      <div id="add_educator_view" className="view view-main">
+      <div id="add_educator_view"
+        className="view view-main"
+        onMouseDown={ this.onEvent("MOUSEDOWN") } 
+        onTouchEnd={ this.onEvent("TOUCHEND") } 
+        onTouchStart={ this.onEvent("TOUCHSTART") } 
+        >
         <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
           <Select 
             name= 'facility_select'
@@ -149,7 +156,6 @@ var AddEducatorPage = React.createClass({
             placeholder="First Name"
             value={ this.state.first_name }
             onChange={ this.handleChange("first_name") }
-            
           />
           <Form.Input 
             type='text' 
@@ -160,7 +166,7 @@ var AddEducatorPage = React.createClass({
             
           />
           <Form.Input 
-            type='number' 
+            type='tel' 
             key= 'educator_phone'
             value={ this.state.phone }
             placeholder="Phone"
