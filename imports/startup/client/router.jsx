@@ -13,18 +13,34 @@ import { Facilities } from '../../api/collections/facilities.coffee';
 
 FlowRouter.route('/', {
   action: function(){
+    currentFacilityId = Session.get("current_facility_id");
+    currentFacilityName = Session.get("current_facility_name");
+    console.log("currentFacilityName");
+    console.log(currentFacilityName);
+    console.log(currentFacilityId);
+    if( !currentFacilityId || currentFacilityId === "")
+      FlowRouter.go("/selectFacility");
+
     mount( MainLayout, {
       header: <Logo key='logo'/>,
-      content: <HomePage key='homepage'/>
+      content: <HomePage key='homepage'
+        currentFacilityName={ currentFacilityName }
+        currentFacilityId={ currentFacilityId }
+      />
     });
   }
 });
 
 FlowRouter.route('/addEducator', {
   action: function(){
+    currentFacilityId = Session.get("current_facility_id");
+    currentFacilityName = Session.get("current_facility_name");
     mount( MainLayout, {
       header: <BackButton key='back_button'/>,
-      content: <AddEducatorPage key='add_educator_page' facilities={ facilities }/>
+      content: <AddEducatorPage key='add_educator_page' 
+        currentFacilityName={ currentFacilityName }
+        currentFacilityId={ currentFacilityId }
+      />
     });
   }
 });

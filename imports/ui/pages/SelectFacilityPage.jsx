@@ -27,11 +27,16 @@ var SelectFacilityPage = React.createClass({
     this.setState({ search: event.target.value });
   },
 
-  _onSelect( value ){
-    Session.set("selected_facility", value);
-    console.log("Set the sessiong");
-    console.log(Session.get("selected_facility"));
-    FlowRouter.go("/");
+  _onSelect( id, name ){
+    return ()=> {
+      console.log("id" + id);
+      Session.set("current_facility_id", id);
+      Session.set("current_facility_name", name);
+      console.log("Set the sessiong");
+      console.log(Session.get("selected_facility_id"));
+      console.log(Session.get("selected_facility_name"));
+      FlowRouter.go("/");
+    } 
   },
 
   _getFacilityComponents( facilities ){
@@ -39,9 +44,10 @@ var SelectFacilityPage = React.createClass({
     let components = facilities.map( function( facility ){
       return (
         < FacilityOption
+          key={ facility._id }
           label={ facility.name }
           value={ facility.salesforce_id }
-          onSelect={ that._onSelect }
+          onSelect={ that._onSelect( facility.salesforce_id, facility.name ) }
         />
       )
     });

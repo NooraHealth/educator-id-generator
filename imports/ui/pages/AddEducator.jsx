@@ -5,16 +5,19 @@ import React from 'react';
 import Select from '../components/form/select/Select.js';
 import { App } from '../../api/App.coffee';
 import { EducatorsSchema } from '../../api/collections/educators.coffee';
+import { CurrentFacilityInfo } from '../components/shared/currentFacilityInfo.jsx';
 
 var AddEducatorPage = React.createClass({
 
   propTypes: { 
-    facilities: React.PropTypes.array
+    currentFacilityId: React.PropTypes.string,
+    currentFacilityName: React.PropTypes.string
   },
 
   defaultProps() {
     return {
-      facilities: []
+      currentFacilityId: "",
+      currentFacilityName: ""
     }
   },
 
@@ -34,7 +37,7 @@ var AddEducatorPage = React.createClass({
     const last_name = this.state.last_name;
     const phone = this.state.phone;
     const department = this.state.department;
-    const facility = this.state.facility;
+    const facility = this.props.currentFacilityId;
     var _this = this;
 
     let educator = {
@@ -105,11 +108,7 @@ var AddEducatorPage = React.createClass({
 
   handleChange(field) {
     return (event) => {
-      console.log("HAndleing change on ", field);
-      if(field == "facility") 
-        this.setState({ [field]: event.value});
-      else
-        this.setState({ [field]: event.target.value});
+      this.setState({ [field]: event.target.value});
     }
   },
     
@@ -118,12 +117,6 @@ var AddEducatorPage = React.createClass({
   },
 
   render() {
-    let facility_options = this.props.facilities.map( function( facility, i ){
-      return {
-        label: facility.name,
-        value: facility.salesforce_id
-      }
-    });
 
     let submitText = "GET EDUCATOR ID";
     if( this.state.loading )
@@ -132,13 +125,7 @@ var AddEducatorPage = React.createClass({
     return (
       <div id="add_educator_view" className="view view-main">
         <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
-          <Select 
-            name= 'facility_select'
-            value= { this.state.facility }
-            options={ facility_options }
-            onChange={ this.handleChange("facility") }
-            placeholder="Facility... Type to search"
-          />
+          <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
           <Form.Input 
             type='text' 
             key= 'educator_first_name'
