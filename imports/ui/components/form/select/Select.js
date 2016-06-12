@@ -252,16 +252,19 @@ var Select = _react2['default'].createClass({
 	},
 
 	handleTouchMove: function handleTouchMove(event) {
+    console.log("SELECT: HANDLETOUCHMOVe");
 		// Set a flag that the view is being dragged
 		this.dragging = true;
 	},
 
 	handleTouchStart: function handleTouchStart(event) {
+    console.log("SELECT: HANDLETOUCHSTART");
 		// Set a flag that the view is not being dragged
 		this.dragging = false;
 	},
 
 	handleTouchEnd: function handleTouchEnd(event) {
+    console.log("SELECT: HANDLETOUCHEND");
 		// Check if the view is being dragged, In this case
 		// we don't want to fire the click event (because the user only wants to scroll)
 		if (this.dragging) return;
@@ -271,6 +274,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	handleTouchEndClearValue: function handleTouchEndClearValue(event) {
+    console.log("SELECT: HANDLETOUCHENDCLEARVALUE");
 		// Check if the view is being dragged, In this case
 		// we don't want to fire the click event (because the user only wants to scroll)
 		if (this.dragging) return;
@@ -280,6 +284,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	handleMouseDown: function handleMouseDown(event) {
+    console.log("SELECT: HANDLEMOUSEDOWN");
 		// if the event was triggered by a mousedown and not the primary
 		// button, or if the component is disabled, ignore it.
 		if (this.props.disabled || event.type === 'mousedown' && event.button !== 0) {
@@ -312,6 +317,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	handleMouseDownOnArrow: function handleMouseDownOnArrow(event) {
+    console.log("SELECT: HANDLEMOUSEDOWNONARROW");
 		// if the event was triggered by a mousedown and not the primary
 		// button, or if the component is disabled, ignore it.
 		if (this.props.disabled || event.type === 'mousedown' && event.button !== 0) {
@@ -328,7 +334,12 @@ var Select = _react2['default'].createClass({
 		this.closeMenu();
 	},
 
+	handleTouchStartOnMenu: function handleTouchStartOnMenu(event) {
+    console.log("TOUCH START ON MENU");
+  },
+
 	handleMouseDownOnMenu: function handleMouseDownOnMenu(event) {
+    console.log("SELECT: HANDLEMOUSEDOWNONMENU");
 		// if the event was triggered by a mousedown and not the primary
 		// button, or if the component is disabled, ignore it.
 		if (this.props.disabled || event.type === 'mousedown' && event.button !== 0) {
@@ -353,6 +364,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	handleInputFocus: function handleInputFocus(event) {
+    console.log("SELECT:HANDLEINPUTFOcUS");
 		var isOpen = this.state.isOpen || this._openAfterFocus || this.props.openOnFocus;
 		if (this.props.onFocus) {
 			this.props.onFocus(event);
@@ -365,6 +377,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	handleInputBlur: function handleInputBlur(event) {
+    console.log("SELECT:HANDLEINPUTBLUR");
 		if (this.refs.menu && document.activeElement === this.refs.menu) {
 			this.focus();
 			return;
@@ -505,6 +518,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	setValue: function setValue(value) {
+    console.log("SELECT SET VALUE");
 		var _this = this;
 
 		if (this.props.autoBlur) {
@@ -524,6 +538,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	selectValue: function selectValue(value) {
+    console.log("SELECT SELECT VALUE");
 		this.hasScrolledToOption = false;
 		if (this.props.multi) {
 			this.addValue(value);
@@ -563,6 +578,7 @@ var Select = _react2['default'].createClass({
 	clearValue: function clearValue(event) {
 		// if the event was triggered by a mousedown and not the primary
 		// button, ignore it.
+    console.log("SLEECT CLEAR VALUE");
 		if (event && event.type === 'mousedown' && event.button !== 0) {
 			return;
 		}
@@ -629,6 +645,7 @@ var Select = _react2['default'].createClass({
 		// if (this.props.allowCreate && !this.state.focusedOption) {
 		// 	return this.selectValue(this.state.inputValue);
 		// }
+    console.log("SELECT SELECT FOCUSSED OPTION");
 		if (this._focusedOption) {
 			return this.selectValue(this._focusedOption);
 		}
@@ -644,6 +661,9 @@ var Select = _react2['default'].createClass({
 	},
 
 	renderValue: function renderValue(valueArray, isOpen) {
+    console.log("ABOUT TO RENDERVALUE")
+    console.log(valueArray);
+    console.log(isOpen);
 		var _this2 = this;
 
 		var renderLabel = this.props.valueRenderer || this.getOptionLabel;
@@ -656,6 +676,8 @@ var Select = _react2['default'].createClass({
 			) : null;
 		}
 		var onClick = this.props.onValueClick ? this.handleValueClick : null;
+    console.log("SELECT: ONCLICK");
+    console.log(this.props.onValueClick);
 		if (this.props.multi) {
 			return valueArray.map(function (value, i) {
 				return _react2['default'].createElement(

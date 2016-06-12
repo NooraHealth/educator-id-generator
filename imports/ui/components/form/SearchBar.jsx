@@ -1,15 +1,14 @@
 'use strict';
 
+import React from 'react';
+
 var SearchBar = React.createClass({
                                         
   propTypes: {
     type: React.PropTypes.string,
     classes: React.PropTypes.string,
     placeholder: React.PropTypes.string,
-    valueLink: React.PropTypes.shape({
-      value: React.PropTypes.string,
-      requestChange: React.PropTypes.func
-    })
+    onChange: React.PropTypes.func
   },
 
   defaultProps(){
@@ -23,16 +22,16 @@ var SearchBar = React.createClass({
   getInitialState(){ return {} },
 
   render(){
-    var { type, classes, placeholder, valueLink } = this.props;
+    var { type, classes, placeholder, onChange } = this.props;
     return (
       <input 
         type={ type }
         className={ classes } 
         placeholder={ placeholder }
-        valueLink={ valueLink }
+        onChange={ onChange }
         />
     ) 
   }
 });
 
-this.SearchBar = SearchBar;
+export { SearchBar };

@@ -23,6 +23,7 @@ var Value = _react2['default'].createClass({
 
 	// the option object for this value
 	handleMouseDown: function handleMouseDown(event) {
+    console.log("VALUE: HANDLEMOUSEDOWN");
 		if (event.type === 'mousedown' && event.button !== 0) {
 			return;
 		}
@@ -39,12 +40,14 @@ var Value = _react2['default'].createClass({
 	onRemove: function onRemove(event) {
 		event.preventDefault();
 		event.stopPropagation();
+    console.log("VALUE: ONREMOVE");
 		this.props.onRemove(this.props.value);
 	},
 
 	handleTouchEndRemove: function handleTouchEndRemove(event) {
 		// Check if the view is being dragged, In this case
 		// we don't want to fire the click event (because the user only wants to scroll)
+    console.log("VALUE: HANDLETOUCHENDREMOVE");
 		if (this.dragging) return;
 
 		// Fire the mouse events
@@ -57,6 +60,7 @@ var Value = _react2['default'].createClass({
 	},
 
 	handleTouchStart: function handleTouchStart(event) {
+    console.log("VALUE: ON TOUCHSTART");
 		// Set a flag that the view is not being dragged
 		this.dragging = false;
 	},
@@ -88,6 +92,7 @@ var Value = _react2['default'].createClass({
 	},
 
 	render: function render() {
+    console.log("RENDERING A VALUE");
 		return _react2['default'].createElement(
 			'div',
 			{ className: (0, _classnames2['default'])('Select-value', this.props.value.className),

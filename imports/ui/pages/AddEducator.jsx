@@ -1,11 +1,10 @@
 'use strict';
 
-import { Form } from '../../components/form/base/Form.jsx';
+import { Form } from '../components/form/base/Form.jsx';
 import React from 'react';
-import Select from 'react-select';
-import { App } from '../../../api/App.coffee'
-import { EducatorsSchema } from '../../../api/collections/educators.coffee'
-
+import Select from '../components/form/select/Select.js';
+import { App } from '../../api/App.coffee';
+import { EducatorsSchema } from '../../api/collections/educators.coffee';
 
 var AddEducatorPage = React.createClass({
 
@@ -106,6 +105,7 @@ var AddEducatorPage = React.createClass({
 
   handleChange(field) {
     return (event) => {
+      console.log("HAndleing change on ", field);
       if(field == "facility") 
         this.setState({ [field]: event.value});
       else
@@ -115,12 +115,6 @@ var AddEducatorPage = React.createClass({
     
   componentDidMount() {
     App.getF7App().addView("#add_educator_view");
-  },
-
-  onEvent( type ) {
-    return function( e ) {
-      console.log(type);
-    }
   },
 
   render() {
@@ -136,12 +130,7 @@ var AddEducatorPage = React.createClass({
       submitText = "...loading..."
 
     return (
-      <div id="add_educator_view"
-        className="view view-main"
-        onMouseDown={ this.onEvent("MOUSEDOWN") } 
-        onTouchEnd={ this.onEvent("TOUCHEND") } 
-        onTouchStart={ this.onEvent("TOUCHSTART") } 
-        >
+      <div id="add_educator_view" className="view view-main">
         <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
           <Select 
             name= 'facility_select'

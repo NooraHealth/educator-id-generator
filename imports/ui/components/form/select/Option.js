@@ -25,6 +25,7 @@ var Option = _react2['default'].createClass({
 		option: _react2['default'].PropTypes.object.isRequired },
 	// object that is base for that option
 	blockEvent: function blockEvent(event) {
+    console.log("OPTION: BLOCKEVENT");
 		event.preventDefault();
 		event.stopPropagation();
 		if (event.target.tagName !== 'A' || !('href' in event.target)) {
@@ -38,12 +39,14 @@ var Option = _react2['default'].createClass({
 	},
 
 	handleMouseDown: function handleMouseDown(event) {
+    console.log("OPTION: HANDLEMOUSEDOWN");
 		event.preventDefault();
 		event.stopPropagation();
 		this.props.onSelect(this.props.option, event);
 	},
 
 	handleMouseEnter: function handleMouseEnter(event) {
+    console.log("OPTION: HANDLEMOUSEENTER");
 		this.onFocus(event);
 	},
 
@@ -52,6 +55,7 @@ var Option = _react2['default'].createClass({
 	},
 
 	handleTouchEnd: function handleTouchEnd(event) {
+    console.log("OPTION: HANDLETOUCHEND");
 		// Check if the view is being dragged, In this case
 		// we don't want to fire the click event (because the user only wants to scroll)
 		if (this.dragging) return;
@@ -65,18 +69,38 @@ var Option = _react2['default'].createClass({
 	},
 
 	handleTouchStart: function handleTouchStart(event) {
+    console.log("OPTION: HANDLETOUCHEND");
 		// Set a flag that the view is not being dragged
 		this.dragging = false;
 	},
+
+	handleSelect: function handleSelect(event) {
+    console.log("OPTION: HANDLESELECT");
+		// Set a flag that the view is not being dragged
+		this.dragging = false;
+	},
+
+	handleScroll: function handleScroll(event) {
+    console.log("OPTION: HANDLESCROLL");
+		// Set a flag that the view is not being dragged
+		this.dragging = false;
+	},
+
+	onClick: function onClick(event) {
+    console.log("OPTION: onClick");
+		// Set a flag that the view is not being dragged
+		this.dragging = false;
+	},
+
 
 	onFocus: function onFocus(event) {
 		if (!this.props.isFocused) {
 			this.props.onFocus(this.props.option, event);
 		}
 	},
+
 	render: function render() {
 		var option = this.props.option;
-
 		var className = (0, _classnames2['default'])(this.props.className, option.className);
 
 		return option.disabled ? _react2['default'].createElement(
@@ -95,6 +119,9 @@ var Option = _react2['default'].createClass({
 				onTouchStart: this.handleMouseDown,
 				onTouchMove: this.handleTouchMove,
 				onTouchEnd: this.handleMouseDown,
+				onSelect: this.handleSelect,
+				onScroll: this.handleScroll,
+				onClick: this.handleClick,
 				title: option.title },
 			this.props.children
 		);
