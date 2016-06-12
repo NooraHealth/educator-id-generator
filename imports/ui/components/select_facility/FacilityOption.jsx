@@ -18,6 +18,13 @@ var FacilityOption = React.createClass({
       onSelect: null
     }
   },
+  
+  handleSelect( type ){
+    var that = this
+    return function() {
+      that.props.onSelect( that.props.value );
+    }
+  },
 
   render(){
     var { label, onSelect } = this.props;
@@ -25,9 +32,12 @@ var FacilityOption = React.createClass({
       <li>
         <div className="item-content">
           <div className="item-inner">
-            <div className="item-title">
+            <a 
+              className="item-title"
+              onClick={ this.handleSelect("on click") }
+              >
               { label }
-            </div>
+            </a>
           </div>
         </div>
       </li>

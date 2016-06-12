@@ -8,7 +8,6 @@ export default SelectFacilityContainer = createContainer(() => {
   // Note that this subscription will get cleaned up when your component is unmounted
   var handle = Meteor.subscribe("facilities.all");
 
-  console.log("in the container");
   return {
     loading: ! handle.ready(),
     facilities: Facilities.find({}).fetch(),

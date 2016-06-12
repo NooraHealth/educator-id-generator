@@ -22,17 +22,26 @@ var SelectFacilityPage = React.createClass({
     }
   },
 
-  handleChange( event ){
+  _handleChange( event ){
     console.log("handling serach bar change " + event.target.value);
     this.setState({ search: event.target.value });
   },
 
+  _onSelect( value ){
+    Session.set("selected_facility", value);
+    console.log("Set the sessiong");
+    console.log(Session.get("selected_facility"));
+    FlowRouter.go("/");
+  },
+
   _getFacilityComponents( facilities ){
+    var that = this;
     let components = facilities.map( function( facility ){
       return (
         < FacilityOption
           label={ facility.name }
           value={ facility.salesforce_id }
+          onSelect={ that._onSelect }
         />
       )
     });
@@ -42,15 +51,11 @@ var SelectFacilityPage = React.createClass({
   render(){
 
     const search = this.state.search.toLowerCase();
-    console.log("The facilities");
-    console.log(this.props.facilities);
     var filtered = this.props.facilities.filter(function( facility ){
-      console.log("filtering " + facility.name);
       return facility.name.toLowerCase().indexOf(search) > -1;
     });
 
     var facilityComponents = this._getFacilityComponents(filtered);
-
     return (
       <div>
         <div className='list-block inset'>
@@ -65,7 +70,7 @@ var SelectFacilityPage = React.createClass({
                       type='text'
                       classes='col-75'
                       placeholder='Search facilities'
-                      onChange={ this.handleChange }
+                      onChange={ this._handleChange }
                       />
                   </div>
                 </div>
