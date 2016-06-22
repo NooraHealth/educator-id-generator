@@ -6,14 +6,16 @@ import React from 'react';
 var ListItem = React.createClass({
 
   propTypes: { 
-    label: React.PropTypes.string,
+    title: React.PropTypes.string,
+    after: React.PropTypes.string,
     value: React.PropTypes.string,
     onSelect: React.PropTypes.func
   },
 
   defaultProps() {
     return {
-      label: "",
+      title: "",
+      after: "",
       value: "",
       onSelect: null
     }
@@ -27,17 +29,19 @@ var ListItem = React.createClass({
   },
 
   render(){
-    var { label, onSelect } = this.props;
+    var { title, after, onSelect } = this.props;
     return (
       <li>
-        <div className="item-content">
+        <div className="item-content"
+          onClick={ onSelect }   
+        >
           <div className="item-inner">
-            <a 
-              className="item-title"
-              onClick={ onSelect }
-              >
-              { label }
-            </a>
+            <div className="item-title">
+              { title }
+            </div>
+            <div className="item-after">
+              { after }
+            </div>
           </div>
         </div>
       </li>

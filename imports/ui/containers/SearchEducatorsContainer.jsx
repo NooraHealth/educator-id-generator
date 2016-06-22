@@ -10,25 +10,21 @@ export default SearchEducatorsContainer = createContainer(() => {
   this._onSelect = function() {};
 
   this._getItems = function( educators ) {
-    console.log("The educators");
-    console.log(educators);
     return educators.map( function( educator ){
       return {
         value: educator.first_name,
         key: educator._id,
-        label: educator.first_name
+        title: educator.first_name + " " + educator.last_name,
+        after: "ID: " + educator.uniqueId
       };
     });
   };
-  items = this._getItems(Educators.find({}).fetch());
-  console.log("Items");
-  console.log(items);
-
+  
   return {
     loading: ! handle.ready(),
     items: _getItems( Educators.find({}).fetch() ),
     onSelect: this._onSelect,
-    searchBarPlaceholder: " Search Educators",
+    searchBarPlaceholder: " Search by Name or ID ",
   };
 }, SearchableList);
 

@@ -57,6 +57,7 @@ FlowRouter.route('/selectFacility', {
 FlowRouter.route('/searchEducators', {
   action: function(){
     mount( MainLayout, {
+      header: <BackButton key='back_button'/>,
       content: <SearchEducatorsContainer/>
     });
   }

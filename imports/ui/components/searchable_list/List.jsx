@@ -10,7 +10,7 @@ var SearchableList = React.createClass({
     items: React.PropTypes.shape({
       value: React.PropTypes.string,
       key: React.PropTypes.string,
-      label: React.PropTypes.string
+      title: React.PropTypes.string
     }),
     onSelect: React.PropTypes.func,
     searchBarPlaceholder: React.PropTypes.string
@@ -40,9 +40,10 @@ var SearchableList = React.createClass({
       return (
         < ListItem
           key={ item.key }
-          label={ item.label }
+          title={ item.title }
+          after={ item.after }
           value={ item.value }
-          onSelect={ that.props.onSelect.bind(that, item.value, item.label) }
+          onSelect={ that.props.onSelect.bind(that, item.value, item.title) }
         />
       )
     });
@@ -55,7 +56,8 @@ var SearchableList = React.createClass({
 
     const search = this.state.search.toLowerCase();
     var filtered = this.props.items.filter(function( item ){
-      return item.label.toLowerCase().indexOf(search) > -1;
+      text = item.title + item.after;
+      return text.toLowerCase().indexOf(search) > -1;
     });
 
     var components = this._getListItems(filtered);

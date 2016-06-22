@@ -19,8 +19,8 @@ export default SelectFacilityContainer = createContainer(() => {
       return {
         value: facility.salesforce_id,
         key: facility._id,
-        label: facility.name
-      };
+        title: facility.name
+      }
     });
   };
 
