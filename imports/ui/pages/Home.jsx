@@ -25,6 +25,12 @@ var HomePage = React.createClass({
           className="button button-round button-fill large-button"
           > Add Educator
         </a></p>
+
+        <p><a 
+          href="/searchEducators"
+          className="button button-round button-fill large-button"
+          > Search Educators
+        </a></p>
       </div>
     )
   }

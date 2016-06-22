@@ -7,9 +7,10 @@ import { MainLayout } from '../../ui/layout.jsx';
 import { HomePage } from '../../ui/pages/Home.jsx';
 import { AddEducatorPage } from '../../ui/pages/AddEducator.jsx';
 import { SelectFacilityContainer } from '../../ui/containers/SelectFacilityContainer.jsx';
+import { SearchEducatorsContainer } from '../../ui/containers/SearchEducatorsContainer.jsx';
+
 import { Logo } from '../../ui/components/Headers/Logo.jsx';
 import { BackButton } from '../../ui/components/Headers/BackButton.jsx';
-import { Facilities } from '../../api/collections/facilities.coffee';
 
 FlowRouter.route('/', {
   action: function(){
@@ -49,6 +50,14 @@ FlowRouter.route('/selectFacility', {
   action: function(){
     mount( MainLayout, {
       content: <SelectFacilityContainer/>
+    });
+  }
+});
+
+FlowRouter.route('/searchEducators', {
+  action: function(){
+    mount( MainLayout, {
+      content: <SearchEducatorsContainer/>
     });
   }
 });
