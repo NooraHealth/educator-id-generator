@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-var FacilityOption = React.createClass({
+var ListItem = React.createClass({
 
   propTypes: { 
     label: React.PropTypes.string,
@@ -34,7 +34,7 @@ var FacilityOption = React.createClass({
           <div className="item-inner">
             <a 
               className="item-title"
-              onClick={ this.handleSelect("on click") }
+              onClick={ onSelect }
               >
               { label }
             </a>
@@ -45,4 +45,4 @@ var FacilityOption = React.createClass({
   }
 });
 
-export { FacilityOption };
+export { ListItem };
