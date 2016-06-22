@@ -48,7 +48,6 @@ FlowRouter.route('/addEducator', {
 FlowRouter.route('/selectFacility', {
   action: function(){
     mount( MainLayout, {
-      header: <Logo key='logo'/>,
       content: <SelectFacilityContainer/>
     });
   }

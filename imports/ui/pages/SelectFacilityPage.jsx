@@ -66,7 +66,6 @@ var SelectFacilityPage = React.createClass({
       <div>
         <div className='list-block inset'>
           <ul>
-            <hr/>
             <li>
               <div className="item-content">
                 <div className="item-media"><i className="fa fa-search fa-2x"></i></div>

@@ -2,7 +2,6 @@
 
 import { Form } from '../components/form/base/Form.jsx';
 import React from 'react';
-import Select from '../components/form/select/Select.js';
 import { App } from '../../api/App.coffee';
 import { EducatorsSchema } from '../../api/collections/educators.coffee';
 import { CurrentFacilityInfo } from '../components/shared/currentFacilityInfo.jsx';
