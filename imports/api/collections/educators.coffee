@@ -13,7 +13,9 @@ EducatorsSchema = new SimpleSchema
     type:String
   department:
     type:String
-  facility:
+  facility_salesforce_id:
+    type:String
+  facility_name:
     type:String
   phone:
     type: Number

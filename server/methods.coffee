@@ -49,7 +49,7 @@ Meteor.methods
         Salesforce.sobject("Facility_Role__c")
         .create {
           "Name" : "Educator Trainee -- #{ firstName } #{ lastName }",
-          "Facility__c" : educator.facility,
+          "Facility__c" : educator.facility_salesforce_id,
           "Contact__c" : ret.id,
           "Department__c": educator.department,
           "Role_With_Noora_Program__c": Meteor.settings.FACILITY_ROLE_TYPE,

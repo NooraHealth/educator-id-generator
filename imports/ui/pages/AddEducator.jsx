@@ -36,7 +36,8 @@ var AddEducatorPage = React.createClass({
     const last_name = this.state.last_name;
     const phone = this.state.phone;
     const department = this.state.department;
-    const facility = this.props.currentFacilityId;
+    const facilityId = this.props.currentFacilityId;
+    const facilityName = this.props.currentFacilityName;
     var _this = this;
 
     let educator = {
@@ -44,7 +45,8 @@ var AddEducatorPage = React.createClass({
       last_name: last_name,
       phone: phone,
       department: department,
-      facility: facility,
+      facility_name: facilityName,
+      facility_salesforce_id: facilityId
     };
 
     try {

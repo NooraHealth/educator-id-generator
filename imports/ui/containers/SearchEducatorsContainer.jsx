@@ -14,7 +14,7 @@ export default SearchEducatorsContainer = createContainer(() => {
       return {
         value: educator.first_name,
         key: educator._id,
-        title: educator.first_name + " " + educator.last_name,
+        title: educator.first_name + " " + educator.last_name + " (" + educator.facility_name +")",
         after: "ID: " + educator.uniqueId
       };
     });
