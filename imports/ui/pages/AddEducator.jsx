@@ -46,6 +46,8 @@ var AddEducatorPage = React.createClass({
       phone: phone,
       department: department,
       facility_name: facilityName,
+      inserted_contact: false,
+      inserted_facility_role: false,
       facility_salesforce_id: facilityId
     };
 
@@ -85,13 +87,12 @@ var AddEducatorPage = React.createClass({
                 });
                 _this.setState({ loading: false });
               } else {
-                Meteor.call("createEducatorInSalesforce", id, ( error, result ) => {
-                  swal({
-                    type: "success",
-                    title: "Nurse Educator Id " + uniqueId
-                  });
-                  FlowRouter.go("/");
+                swal({
+                  type: "success",
+                  title: "Nurse Educator Id " + uniqueId
                 });
+                _this.setState({ loading: false });
+                FlowRouter.go("/");
               }
             });
           }

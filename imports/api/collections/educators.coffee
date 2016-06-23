@@ -19,9 +19,10 @@ EducatorsSchema = new SimpleSchema
     type:String
   phone:
     type: Number
-  errors_inserting_to_salesforce:
-    type: [String]
-    optional: true
+  inserted_facility_role:
+    type: Boolean
+  inserted_contact:
+    type: Boolean
   uniqueId:
     type: Number
     optional: true
