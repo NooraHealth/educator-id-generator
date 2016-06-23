@@ -46,8 +46,6 @@ var AddEducatorPage = React.createClass({
       phone: phone,
       department: department,
       facility_name: facilityName,
-      inserted_contact: false,
-      inserted_facility_role: false,
       facility_salesforce_id: facilityId
     };
 
