@@ -10,6 +10,8 @@ FacilitiesSchema = new SimpleSchema
     type:String
   salesforce_id:
     type:String
+  delivery_partner:
+    type:String
 
 Facilities.attachSchema FacilitiesSchema
 
