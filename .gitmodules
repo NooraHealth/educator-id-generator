@@ -1,0 +1,3 @@
+[submodule "packages/salesforce"]
+	path = packages/salesforce
+	url = git@github.com:artichox/meteor-salesforce.git
