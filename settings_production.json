@@ -1,0 +1,18 @@
+{
+  "SF_LOGIN_URL": "https://login.salesforce.com",
+  "SF_USER": "lucyannerichards@gmail.com",
+  "SF_PASS": "Frankomuchkittysocute1433",
+  "SF_TOKEN": "HQnawEKo8hKlRv1xxcQIIzme8",
+  "UNIQUE_ID_DOC_ID": "vMyQi3LWaum5eGZP6",
+  "CONTACT_RECORD_TYPE": "012j00000010Gga",
+  "FACILITY_ROLE_TYPE": "Trainee",
+  "CONTACT_UPDATE_INTERVAL": 100000000,
+  "ROLE_UPDATE_INTERVAL": 100000000,
+  "FACILITY_UPDATE_INTERVAL": 10000000,
+  "public": {
+    "educators_collection": "educators",
+    "unique_id_collection": "educator_unique_id",
+    "facilities_collection": "salesforce_facilities"
+  }
+}
+

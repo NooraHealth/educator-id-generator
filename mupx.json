@@ -1,0 +1,21 @@
+{
+ "servers": [{
+  "host": "54.153.61.149",
+  "username": "ubuntu",
+  "pem" : "/Users/user/scripts/kde.pem"
+ }],
+ "nodeVersion": "0.10.43",
+ "setupMongo":"false",
+ "setupNode": "true",
+ "appName": "EducatorIdGenerator",
+ "app": "/Users/user/NooraHealth/educator-id-generator/",
+ "env":{
+  "MONGO_URL": "mongodb://lucy:artichokes1433@c312.lighthouse.2.mongolayer.com:10312,lighthouse.3.mongolayer.com:10311/webapp?replicaSet=set-555b94436b0733dec5001b44",
+  "PORT": 80,
+  "ROOT_URL": "http://educatoridgenerator.noorahealth.org",
+  "AWS_ACCESS_KEY": "AKIAJ75Q4TQRLQO2JABQ", 
+  "AWS_SECRET_ACCESS_KEY": "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",
+  "METEOR_ENV": "production"
+ },
+ "deployCheckWaitTime": 15
+}
