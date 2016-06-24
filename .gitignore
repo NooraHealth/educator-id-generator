@@ -3,7 +3,8 @@
 /server/startup.coffee
 .uploads/
 settings.json
-settings_dev.json
+settings_production.json
 
 public/
 mup.json
+mupx.json
