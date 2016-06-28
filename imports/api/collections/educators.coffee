@@ -27,7 +27,7 @@ EducatorsSchema = new SimpleSchema
   phone:
     type: Number
   uniqueId:
-    type: Number
+    type: String
     optional: true
     label: "Unique Id"
 

@@ -66,7 +66,7 @@ var AddEducatorPage = React.createClass({
         }
 
         //Meteor.setTimeout(function(){ swal("SOMETHING"); }, 1000);
-        Meteor.call("getUniqueId", function(error, uniqueId){
+        Meteor.call("getUniqueId", facilityName, function(error, uniqueId){
           if( error ) {
             swal({
               type: "error",

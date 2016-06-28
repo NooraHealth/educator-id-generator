@@ -20,7 +20,7 @@ Meteor.methods
     console.log educator
     return Educators.insert educator
 
-  "getUniqueId": ->
+  "getUniqueId": ( facilityName )->
     result = UniqueID.findAndModify({
       query: { _id: Meteor.settings.UNIQUE_ID_DOC_ID }
       update: { $inc: { currentUniqueID: 1 } }
@@ -28,7 +28,14 @@ Meteor.methods
       console.log "This is the result"
       console.log result
     )
-    return result.currentUniqueID
+    console.log facilityName
+    getInitials = ( name )->
+      words = name.split " "
+      letters = words.map (word)->
+        return word[0].toUpperCase()
+    initials = getInitials( facilityName )
+    console.log initials
+    return initials.join("") + result.currentUniqueID
 
   "createFacilityRolesInSalesforce": ( educators )->
     console.log("Creating facilityRoles in SAlesforce")
