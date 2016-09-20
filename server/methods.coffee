@@ -38,8 +38,6 @@ Meteor.methods
       words = name.split " "
       letters = words.map (word)->
         cleaned = word.replace(/[^a-zA-Z]/g, "")
-        console.log "CLEANDED"
-        console.log cleaned
         return cleaned[0]?.toUpperCase()
     initials = getInitials( facilityName )
     return initials.join("") + result.currentUniqueID
