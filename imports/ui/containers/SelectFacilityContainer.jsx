@@ -15,6 +15,11 @@ export default SelectFacilityContainer = createContainer(() => {
   };
 
   this._getItems = function( facilities ) {
+    console.log("The facilities I am putting here");
+    console.log(facilities);
+    console.log("Facilities fetich");
+    console.log(Facilities.find().fetch());
+
     return facilities.map( function( facility ){
       return {
         value: facility.salesforce_id,

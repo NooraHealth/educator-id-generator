@@ -15,6 +15,10 @@ Meteor.methods
     result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c"
     return result.response.records
 
+  "getNurseEducatorsFromSalesforce": () ->
+    result = Salesforce.query "SELECT Contact FROM Condition_Operation_Role__c"
+    return result.response.records
+
   "insertEducator": (educator) ->
     console.log "about to insert this educator"
     console.log educator
@@ -28,13 +32,16 @@ Meteor.methods
       console.log "This is the result"
       console.log result
     )
+
     console.log facilityName
     getInitials = ( name )->
       words = name.split " "
       letters = words.map (word)->
-        return word[0].toUpperCase()
+        cleaned = word.replace(/[^a-zA-Z]/g, "")
+        console.log "CLEANDED"
+        console.log cleaned
+        return cleaned[0]?.toUpperCase()
     initials = getInitials( facilityName )
-    console.log initials
     return initials.join("") + result.currentUniqueID
 
   "createFacilityRolesInSalesforce": ( educators )->
@@ -70,6 +77,9 @@ Meteor.methods
   "createContactsInSalesforce": ( educators )->
     mapped = educators.map( (educator) ->
       facility = Facilities.findOne { salesforce_id: educator.facility_salesforce_id }
+      console.log "This is the delivery_partner id"
+      console.log facility.delivery_partner
+      console.log facility.delivery_partner
       lastName = educator.last_name
       firstName = educator.first_name
       if not lastName or lastName is ""
