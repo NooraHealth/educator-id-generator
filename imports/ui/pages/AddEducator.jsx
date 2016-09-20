@@ -85,12 +85,15 @@ var AddEducatorPage = React.createClass({
                 });
                 _this.setState({ loading: false });
               } else {
+                const text = "Nurse Educator ID: "  + uniqueId;
                 swal({
                   type: "success",
-                  title: "Nurse Educator Id " + uniqueId
+                  title: text
+                }, function() {
+                  console.log("ON CONFIRM");
+                  FlowRouter.go("/");
                 });
                 _this.setState({ loading: false });
-                FlowRouter.go("/");
               }
             });
           }
