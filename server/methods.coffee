@@ -20,8 +20,6 @@ Meteor.methods
     return result.response.records
 
   "insertEducator": (educator) ->
-    console.log "about to insert this educator"
-    console.log educator
     return Educators.insert educator
 
   "getUniqueId": ( facilityName )->
@@ -43,8 +41,6 @@ Meteor.methods
     return initials.join("") + result.currentUniqueID
 
   "createFacilityRolesInSalesforce": ( educators )->
-    console.log("Creating facilityRoles in SAlesforce")
-    console.log educators
     mapped = educators.map( (educator) ->
       return {
         "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",

@@ -65,10 +65,17 @@ var AddEducatorPage = React.createClass({
           return;
         }
 
+        const showPopup = ( options, callback )=> {
+          Meteor.setTimeout( ()=> { 
+            console.log("About to show the popup!!!");
+            swal(options, callback);
+          }, 10 );
+        };
+
         //Meteor.setTimeout(function(){ swal("SOMETHING"); }, 1000);
         Meteor.call("getUniqueId", facilityName, function(error, uniqueId){
           if( error ) {
-            swal({
+            showPopup({
               type: "error",
               title: "Sorry!",
               text: "There has been an error retrieving a unique ID"
@@ -78,7 +85,7 @@ var AddEducatorPage = React.createClass({
             educator.uniqueId = uniqueId;
             Meteor.call( "insertEducator", educator, ( error, id ) => {
               if( error ) {
-                swal({
+                showPopup({
                   type: "error",
                   text: error.message,
                   title: "Error inserting educator into database"
@@ -86,14 +93,14 @@ var AddEducatorPage = React.createClass({
                 _this.setState({ loading: false });
               } else {
                 const text = "Nurse Educator ID: "  + uniqueId;
-                swal({
+                console.log("About to make a swal " + text);
+                showPopup({
                   type: "success",
                   title: text
                 }, function() {
-                  console.log("ON CONFIRM");
+                  _this.setState({ loading: false });
                   FlowRouter.go("/");
                 });
-                _this.setState({ loading: false });
               }
             });
           }
