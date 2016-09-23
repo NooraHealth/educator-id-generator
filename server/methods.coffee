@@ -1,6 +1,7 @@
 { Educators } = require "../imports/api/collections/educators.coffee"
 { UniqueID } = require "../imports/api/collections/unique_id.coffee"
 { Facilities } = require "../imports/api/collections/facilities.coffee"
+{ isInt } = require "./utils"
 
 Meteor.methods
 
@@ -11,15 +12,33 @@ Meteor.methods
       if not Facilities.findOne { salesforce_id: facility.Id }
         Facilities.insert { name: facility.Name, salesforce_id: facility.Id, delivery_partner: facility.Delivery_Partner__c }
 
-  "getFacilitiesFromSalesforce": () ->
+  "updateEducatorsInMongo": ->
+    educators = Meteor.call("getEducatorsFromSalesforce")
+    for educator in educators
+      if not Educators.findOne { contact_salesforce_id: educator.Id }
+        phone = if isInt( educator.MobilePhone ) then parseInt(educator.MobilePhone) else null
+        Educators.insert {
+          last_name: educator.LastName or ""
+          first_name: educator.FirstName or ""
+          contact_salesforce_id: educator.Id
+          department: educator.Department or ""
+          phone: phone or 0
+          uniqueId: educator.Trainee_ID__c
+        }
+
+  "getFacilitiesFromSalesforce": ->
     result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c"
     return result.response.records
 
-  "getNurseEducatorsFromSalesforce": () ->
+  "getEducatorsFromSalesforce": ->
+    result = Salesforce.query "SELECT Id, FirstName, LastName, MobilePhone, Department, Trainee_Id__c FROM Contact WHERE Trainee_Id__c != ''"
+    return result.response.records
+
+  "getNurseEducatorsFromSalesforce": ->
     result = Salesforce.query "SELECT Contact FROM Condition_Operation_Role__c"
     return result.response.records
 
-  "insertEducator": (educator) ->
+  "insertEducator": ( educator )->
     return Educators.insert educator
 
   "getUniqueId": ( facilityName )->
@@ -46,7 +65,7 @@ Meteor.methods
         "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",
         "Facility__c" : educator.facility_salesforce_id,
         "Contact__c" : educator.contact_salesforce_id,
-        "Department__c": educator.department,
+        "Department__c": edjucator.department,
         "Role_With_Noora_Program__c": Meteor.settings.FACILITY_ROLE_TYPE,
       }
     )
@@ -59,9 +78,6 @@ Meteor.methods
         console.log("Inserted facility role successfully")
         console.log("The resturn", ret)
         for inserted, i in ret
-          console.log(" about to update")
-          console.log(inserted)
-          console.log i
           educator = educators[i]
           Educators.update { _id: educator._id }, { $set: { facility_role_salesforce_id: inserted.id }}
 
@@ -87,8 +103,7 @@ Meteor.methods
         "Department" : educator.department,
         "AccountId" : facility.delivery_partner,
         "Trainee_Id__c": educator.uniqueId,
-        "RecordTypeId": Meteor.settings.CONTACT_RECORD_TYPE,
-        "Is_Nurse_Educator_Trainee__c": true,
+        "RecordTypeId": Meteor.settings.CONTACT_RECORD_TYPE
       }
     )
 

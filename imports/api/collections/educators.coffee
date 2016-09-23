@@ -8,11 +8,13 @@ Educators = new Mongo.Collection Meteor.settings.public.educators_collection
 EducatorsSchema = new SimpleSchema
   last_name:
     type: String
-    optional: true
+    defaultValue: ""
   first_name:
     type: String
+    defaultValue: ""
   department:
     type: String
+    defaultValue: ""
   facility_salesforce_id:
     type: String
     defaultValue: ""
@@ -24,11 +26,12 @@ EducatorsSchema = new SimpleSchema
     defaultValue: ""
   facility_name:
     type: String
+    defaultValue: ""
   phone:
     type: Number
+    defaultValue: ""
   uniqueId:
     type: String
-    optional: true
     label: "Unique Id"
 
 Educators.attachSchema EducatorsSchema
