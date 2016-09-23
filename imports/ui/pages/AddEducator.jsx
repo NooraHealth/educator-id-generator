@@ -69,7 +69,7 @@ var AddEducatorPage = React.createClass({
           Meteor.setTimeout( ()=> { 
             console.log("About to show the popup!!!");
             swal(options, callback);
-          }, 10 );
+          }, 100 );
         };
 
         //Meteor.setTimeout(function(){ swal("SOMETHING"); }, 1000);
