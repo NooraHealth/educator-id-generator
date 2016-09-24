@@ -65,7 +65,7 @@ Meteor.methods
         "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",
         "Facility__c" : educator.facility_salesforce_id,
         "Contact__c" : educator.contact_salesforce_id,
-        "Department__c": edjucator.department,
+        "Department__c": educator.department,
         "Role_With_Noora_Program__c": Meteor.settings.FACILITY_ROLE_TYPE,
       }
     )
@@ -87,9 +87,6 @@ Meteor.methods
   "createContactsInSalesforce": ( educators )->
     mapped = educators.map( (educator) ->
       facility = Facilities.findOne { salesforce_id: educator.facility_salesforce_id }
-      console.log "This is the delivery_partner id"
-      console.log facility.delivery_partner
-      console.log facility.delivery_partner
       lastName = educator.last_name
       firstName = educator.first_name
       if not lastName or lastName is ""

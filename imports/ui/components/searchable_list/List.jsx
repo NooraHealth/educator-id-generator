@@ -51,9 +51,6 @@ var SearchableList = React.createClass({
   },
 
   render(){
-    console.log("rendering");
-    console.log(this.props.items);
-
     const search = this.state.search.toLowerCase();
     var filtered = this.props.items.filter(function( item ){
       text = item.title + item.after;

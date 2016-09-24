@@ -33,6 +33,7 @@ EducatorsSchema = new SimpleSchema
   uniqueId:
     type: String
     label: "Unique Id"
+    optional: true
 
 Educators.attachSchema EducatorsSchema
 
