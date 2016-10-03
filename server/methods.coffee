@@ -1,4 +1,5 @@
 { Educators } = require "../imports/api/collections/educators.coffee"
+{ BackupEducators } = require "../imports/api/collections/educators.coffee"
 { UniqueID } = require "../imports/api/collections/unique_id.coffee"
 { Facilities } = require "../imports/api/collections/facilities.coffee"
 { isInt } = require "./utils"
@@ -14,9 +15,12 @@ Meteor.methods
 
   "updateEducatorsInMongo": ->
     educators = Meteor.call("getEducatorsFromSalesforce")
+    console.log "The educators!!"
     for educator in educators
-      if not Educators.findOne { contact_salesforce_id: educator.Id }
+      if not Educators.findOne { uniqueId: educator.Trainee_ID__c }
         phone = if isInt( educator.MobilePhone ) then parseInt(educator.MobilePhone) else null
+        console.log "About to insert this"
+        console.log educator
         Educators.insert {
           last_name: educator.LastName or ""
           first_name: educator.FirstName or ""
@@ -28,17 +32,14 @@ Meteor.methods
 
   "getFacilitiesFromSalesforce": ->
     result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c"
-    return result.response.records
+    return result?.response?.records
 
   "getEducatorsFromSalesforce": ->
     result = Salesforce.query "SELECT Id, FirstName, LastName, MobilePhone, Department, Trainee_Id__c FROM Contact WHERE Trainee_Id__c != ''"
-    return result.response.records
-
-  "getNurseEducatorsFromSalesforce": ->
-    result = Salesforce.query "SELECT Contact FROM Condition_Operation_Role__c"
-    return result.response.records
+    return result?.response?.records
 
   "insertEducator": ( educator )->
+    BackupEducators.insert educator
     return Educators.insert educator
 
   "getUniqueId": ( facilityName )->
@@ -60,6 +61,8 @@ Meteor.methods
     return initials.join("") + result.currentUniqueID
 
   "createFacilityRolesInSalesforce": ( educators )->
+    console.log "Creating facility roles for"
+    console.log educators
     mapped = educators.map( (educator) ->
       return {
         "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",
@@ -82,9 +85,12 @@ Meteor.methods
           Educators.update { _id: educator._id }, { $set: { facility_role_salesforce_id: inserted.id }}
 
     #insert into the Salesforce database
-    Salesforce.sobject("Facility_Role__c").create mapped, callback.bind(this)
+    for facility in mapped
+      Salesforce.sobject("Facility_Role__c").create facility, callback.bind(this)
 
   "createContactsInSalesforce": ( educators )->
+    console.log "Creating Contacts in Salesforce"
+    console.log educators
     mapped = educators.map( (educator) ->
       facility = Facilities.findOne { salesforce_id: educator.facility_salesforce_id }
       lastName = educator.last_name
@@ -116,4 +122,5 @@ Meteor.methods
           Educators.update { _id: educator._id }, { $set: { contact_salesforce_id: inserted.id }}
 
     #insert into the Salesforce database
-    Salesforce.sobject("Contact").create mapped, callback.bind(this)
+    for educator in mapped
+      Salesforce.sobject("Contact").create educator, callback.bind(this)
