@@ -80,6 +80,8 @@ Meteor.methods
       else
         console.log("Inserted facility role successfully")
         console.log("The resturn", ret)
+        if not Array.isArray ret then ret = [ret]
+        console.log("The second ret (should be array) ", ret)
         for inserted, i in ret
           educator = educators[i]
           Educators.update { _id: educator._id }, { $set: { facility_role_salesforce_id: inserted.id }}
@@ -117,6 +119,8 @@ Meteor.methods
       else
         console.log("Inserted successfully")
         console.log("The resturn", ret)
+        if not Array.isArray ret then ret = [ret]
+        console.log "This is now ret ", ret
         for inserted, i in ret
           educator = educators[i]
           Educators.update { _id: educator._id }, { $set: { contact_salesforce_id: inserted.id }}
