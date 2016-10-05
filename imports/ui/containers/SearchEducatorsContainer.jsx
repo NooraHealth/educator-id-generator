@@ -2,9 +2,12 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { SearchableList } from '../components/searchable_list/List.jsx';
 import { Educators } from '../../api/collections/educators.coffee';
 
-export default SearchEducatorsContainer = createContainer(() => {
+export default SearchEducatorsContainer = createContainer(( params ) => {
   // Do all your reactive data access in this method.
   // Note that this subscription will get cleaned up when your component is unmounted
+
+  const { currentFacilityId, currentFacilityName } = params;
+
   var handle = Meteor.subscribe("educators.all");
 
   this._onSelect = function() {};
@@ -19,12 +22,12 @@ export default SearchEducatorsContainer = createContainer(() => {
       };
     });
   };
-  
+
   return {
     loading: ! handle.ready(),
-    items: _getItems( Educators.find({}).fetch() ),
+    items: _getItems( Educators.find({ facility_salesforce_id: currentFacilityId }).fetch() ),
     onSelect: this._onSelect,
-    searchBarPlaceholder: " Search by Name or ID ",
+    searchBarPlaceholder: currentFacilityName + ": Search by Name or ID ",
   };
 }, SearchableList);
 

@@ -8,7 +8,7 @@ import { CurrentFacilityInfo } from '../components/shared/currentFacilityInfo.js
 
 var AddEducatorPage = React.createClass({
 
-  propTypes: { 
+  propTypes: {
     currentFacilityId: React.PropTypes.string,
     currentFacilityName: React.PropTypes.string
   },
@@ -66,7 +66,7 @@ var AddEducatorPage = React.createClass({
         }
 
         const showPopup = ( options, callback )=> {
-          Meteor.setTimeout( ()=> { 
+          Meteor.setTimeout( ()=> {
             console.log("About to show the popup!!!");
             swal(options, callback);
           }, 100 );
@@ -121,7 +121,7 @@ var AddEducatorPage = React.createClass({
       this.setState({ [field]: event.target.value});
     }
   },
-    
+
   componentDidMount() {
     App.getF7App().addView("#add_educator_view");
   },
@@ -136,31 +136,31 @@ var AddEducatorPage = React.createClass({
       <div id="add_educator_view" className="view view-main">
         <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
           <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
-          <Form.Input 
-            type='text' 
+          <Form.Input
+            type='text'
             key= 'educator_first_name'
             placeholder="First Name"
             value={ this.state.first_name }
             onChange={ this.handleChange("first_name") }
           />
-          <Form.Input 
-            type='text' 
+          <Form.Input
+            type='text'
             key= 'educator_last_name'
             placeholder="Last Name"
             value={ this.state.last_name }
             onChange={ this.handleChange("last_name") }
-            
+
           />
-          <Form.Input 
-            type='tel' 
+          <Form.Input
+            type='tel'
             key= 'educator_phone'
             value={ this.state.phone }
             placeholder="Phone"
             onChange={ this.handleChange("phone") }
-            
+
           />
-          <Form.Input 
-            type='text' 
+          <Form.Input
+            type='text'
             key= 'educator_department'
             placeholder="Department"
             value={ this.state.department }

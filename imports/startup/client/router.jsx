@@ -38,7 +38,7 @@ FlowRouter.route('/addEducator', {
     currentFacilityName = Session.get("current_facility_name");
     mount( MainLayout, {
       header: <BackButton key='back_button'/>,
-      content: <AddEducatorPage key='add_educator_page' 
+      content: <AddEducatorPage key='add_educator_page'
         currentFacilityName={ currentFacilityName }
         currentFacilityId={ currentFacilityId }
       />
@@ -56,9 +56,14 @@ FlowRouter.route('/selectFacility', {
 
 FlowRouter.route('/searchEducators', {
   action: function(){
+    currentFacilityId = Session.get("current_facility_id");
+    currentFacilityName = Session.get("current_facility_name");
     mount( MainLayout, {
       header: <BackButton key='back_button'/>,
-      content: <SearchEducatorsContainer/>
+      content: <SearchEducatorsContainer
+        currentFacilityName={ currentFacilityName }
+        currentFacilityId={ currentFacilityId }
+    />
     });
   }
 });
