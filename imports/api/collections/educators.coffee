@@ -19,18 +19,23 @@ EducatorsSchema = new SimpleSchema
   facility_salesforce_id:
     type: String
     defaultValue: ""
+    optional: true
   facility_role_salesforce_id:
     type: String
     defaultValue: ""
+    optional: true
   contact_salesforce_id:
     type: String
     defaultValue: ""
+    optional: true
   facility_name:
     type: String
     defaultValue: ""
+    optional: true
   phone:
     type: Number
     defaultValue: ""
+    optional: true
   uniqueId:
     type: String
     label: "Unique Id"

@@ -11,6 +11,7 @@ class App
       @f7 = new Framework7(
         material: true
         router:false
+        fastClicks: false
       )
 
     getF7App: ->
@@ -18,8 +19,3 @@ class App
 
 
 module.exports.App = App.get()
-
-
-
-
-

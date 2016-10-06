@@ -64,67 +64,70 @@ Meteor.methods
     console.log "Creating facility roles for"
     console.log educators
     mapped = educators.map( (educator) ->
+      console.log "The educator"
+      console.log educator
       return {
-        "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",
-        "Facility__c" : educator.facility_salesforce_id,
-        "Contact__c" : educator.contact_salesforce_id,
-        "Department__c": educator.department,
-        "Role_With_Noora_Program__c": Meteor.settings.FACILITY_ROLE_TYPE,
+        educator: educator
+        salesforce_role: {
+          "Name" : "Educator Trainee -- #{ educator.first_name } #{ educator.last_name }",
+          "Facility__c" : educator.facility_salesforce_id,
+          "Contact__c" : educator.contact_salesforce_id,
+          "Department__c": educator.department,
+          "Role_With_Noora_Program__c": Meteor.settings.FACILITY_ROLE_TYPE,
+        }
       }
     )
 
-    callback = Meteor.bindEnvironment ( err, ret ) ->
+    callback = Meteor.bindEnvironment ( educator, err, ret ) ->
       if err
         console.log "Error inserting facility role into Salesforce"
         console.log err
       else
         console.log("Inserted facility role successfully")
         console.log("The resturn", ret)
-        if not Array.isArray ret then ret = [ret]
-        console.log("The second ret (should be array) ", ret)
-        for inserted, i in ret
-          educator = educators[i]
-          Educators.update { _id: educator._id }, { $set: { facility_role_salesforce_id: inserted.id }}
+        Educators.update { _id: educator._id }, { $set: { facility_role_salesforce_id: ret.id }}
 
     #insert into the Salesforce database
-    for facility in mapped
-      Salesforce.sobject("Facility_Role__c").create facility, callback.bind(this)
+    for role in mapped
+      console.log role
+      Salesforce.sobject("Facility_Role__c").create role.salesforce_role, callback.bind(this, role.educator)
 
   "createContactsInSalesforce": ( educators )->
     console.log "Creating Contacts in Salesforce"
     console.log educators
     mapped = educators.map( (educator) ->
-      facility = Facilities.findOne { salesforce_id: educator.facility_salesforce_id }
+      facility = Facilities.findOne {
+        salesforce_id: educator.facility_salesforce_id
+      }
       lastName = educator.last_name
       firstName = educator.first_name
       if not lastName or lastName is ""
         lastName = educator.first_name
         firstName = ""
-    
+
       return {
-        "LastName" : lastName,
-        "FirstName" : firstName,
-        "MobilePhone" : educator.phone,
-        "Department" : educator.department,
-        "AccountId" : facility.delivery_partner,
-        "Trainee_Id__c": educator.uniqueId,
-        "RecordTypeId": Meteor.settings.CONTACT_RECORD_TYPE
+        educator: educator
+        salesforce_contact: {
+          "LastName" : lastName,
+          "FirstName" : firstName,
+          "MobilePhone" : educator.phone,
+          "Department" : educator.department,
+          "AccountId" : facility.delivery_partner,
+          "Trainee_Id__c": educator.uniqueId,
+          "RecordTypeId": Meteor.settings.CONTACT_RECORD_TYPE
+        }
       }
     )
 
-    callback = Meteor.bindEnvironment ( err, ret ) ->
+    callback = Meteor.bindEnvironment ( educator, err, ret ) ->
       if err
-        console.log "Error inserting into Salesforce"
         console.log err
       else
-        console.log("Inserted successfully")
         console.log("The resturn", ret)
-        if not Array.isArray ret then ret = [ret]
-        console.log "This is now ret ", ret
-        for inserted, i in ret
-          educator = educators[i]
-          Educators.update { _id: educator._id }, { $set: { contact_salesforce_id: inserted.id }}
+        console.log "the educator"
+        console.log educator
+        Educators.update { _id: educator._id }, { $set: { contact_salesforce_id: ret.id }}
 
     #insert into the Salesforce database
     for educator in mapped
-      Salesforce.sobject("Contact").create educator, callback.bind(this)
+      Salesforce.sobject("Contact").create educator.salesforce_contact, callback.bind(this, educator.educator)
