@@ -67,7 +67,6 @@ var AddEducatorPage = React.createClass({
 
         const showPopup = ( options, callback )=> {
           Meteor.setTimeout( ()=> {
-            console.log("About to show the popup!!!");
             swal(options, callback);
           }, 100 );
         };
@@ -93,7 +92,6 @@ var AddEducatorPage = React.createClass({
                 _this.setState({ loading: false });
               } else {
                 const text = "Nurse Educator ID: "  + uniqueId;
-                console.log("About to make a swal " + text);
                 showPopup({
                   type: "success",
                   title: text
