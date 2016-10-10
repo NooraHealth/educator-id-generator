@@ -6,36 +6,42 @@
 
 Meteor.methods
 
-  "updateFacilitiesInMongo": ->
-    facilities = Meteor.call("getFacilitiesFromSalesforce")
-    console.log facilities
+  "importFacilities": ->
+    facilities = Meteor.call("fetchFacilitiesFromSalesforce");
     for facility in facilities
       if not Facilities.findOne { salesforce_id: facility.Id }
         Facilities.insert { name: facility.Name, salesforce_id: facility.Id, delivery_partner: facility.Delivery_Partner__c }
 
-  "updateEducatorsInMongo": ->
-    educators = Meteor.call("getEducatorsFromSalesforce")
-    console.log "The educators!!"
-    for educator in educators
+  "importEducators": ->
+    records = Meteor.call("fetchEducatorsFromSalesforce")
+    for record in records
+      educator = record.Contact__r
+      facility = record.Facility__r
       if not Educators.findOne { uniqueId: educator.Trainee_ID__c }
         phone = if isInt( educator.MobilePhone ) then parseInt(educator.MobilePhone) else null
-        console.log "About to insert this"
-        console.log educator
         Educators.insert {
           last_name: educator.LastName or ""
           first_name: educator.FirstName or ""
           contact_salesforce_id: educator.Id
           department: educator.Department or ""
+          salesforce_facility_id: facility.Id
+          facility_role_salesforce_id: record.Id
+          facility_salesforce_id: facility.Id
+          facility_name: facility.Name
           phone: phone or 0
           uniqueId: educator.Trainee_ID__c
         }
 
-  "getFacilitiesFromSalesforce": ->
+  "fetchFacilitiesFromSalesforce": ->
     result = Salesforce.query "SELECT Id, Name, Delivery_Partner__c FROM Facility__c"
     return result?.response?.records
 
-  "getEducatorsFromSalesforce": ->
-    result = Salesforce.query "SELECT Id, FirstName, LastName, MobilePhone, Department, Trainee_Id__c FROM Contact WHERE Trainee_Id__c != ''"
+  "fetchEducatorsFromSalesforce": ->
+    # result = Salesforce.query "SELECT Id, FirstName, LastName, MobilePhone, Department, Trainee_Id__c FROM Contact WHERE Trainee_Id__c != ''"
+    result = Salesforce.query "SELECT Id, Contact__c, Contact__r.id,
+      Contact__r.MobilePhone, Contact__r.FirstName, Contact__r.LastName, Contact__r.Department,
+      Contact__r.Trainee_Id__c, Facility__c, Facility__r.Name, Facility__r.id
+      FROM Facility_Role__c WHERE Role_With_Noora_Program__c = 'Trainee'"
     return result?.response?.records
 
   "insertEducator": ( educator )->
@@ -51,7 +57,6 @@ Meteor.methods
       console.log result
     )
 
-    console.log facilityName
     getInitials = ( name )->
       words = name.split " "
       letters = words.map (word)->
@@ -60,12 +65,8 @@ Meteor.methods
     initials = getInitials( facilityName )
     return initials.join("") + result.currentUniqueID
 
-  "createFacilityRolesInSalesforce": ( educators )->
-    console.log "Creating facility roles for"
-    console.log educators
+  "exportFacilityRoles": ( educators )->
     mapped = educators.map( (educator) ->
-      console.log "The educator"
-      console.log educator
       return {
         educator: educator
         salesforce_role: {
@@ -83,18 +84,13 @@ Meteor.methods
         console.log "Error inserting facility role into Salesforce"
         console.log err
       else
-        console.log("Inserted facility role successfully")
-        console.log("The resturn", ret)
         Educators.update { _id: educator._id }, { $set: { facility_role_salesforce_id: ret.id }}
 
     #insert into the Salesforce database
     for role in mapped
-      console.log role
       Salesforce.sobject("Facility_Role__c").create role.salesforce_role, callback.bind(this, role.educator)
 
-  "createContactsInSalesforce": ( educators )->
-    console.log "Creating Contacts in Salesforce"
-    console.log educators
+  "exportNurseEducators": ( educators )->
     mapped = educators.map( (educator) ->
       facility = Facilities.findOne {
         salesforce_id: educator.facility_salesforce_id
@@ -123,9 +119,6 @@ Meteor.methods
       if err
         console.log err
       else
-        console.log("The resturn", ret)
-        console.log "the educator"
-        console.log educator
         Educators.update { _id: educator._id }, { $set: { contact_salesforce_id: ret.id }}
 
     #insert into the Salesforce database
