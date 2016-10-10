@@ -45,5 +45,5 @@ Educators.attachSchema EducatorsSchema
 BackupEducators.attachSchema EducatorsSchema
 
 module.exports.Educators = Educators
-module.exports.BackupEducators = BackupEducators
 module.exports.EducatorsSchema = EducatorsSchema
+module.exports.BackupEducators = BackupEducators
