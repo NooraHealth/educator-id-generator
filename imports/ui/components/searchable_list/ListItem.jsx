@@ -5,7 +5,7 @@ import React from 'react';
 
 var ListItem = React.createClass({
 
-  propTypes: { 
+  propTypes: {
     title: React.PropTypes.string,
     after: React.PropTypes.string,
     value: React.PropTypes.string,
@@ -20,7 +20,7 @@ var ListItem = React.createClass({
       onSelect: null
     }
   },
-  
+
   handleSelect( type ){
     var that = this
     return function() {
@@ -33,7 +33,7 @@ var ListItem = React.createClass({
     return (
       <li>
         <div className="item-content"
-          onClick={ onSelect }   
+          onClick={ onSelect }
         >
           <div className="item-inner">
             <div className="item-title">

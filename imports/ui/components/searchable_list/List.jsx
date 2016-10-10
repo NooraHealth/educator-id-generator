@@ -5,7 +5,7 @@ import { ListItem } from './ListItem.jsx';
 import { SearchBar } from './SearchBar.jsx';
 
 var SearchableList = React.createClass({
-                                        
+
   propTypes: {
     items: React.PropTypes.shape({
       value: React.PropTypes.string,
@@ -88,8 +88,8 @@ var SearchableList = React.createClass({
         </div>
       </div>
 
-    ) 
-  
+    )
+
   }
 });
 

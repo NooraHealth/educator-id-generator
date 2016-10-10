@@ -5,7 +5,7 @@ import React from 'react';
 
 var Input = React.createClass({
 
-  propTypes: { 
+  propTypes: {
     value: React.PropTypes.string,
     icon: React.PropTypes.string,
     onChange: React.PropTypes.func

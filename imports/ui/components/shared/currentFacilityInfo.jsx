@@ -13,7 +13,7 @@ var CurrentFacilityInfo = React.createClass({
       name: ""
     }
   },
-  
+
   render(){
     return (
       <p> Current Facility: <em> { this.props.name }  </em><a href="/selectFacility"> Change </a></p>
@@ -22,4 +22,3 @@ var CurrentFacilityInfo = React.createClass({
 });
 
 export { CurrentFacilityInfo };
-

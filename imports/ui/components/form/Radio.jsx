@@ -35,7 +35,7 @@ var RadioGroup = React.createClass({
   componentWillReceiveProps(nextProps) {
     var currentValueLink = this._getValueLink(this.props),
         nextValueLink = this._getValueLink(nextProps);
-    
+
     if (currentValueLink.value !== nextValueLink.value) {
       var node = jQuery(this.getDOMNode());
       node.val(nextValueLink.value);
@@ -50,7 +50,7 @@ var RadioGroup = React.createClass({
       let ref = 'radio-' + i;
       if(option.value == that._getValueLink(that.props).value){
         checked = true;
-      } 
+      }
 
       return < Form.RadioGroup.Radio
         key={ ref }
@@ -65,7 +65,7 @@ var RadioGroup = React.createClass({
       <div>
         { options }
       </div>
-  
+
     )
   }
 });
@@ -85,7 +85,7 @@ var Radio = React.createClass({
       option: { title: "", value: "" },
       checked: false,
       onChange: function() { return null }
-    } 
+    }
   },
 
   render(){

@@ -4,6 +4,7 @@
 .uploads/
 settings.json
 settings_production.json
+settings_dev.json
 package.json
 public/
 mup.json

@@ -3,7 +3,7 @@
 import React from 'react';
 
 var SearchBar = React.createClass({
-                                        
+
   propTypes: {
     type: React.PropTypes.string,
     classes: React.PropTypes.string,
@@ -18,19 +18,19 @@ var SearchBar = React.createClass({
       placeholder: ""
     }
   },
-  
+
   getInitialState(){ return {} },
 
   render(){
     var { type, classes, placeholder, onChange } = this.props;
     return (
-      <input 
+      <input
         type={ type }
-        className={ classes } 
+        className={ classes }
         placeholder={ placeholder }
         onChange={ onChange }
         />
-    ) 
+    )
   }
 });
 
