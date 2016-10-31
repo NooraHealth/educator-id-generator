@@ -8,6 +8,7 @@ Meteor.methods
 
   "importFacilities": ->
     facilities = Meteor.call("fetchFacilitiesFromSalesforce");
+    console.log facilities
     for facility in facilities
       if not Facilities.findOne { salesforce_id: facility.Id }
         Facilities.insert { name: facility.Name, salesforce_id: facility.Id, delivery_partner: facility.Delivery_Partner__c }
@@ -91,6 +92,8 @@ Meteor.methods
       Salesforce.sobject("Facility_Role__c").create role.salesforce_role, callback.bind(this, role.educator)
 
   "exportNurseEducators": ( educators )->
+    console.log "Exporting nurse educaotrs"
+    console.log educators
     mapped = educators.map( (educator) ->
       facility = Facilities.findOne {
         salesforce_id: educator.facility_salesforce_id
