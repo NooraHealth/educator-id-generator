@@ -3,6 +3,7 @@
 /server/startup.coffee
 .uploads/
 settings.json
+settings_dev.json
 settings_production.json
 package.json
 public/
