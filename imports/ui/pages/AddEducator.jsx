@@ -10,7 +10,8 @@ var AddEducatorPage = React.createClass({
 
   propTypes: {
     currentFacilityId: React.PropTypes.string,
-    currentFacilityName: React.PropTypes.string
+    currentFacilityName: React.PropTypes.string,
+    departments: React.PropTypes.array
   },
 
   defaultProps() {
