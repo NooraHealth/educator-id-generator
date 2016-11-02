@@ -123,16 +123,12 @@ var AddEducatorPage = React.createClass({
     }
   },
 
-  componentDidMount() {
-    var departments = this.props.departments;
-  },
 
   render() {
 
     let submitText = "GET EDUCATOR ID";
     if( this.state.loading )
       submitText = "...loading..."
-
     return (
       <div>
         <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
@@ -163,14 +159,12 @@ var AddEducatorPage = React.createClass({
             onChange={ this.handleChange("phone") }
 
           />
-          <Form.Input
-            type='text'
+          <Form.Search
             key= 'educator_department'
-            id= 'educator_department'
             placeholder="Department"
             value={ this.state.department }
-            icon="hospital icon"
             onChange={ this.handleChange("department") }
+            source={ this.props.departments }
           />
       </Form>
       </div>

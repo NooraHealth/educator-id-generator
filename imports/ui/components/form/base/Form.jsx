@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Input } from '../Input.jsx';
+import { Search } from '../Search.jsx';
 
 var Form = React.createClass({
   propTypes: {
@@ -38,5 +39,6 @@ var Form = React.createClass({
 
 
 Form.Input = Input;
+Form.Search = Search;
 
 export { Form };

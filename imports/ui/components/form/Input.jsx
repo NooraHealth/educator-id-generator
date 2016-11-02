@@ -21,7 +21,6 @@ var Input = React.createClass({
 
   render(){
     var { title, icon, value, onChange, ...inputProps } = this.props;
-    console.log(icon);
     return (
       <div className="ui fluid left icon input">
         <i className={ icon }></i>

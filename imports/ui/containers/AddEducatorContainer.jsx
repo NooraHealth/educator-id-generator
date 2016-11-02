@@ -18,7 +18,7 @@ export default AddEducatorContainer = createContainer(( params ) => {
     filtered = []
     departments.forEach( function(department){
       if( filtered.indexOf(department) == -1){
-        filtered.push( department );
+        filtered.push({ title: department });
       };
     });
     return filtered;
