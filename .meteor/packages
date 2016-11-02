@@ -11,14 +11,12 @@ session@1.1.7                 # Client-side reactive dictionary for your app
 jquery@1.11.10                  # Helpful client-side library
 tracker@1.1.1                 # Meteor's client-side reactive programming library
 
-standard-minifiers@1.0.6      # JS/CSS minifiers run for production mode
 es5-shim@4.6.15                # ECMAScript 5 compatibility for older browsers.
 
 autopublish@1.0.7             # Publish all data to the clients (for prototyping)
 coffeescript@1.11.1_2
 aldeed:simple-schema
 ground:db
-fortawesome:fontawesome
 momentjs:moment
 percolatestudio:segment.io
 arillo:flow-router-helpers
@@ -33,5 +31,8 @@ react-meteor-data
 crosswalk@1.7.0
 ecmascript@0.5.9
 shell-server
-loftsteinn:framework7-material
-fourseven:scss
+semantic:ui
+less
+juliancwirko:postcss
+standard-minifier-js
+semantic:ui-icon

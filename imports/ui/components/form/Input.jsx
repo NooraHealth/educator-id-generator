@@ -21,14 +21,15 @@ var Input = React.createClass({
 
   render(){
     var { title, icon, value, onChange, ...inputProps } = this.props;
+    console.log(icon);
     return (
-      <div className="item-content">
-        <div className="item-media"><i className={ icon }></i></div>
-        <div className="item-inner">
-          <div className="item-input">
-            <input { ...inputProps } value={ value } onChange={ onChange } />
-          </div>
-        </div>
+      <div className="ui fluid left icon input">
+        <i className={ icon }></i>
+        <input
+          { ...inputProps }
+          value={ value }
+          onChange={ onChange }
+        />
       </div>
     );
   }

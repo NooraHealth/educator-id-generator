@@ -6,7 +6,7 @@ import { CurrentFacilityInfo } from '../components/shared/currentFacilityInfo.js
 
 var HomePage = React.createClass({
 
-  propTypes: { 
+  propTypes: {
     currentFacilityName: React.PropTypes.string
   },
 
@@ -18,17 +18,17 @@ var HomePage = React.createClass({
 
   render(){
     return (
-      <div className="list-block inset">
+      <div>
         <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
-        <p><a 
+        <p><a
           href="/addEducator"
-          className="button button-round button-fill large-button"
+          className="fluid ui blue button"
           > Add Educator
         </a></p>
 
-        <p><a 
+        <p><a
           href="/searchEducators"
-          className="button button-round button-fill large-button"
+          className="fluid ui blue button"
           > Search Educators
         </a></p>
       </div>
@@ -37,4 +37,3 @@ var HomePage = React.createClass({
 });
 
 export { HomePage };
-

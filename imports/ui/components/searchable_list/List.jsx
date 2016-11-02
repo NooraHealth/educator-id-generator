@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ListItem } from './ListItem.jsx';
-import { SearchBar } from './SearchBar.jsx';
+import { Input } from '../form/Input.jsx';
 
 var SearchableList = React.createClass({
 
@@ -60,32 +60,16 @@ var SearchableList = React.createClass({
     var components = this._getListItems(filtered);
     return (
       <div>
-        <div className='list-block inset'>
-          <ul>
-            <li>
-              <div className="item-content">
-                <div className="item-media"><i className="fa fa-search fa-2x"></i></div>
-                <div className="item-inner">
-                  <div className="item-input">
-                    <SearchBar
-                      type='text'
-                      classes='col-75'
-                      placeholder={ this.props.searchBarPlaceholder }
-                      onChange={ this._handleChange }
-                      />
-                  </div>
-                </div>
-              </div>
-            </li>
-            <hr/>
-          </ul>
-        </div>
-
-        <div className="list-block">
-          <ul>
+        <h1 className='ui header'>{ this.props.header }</h1>
+          <Input
+            type='text'
+            placeholder={ this.props.searchBarPlaceholder }
+            onChange={ this._handleChange }
+            icon='search icon'
+            />
+          <div className="ui segments middle aligned selection list">
             { components }
-          </ul>
-        </div>
+          </div>
       </div>
 
     )

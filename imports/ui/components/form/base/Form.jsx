@@ -24,15 +24,13 @@ var Form = React.createClass({
     let onSubmit = this.props.onSubmit;
     let submitButtonContent = this.props.submitButtonContent;
     let children = React.Children.map( this.props.children, function( child ){
-      return <div><hr/><li> {child} </li></div>
+      return <div className="ui segment"> {child} </div>
     });
 
     return (
-      <div className="list-block inset">
-        <ul>
+      <div className="ui segments">
           { children }
-        </ul>
-        <p><a key='submitbutton' className="button button-round button-fill button-big" onClick={ onSubmit } disabled={ this.props.disabled }>{ this.props.submitButtonContent }</a></p>
+        <p><a key='submitbutton' className="ui fluid blue button" onClick={ onSubmit } disabled={ this.props.disabled }>{ this.props.submitButtonContent }</a></p>
       </div>
     )
   }
