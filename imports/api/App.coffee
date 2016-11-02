@@ -1,3 +1,4 @@
+require 'meteor/loftsteinn:framework7-material'
 
 class App
   @get: ->
@@ -8,11 +9,10 @@ class App
     constructor: ->
 
     initialize: ->
-      @f7 = new Framework7(
+      @f7 = new Framework7({
         material: true
-        router:false
-        fastClicks: false
-      )
+      })
+      console.log @f7
 
     getF7App: ->
       return @f7

@@ -124,7 +124,28 @@ var AddEducatorPage = React.createClass({
   },
 
   componentDidMount() {
+    var departments = this.props.departments;
+    console.log("in componentsDidUpdate");
     App.getF7App().addView("#add_educator_view");
+    App.getF7App().autocomplete({
+      input: '#educator_department',
+      openIn: 'dropdown',
+      source: (function (departments, autocomplete, query, render) {
+        var results = [];
+        // Find matched items
+        console.log(departments);
+        console.log(query);
+        console.log(autocomplete);
+        console.log(render);
+        for (var i = 0; i < departments.length; i++) {
+          if (departments[i].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(departments[i]);
+        }
+        // Render items by passing array with result items
+        console.log("about to render these results");
+        console.log(results);
+        render(results);
+      }).bind(this, departments)
+    });
   },
 
   render() {
@@ -135,39 +156,50 @@ var AddEducatorPage = React.createClass({
 
     return (
       <div id="add_educator_view" className="view view-main">
-        <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
-          <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
-          <Form.Input
-            type='text'
-            key= 'educator_first_name'
-            placeholder="First Name"
-            value={ this.state.first_name }
-            onChange={ this.handleChange("first_name") }
-          />
-          <Form.Input
-            type='text'
-            key= 'educator_last_name'
-            placeholder="Last Name"
-            value={ this.state.last_name }
-            onChange={ this.handleChange("last_name") }
+        <div className="page">
+          <div className="page-content">
+            <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
+              <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
+              <Form.Input
+                type='text'
+                key= 'educator_first_name'
+                placeholder="First Name"
+                value={ this.state.first_name }
+                onChange={ this.handleChange("first_name") }
+              />
+              <Form.Input
+                type='text'
+                key= 'educator_last_name'
+                placeholder="Last Name"
+                value={ this.state.last_name }
+                onChange={ this.handleChange("last_name") }
 
-          />
-          <Form.Input
-            type='tel'
-            key= 'educator_phone'
-            value={ this.state.phone }
-            placeholder="Phone"
-            onChange={ this.handleChange("phone") }
+              />
+              <Form.Input
+                type='tel'
+                key= 'educator_phone'
+                value={ this.state.phone }
+                placeholder="Phone"
+                onChange={ this.handleChange("phone") }
 
-          />
-          <Form.Input
-            type='text'
-            key= 'educator_department'
-            placeholder="Department"
-            value={ this.state.department }
-            onChange={ this.handleChange("department") }
-          />
-        </Form>
+              />
+              <div className="list-block">
+                <ul>
+                  <li>
+                    <Form.Input
+                      type='text'
+                      key= 'educator_department'
+                      id= 'educator_department'
+                      placeholder="Department"
+                      value={ this.state.department }
+                      onChange={ this.handleChange("department") }
+                    />
+                  </li>
+                </ul>
+              </div>
+            </Form>
+          </div>
+        </div>
       </div>
     )
   }

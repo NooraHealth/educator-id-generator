@@ -1,15 +1,11 @@
-/*@import '_bourbon';*/
-/*@import '.meteor/local/build/programs/server/assets/packages/wolves_bourbon/bourbon/_bourbon';*/
 
-@import '_variables'; 
+@import '_variables';
 
 @import '_mixins';
 
 @import '_layout';
 
-/*@import 'default';*/
-
-/* -------------------------------- 
+/* --------------------------------
 
 Primary style
 
@@ -29,7 +25,6 @@ html {
 
 body {
   color: black;
-  /*background: $light-blue-1;*/
   margin-bottom: $footer-height;
   font-size: 20px;
   overflow: scroll;
@@ -37,7 +32,7 @@ body {
   a {
     color: lighten($primary-blue, 10%);
     text-decoration: none;
-    
+
     &:hover {
       color: $primary-blue;
       text-decoration: none;
@@ -106,8 +101,12 @@ a {
   overflow: visible !important;
 }
 
-/* -------------------------------- 
+/* --------------------------------
 
-Custom NH components 
+Custom F7 components
 
 --------------------------------*/
+
+.page {
+  position: relative !important;
+}

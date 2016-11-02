@@ -5,7 +5,7 @@ import { Input } from '../Input.jsx';
 
 var Form = React.createClass({
   propTypes: {
-    onSubmit: React.PropTypes.func, 
+    onSubmit: React.PropTypes.func,
     submitButtonContent: React.PropTypes.string,
     disabled: React.PropTypes.bool
   },
@@ -37,9 +37,8 @@ var Form = React.createClass({
     )
   }
 });
-  
+
 
 Form.Input = Input;
 
 export { Form };
-

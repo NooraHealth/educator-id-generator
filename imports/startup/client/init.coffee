@@ -3,5 +3,3 @@
 
 Meteor.startup ()->
   App.initialize()
-
-

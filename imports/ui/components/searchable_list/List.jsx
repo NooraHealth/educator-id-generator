@@ -53,7 +53,7 @@ var SearchableList = React.createClass({
   render(){
     const search = this.state.search.toLowerCase();
     var filtered = this.props.items.filter(function( item ){
-      text = item.title + item.after;
+      let text = item.title + item.after;
       return text.toLowerCase().indexOf(search) > -1;
     });
 
