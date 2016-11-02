@@ -1,0 +1,9 @@
+/*@import '../imports/style/scss/style.scss';*/
+
+.main.container {
+  margin-top: 7em;
+}
+
+.ui.search .prompt {
+  border-radius: 0;
+}

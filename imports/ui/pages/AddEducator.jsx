@@ -129,6 +129,9 @@ var AddEducatorPage = React.createClass({
     let submitText = "GET EDUCATOR ID";
     if( this.state.loading )
       submitText = "...loading..."
+    var source = this.props.departments.map( function(dept){
+        return { title: dept };
+    });
     return (
       <div>
         <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
@@ -164,7 +167,7 @@ var AddEducatorPage = React.createClass({
             placeholder="Department"
             value={ this.state.department }
             onChange={ this.handleChange("department") }
-            source={ this.props.departments }
+            source={ source }
           />
       </Form>
       </div>
