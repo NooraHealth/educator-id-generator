@@ -153,15 +153,6 @@ var AddEducatorPage = React.createClass({
             onChange={ this.handleChange("last_name") }
 
           />
-          <Form.Input
-            type='tel'
-            key= 'educator_phone'
-            value={ this.state.phone }
-            placeholder="Phone"
-            icon="call icon"
-            onChange={ this.handleChange("phone") }
-
-          />
           <Form.Search
             key= 'educator_department'
             placeholder="Department"
@@ -169,7 +160,16 @@ var AddEducatorPage = React.createClass({
             onChange={ this.handleChange("department") }
             source={ source }
           />
-      </Form>
+          <Form.Input
+              type='tel'
+              key= 'educator_phone'
+              value={ this.state.phone }
+              placeholder="Phone"
+              icon="call icon"
+              onChange={ this.handleChange("phone") }
+
+            />
+        </Form>
       </div>
     )
   }
