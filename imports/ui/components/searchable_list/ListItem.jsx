@@ -7,26 +7,22 @@ var ListItem = React.createClass({
 
   propTypes: {
     title: React.PropTypes.string,
-    after: React.PropTypes.string,
-    value: React.PropTypes.string,
-    onSelect: React.PropTypes.func
+    value: React.PropTypes.string
   },
 
   defaultProps() {
     return {
       title: "",
-      after: "",
-      value: "",
-      onSelect: null
+      value: ""
     }
   },
 
-  handleSelect( type ){
-    var that = this
-    return function() {
-      that.props.onSelect( that.props.value );
-    }
-  },
+  // handleSelect( type ){
+  //   const onSelect = this.props.onSelect;
+  //   return function() {
+  //     onSelect( that.props.value );
+  //   }
+  // },
 
   render(){
     var { title, after, onSelect } = this.props;

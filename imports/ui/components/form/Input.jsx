@@ -19,15 +19,21 @@ var Input = React.createClass({
     }
   },
 
+  _handleChange(onChange, e) {
+    if(e.target && e.target.value !== undefined) {
+      onChange(e.target.value);
+    }
+  },
+
   render(){
     var { title, icon, value, onChange, ...inputProps } = this.props;
     return (
-      <div className="ui fluid left icon input" onClick={ onChange }>
+      <div className="ui fluid left icon input" >
         <i className={ icon }></i>
         <input
           { ...inputProps }
           value={ value }
-          onInput={ onChange }
+          onInput={ this._handleChange.bind(this, onChange) }
         />
       </div>
     );

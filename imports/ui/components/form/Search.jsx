@@ -7,6 +7,7 @@ var Search = React.createClass({
 
   propTypes: {
     value: React.PropTypes.string,
+    label: React.PropTypes.string,
     icon: React.PropTypes.string,
     onChange: React.PropTypes.func,
     source: React.PropTypes.array
@@ -24,18 +25,20 @@ var Search = React.createClass({
     const changeInputValue = (function(e) {
       const activeResult = $(".result.active");
       const text = $(".result.active").text();
-      console.log("Text of active " + text);
-      console.log("Value " + this.props.value);
-      if( activeResult.length == 1 && text != this.props.value ){
-        this.props.onChange({ target: { value: text } });
+      const acceptedKeyCodes = [ 13, 40, 38 ];
+      if(
+        acceptedKeyCodes.indexOf(e.keyCode) != -1 &&
+        activeResult.length == 1 &&
+        text != this.props.value ){
+          this.props.onChange( text );
       }
     }).bind(this);
 
-    $(".prompt").keyup(changeInputValue);
+    $(this.input).keyup(changeInputValue);
   },
 
   componentDidUpdate() {
-    $('#search')
+    $(this.search)
       .search({
         source: this.props.source,
         searchFields: [
@@ -46,30 +49,55 @@ var Search = React.createClass({
       });
   },
 
-  handleChange( onValueChange, e ){
+  handleClick( onChange, e ){
     const onResultClicked = function(e) {
       let text = $(e.target).text();
-      onValueChange({ target: { value: text } });
+      onChange( text );
     };
 
-    $(".result").click(onResultClicked);
+    $(this.search).find(".result").click(onResultClicked);
+  },
+
+  handleChange( onChange, e ){
+    if(e.target && e.target.value !== undefined ) {
+      onChange(e.target.value);
+    }
   },
 
   render(){
-    var { value, onChange, source, ...inputProps } = this.props;
-    console.log("The value " +value);
+    var { label, icon, value, onChange, source, loading, ...inputProps } = this.props;
+    const getInputClasses = function() {
+      const defaultClasses = "ui fluid left ";
+      const type = (icon)? "icon": "labeled";
+      return defaultClasses + type + " input";
+    }
+    const getInputPrefix = function() {
+      if( icon ){
+        return <i className={icon}></i>;
+      } else {
+        return (
+          <div className="ui label">
+              { label }
+          </div>
+        )
+      }
+    }
     return (
-      <div id="search" className="ui search">
-        <div className="ui fluid left icon input">
+      <div
+        className="ui search"
+        ref={ (search)=> this.search = search }
+        >
+        <div className={ getInputClasses() }>
+          { getInputPrefix() }
           <input
             { ...inputProps }
             className="prompt"
             type="text"
             value={ value }
-            onBlur={ this.handleChange.bind(this, onChange) }
-            onChange={ onChange }
+            onBlur={ this.handleClick.bind(this, onChange) }
+            onChange={ this.handleChange.bind(this, onChange) }
+            ref={ (input) => this.input = input }
             />
-          <i className="search icon"></i>
         </div>
         <div className="results"></div>
       </div>

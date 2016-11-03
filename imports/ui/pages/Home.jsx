@@ -2,9 +2,8 @@
 
 //import { React } from 'react';
 import React from 'react';
-import { CurrentFacilityInfo } from '../components/shared/currentFacilityInfo.jsx';
 
-var HomePage = React.createClass({
+const HomePage = React.createClass({
 
   propTypes: {
     currentFacilityName: React.PropTypes.string
@@ -19,7 +18,6 @@ var HomePage = React.createClass({
   render(){
     return (
       <div>
-        <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
         <p><a
           href="/addEducator"
           className="fluid ui blue button"

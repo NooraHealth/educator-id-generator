@@ -29,21 +29,18 @@ var SearchableList = React.createClass({
     }
   },
 
-  _handleChange( event ){
-    this.setState({ search: event.target.value });
+  _handleChange( value ){
+    this.setState({ search: value });
   },
 
   _getListItems( items ){
-    var that = this;
-    let components = items.map( function( item ){
-
+    const that = this;
+    const components = items.map( function( item ){
       return (
         < ListItem
           key={ item.key }
           title={ item.title }
-          after={ item.after }
           value={ item.value }
-          onSelect={ that.props.onSelect.bind(that, item.value, item.title) }
         />
       )
     });

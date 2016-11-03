@@ -1,22 +1,19 @@
 'use strict';
 
-import { Form } from '../components/form/base/Form.jsx';
 import React from 'react';
-import { App } from '../../api/App.coffee';
+import { Form } from '../components/form/base/Form.jsx';
 import { EducatorsSchema } from '../../api/collections/educators.coffee';
-import { CurrentFacilityInfo } from '../components/shared/currentFacilityInfo.jsx';
+import { SelectFacilityContainer } from '../containers/SelectFacilityContainer.jsx';
 
 var AddEducatorPage = React.createClass({
 
   propTypes: {
-    currentFacilityId: React.PropTypes.string,
     currentFacilityName: React.PropTypes.string,
     departments: React.PropTypes.array
   },
 
   defaultProps() {
     return {
-      currentFacilityId: "",
       currentFacilityName: ""
     }
   },
@@ -37,7 +34,6 @@ var AddEducatorPage = React.createClass({
     const last_name = this.state.last_name;
     const phone = this.state.phone;
     const department = this.state.department;
-    const facilityId = this.props.currentFacilityId;
     const facilityName = this.props.currentFacilityName;
     var _this = this;
 
@@ -47,7 +43,6 @@ var AddEducatorPage = React.createClass({
       phone: phone,
       department: department,
       facility_name: facilityName,
-      facility_salesforce_id: facilityId
     };
 
     try {
@@ -68,7 +63,6 @@ var AddEducatorPage = React.createClass({
 
         const showPopup = ( options, callback )=> {
           Meteor.setTimeout( ()=> {
-            console.log("About to show the popup!!!");
             swal(options, callback);
           }, 100 );
         };
@@ -94,13 +88,11 @@ var AddEducatorPage = React.createClass({
                 _this.setState({ loading: false });
               } else {
                 const text = "Nurse Educator ID: "  + uniqueId;
-                console.log("About to make a swal " + text);
                 showPopup({
                   type: "success",
                   title: text
                 }, function() {
-                  _this.setState({ loading: false });
-                  FlowRouter.go("/");
+                  _this.setState(_this.getInitialState());
                 });
               }
             });
@@ -118,11 +110,8 @@ var AddEducatorPage = React.createClass({
   },
 
   handleChange(field) {
-    return (event) => {
-      console.log("CHANGING");
-      console.log("CHANGE");
-      console.log(event.target.value);
-      this.setState({ [field]: event.target.value});
+    return (value) => {
+      this.setState({ [field]: value});
     }
   },
 
@@ -138,7 +127,15 @@ var AddEducatorPage = React.createClass({
     return (
       <div>
         <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
-          <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
+          <SelectFacilityContainer/>
+          <Form.Search
+            key= 'educator_department'
+            placeholder="Department"
+            icon="search icon"
+            value={ this.state.department }
+            onChange={ this.handleChange("department") }
+            source={ source }
+          />
           <Form.Input
             type='text'
             key= 'educator_first_name'
@@ -155,13 +152,6 @@ var AddEducatorPage = React.createClass({
             value={ this.state.last_name }
             onChange={ this.handleChange("last_name") }
 
-          />
-          <Form.Search
-            key= 'educator_department'
-            placeholder="Department"
-            value={ this.state.department }
-            onChange={ this.handleChange("department") }
-            source={ source }
           />
           <Form.Input
               type='tel'

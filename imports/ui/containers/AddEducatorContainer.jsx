@@ -2,6 +2,7 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import { AddEducatorPage } from '../pages/AddEducator.jsx';
 import { Educators } from '../../api/collections/educators.coffee';
+import { AppConfig } from '../../api/AppConfig.coffee';
 
 export default AddEducatorContainer = createContainer(( params ) => {
   // Do all your reactive data access in this method.
@@ -26,7 +27,8 @@ export default AddEducatorContainer = createContainer(( params ) => {
 
   return {
     loading: ! handle.ready(),
-    departments: _getDepartments( Educators.find({ facility_salesforce_id: currentFacilityId }).fetch() ),
+    departments: _getDepartments( Educators.find({ facility_name: AppConfig.getFacilityName() }).fetch() ),
+    currentFacilityName: AppConfig.getFacilityName()
   };
 }, AddEducatorPage);
 

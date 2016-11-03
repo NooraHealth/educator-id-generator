@@ -12,7 +12,6 @@ generateUniqueId = ( facilityName )->
         return cleaned[0]?.toUpperCase()
 
     initials = getInitials( facilityName )
-    console.log result
     return initials.join("") + result.currentUniqueID
 
 
