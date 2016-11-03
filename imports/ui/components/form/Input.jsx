@@ -22,12 +22,12 @@ var Input = React.createClass({
   render(){
     var { title, icon, value, onChange, ...inputProps } = this.props;
     return (
-      <div className="ui fluid left icon input">
+      <div className="ui fluid left icon input" onClick={ onChange }>
         <i className={ icon }></i>
         <input
           { ...inputProps }
           value={ value }
-          onChange={ onChange }
+          onInput={ onChange }
         />
       </div>
     );

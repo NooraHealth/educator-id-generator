@@ -16,9 +16,6 @@ FlowRouter.route('/', {
   action: function(){
     currentFacilityId = Session.get("current_facility_id");
     currentFacilityName = Session.get("current_facility_name");
-    console.log("currentFacilityName");
-    console.log(currentFacilityName);
-    console.log(currentFacilityId);
     if( !currentFacilityId || currentFacilityId === "")
       FlowRouter.go("/selectFacility");
 

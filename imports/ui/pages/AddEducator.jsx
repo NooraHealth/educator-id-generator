@@ -119,6 +119,9 @@ var AddEducatorPage = React.createClass({
 
   handleChange(field) {
     return (event) => {
+      console.log("CHANGING");
+      console.log("CHANGE");
+      console.log(event.target.value);
       this.setState({ [field]: event.target.value});
     }
   },

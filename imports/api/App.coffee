@@ -9,7 +9,4 @@ class App
 
     initialize: ->
 
-    getF7App: ->
-
-
 module.exports.App = App.get()

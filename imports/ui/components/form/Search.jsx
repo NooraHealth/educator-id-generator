@@ -20,6 +20,20 @@ var Search = React.createClass({
     }
   },
 
+  componentDidMount() {
+    const changeInputValue = (function(e) {
+      const activeResult = $(".result.active");
+      const text = $(".result.active").text();
+      console.log("Text of active " + text);
+      console.log("Value " + this.props.value);
+      if( activeResult.length == 1 && text != this.props.value ){
+        this.props.onChange({ target: { value: text } });
+      }
+    }).bind(this);
+
+    $(".prompt").keyup(changeInputValue);
+  },
+
   componentDidUpdate() {
     $('#search')
       .search({
@@ -32,8 +46,18 @@ var Search = React.createClass({
       });
   },
 
+  handleChange( onValueChange, e ){
+    const onResultClicked = function(e) {
+      let text = $(e.target).text();
+      onValueChange({ target: { value: text } });
+    };
+
+    $(".result").click(onResultClicked);
+  },
+
   render(){
     var { value, onChange, source, ...inputProps } = this.props;
+    console.log("The value " +value);
     return (
       <div id="search" className="ui search">
         <div className="ui fluid left icon input">
@@ -42,7 +66,9 @@ var Search = React.createClass({
             className="prompt"
             type="text"
             value={ value }
-            onChange={ onChange }/>
+            onBlur={ this.handleChange.bind(this, onChange) }
+            onChange={ onChange }
+            />
           <i className="search icon"></i>
         </div>
         <div className="results"></div>
