@@ -29,7 +29,7 @@ var AddEducatorPage = React.createClass({
   },
 
   _onSubmit() {
-    this.setState({ loading: true });
+    console.log("ON SUBMIT!!");
     const first_name = this.state.first_name;
     const last_name = this.state.last_name;
     const phone = this.state.phone;
@@ -51,16 +51,18 @@ var AddEducatorPage = React.createClass({
       swal({
         type: "info",
         closeOnConfirm: true,
-        showLoaderOnConfirm: true,
         showCancelButton: true,
         text: "Are you sure you want to register this educator?",
         title: "Confirm"
       }, function( isConfirm ) {
+        console.log("in the on confirm");
+        console.log(isConfirm);
         if( !isConfirm ) {
           _this.setState({ loading: false });
           return;
         }
 
+        _this.setState({ loading: true });
         const showPopup = ( options, callback )=> {
           Meteor.setTimeout( ()=> {
             swal(options, callback);
@@ -79,7 +81,9 @@ var AddEducatorPage = React.createClass({
           } else {
             educator.uniqueId = uniqueId;
             Meteor.call( "insertEducator", educator, ( error, id ) => {
+              console.log("in the callback");
               if( error ) {
+                console.log("There was an error");
                 showPopup({
                   type: "error",
                   text: error.message,
@@ -87,6 +91,7 @@ var AddEducatorPage = React.createClass({
                 });
                 _this.setState({ loading: false });
               } else {
+                console.log("about to show popup of educator id");
                 const text = "Nurse Educator ID: "  + uniqueId;
                 showPopup({
                   type: "success",
