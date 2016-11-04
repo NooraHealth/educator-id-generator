@@ -14,6 +14,8 @@ Meteor.methods
 
   "updateEducator": ( educator )->
     educator.needs_update = true
+    console.log "To update"
+    console.log educator
     facility = Facilities.findOne { name: educator.facility_name }
     educator.facility_salesforce_id = facility.salesforce_id
     Educators.update { uniqueId: educator.uniqueId }, { $set: educator }

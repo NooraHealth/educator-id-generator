@@ -35,22 +35,31 @@ var Search = React.createClass({
     }).bind(this);
 
     $(this.input).keyup(changeInputValue);
+    this._initializeSearch();
   },
 
   componentDidUpdate( prevProps, prevState ) {
-    const shouldUpdateSearch = JSON.stringify( this.props.source ) !== JSON.stringify(prevProps.source)
+    const shouldUpdateSearch = this.props.source !== null &&
+                        prevProps.source !== null &&
+                        JSON.stringify( this.props.source ) !== JSON.stringify(prevProps.source);
     if(shouldUpdateSearch){
-      $(this.search)
-        .search({
-          source: this.props.source,
-          searchFields: [
-            'title'
-          ],
-          searchFullText: false,
-          minCharacters: 0
-        });
-      $(this.search).search("clear cache");
+      console.log("updaitng search to");
+      console.log(this.props.source);
+      this._initializeSearch()
     }
+  },
+
+  _initializeSearch(){
+    $(this.search)
+      .search({
+        source: this.props.source,
+        searchFields: [
+          'title'
+        ],
+        searchFullText: false,
+        minCharacters: 0
+      });
+    $(this.search).search("clear cache");
   },
 
   handleClick( onChange, e ){
@@ -69,8 +78,7 @@ var Search = React.createClass({
   },
 
   handleFocus(){
-    console.log("focus event");
-    $(this.search).search("query");
+    $(this.search).search("search local", "");
   },
 
   render(){
