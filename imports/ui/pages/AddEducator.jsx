@@ -81,9 +81,7 @@ var AddEducatorPage = React.createClass({
           } else {
             educator.uniqueId = uniqueId;
             Meteor.call( "insertEducator", educator, ( error, id ) => {
-              console.log("in the callback");
               if( error ) {
-                console.log("There was an error");
                 showPopup({
                   type: "error",
                   text: error.message,
@@ -91,13 +89,11 @@ var AddEducatorPage = React.createClass({
                 });
                 _this.setState({ loading: false });
               } else {
-                console.log("about to show popup of educator id");
                 const text = "Nurse Educator ID: "  + uniqueId;
+                _this.setState(_this.getInitialState());
                 showPopup({
                   type: "success",
                   title: text
-                }, function() {
-                  _this.setState(_this.getInitialState());
                 });
               }
             });
