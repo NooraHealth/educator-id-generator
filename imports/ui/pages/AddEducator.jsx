@@ -145,7 +145,7 @@ var AddEducatorPage = React.createClass({
         }
       });
     }else{
-      Meteor.call("updateEducator", educator.uniqueId, educator, ( error, result )=>{
+      Meteor.call("updateEducator", educator, ( error, result )=>{
         if( error ) {
           onSaveError(error);
         } else {
