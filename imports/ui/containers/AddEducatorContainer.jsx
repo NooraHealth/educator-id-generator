@@ -5,11 +5,6 @@ import { Educators } from '../../api/collections/educators.coffee';
 import { AppConfig } from '../../api/AppConfig.coffee';
 
 export default AddEducatorContainer = createContainer(( params ) => {
-  // Do all your reactive data access in this method.
-  // Note that this subscription will get cleaned up when your component is unmounted
-
-  const { currentFacilityId, currentFacilityName } = params;
-
   var handle = Meteor.subscribe("educators.all");
 
   this._getDepartments = function( educators ) {
