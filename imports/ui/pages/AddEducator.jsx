@@ -28,7 +28,7 @@ var AddEducatorPage = React.createClass({
         first_name: educator.first_name,
         unique_id: educator.uniqueId,
         last_name: educator.last_name,
-        phone: educator.phone,
+        phone: educator.phone.toString(),
         department: educator.department,
         uniqueId: educator.uniqueId,
         loading: false
@@ -62,7 +62,7 @@ var AddEducatorPage = React.createClass({
     };
 
     try {
-      EducatorsSchema.clean(educator);
+      EducatorsSchema.clean(educator, { getAutoValues: false });
       EducatorsSchema.validate(educator);
       swal({
         type: "info",
@@ -95,6 +95,8 @@ var AddEducatorPage = React.createClass({
   },
 
   _saveEducator(educator) {
+    console.log("About to save this educator");
+    console.log(educator);
 
     const that = this;
     const showPopup = ( options, callback )=> {
@@ -105,7 +107,7 @@ var AddEducatorPage = React.createClass({
 
     const onSaveSuccess = function( educator ){
       const text = "ID: "  + educator.uniqueId;
-      that.setState(that.getInitialState());
+      that._clearForm()
       showPopup({
         type: "success",
         title: "Nurse Educator Saved Successfully",
@@ -113,7 +115,7 @@ var AddEducatorPage = React.createClass({
       });
     };
 
-    const onSaveError = function(educator) {
+    const onSaveError = function(error) {
       that.setState({ loading: false });
       showPopup({
         type: "error",
@@ -122,8 +124,8 @@ var AddEducatorPage = React.createClass({
       });
     }
 
-    if( educator.uniqueId !== null ){
-      Meteor.call("getUniqueId", facilityName, function(error, uniqueId){
+    if( educator.uniqueId == null ){
+      Meteor.call("getUniqueId", educator.facility_name, function(error, uniqueId){
         if( error ) {
           showPopup({
             type: "error",
@@ -135,7 +137,7 @@ var AddEducatorPage = React.createClass({
           educator.uniqueId = uniqueId;
           Meteor.call( "insertEducator", educator, ( error, result ) => {
             if( error ) {
-              onSaveError(educator);
+              onSaveError(error);
             } else {
               onSaveSuccess(educator);
             }
@@ -143,14 +145,25 @@ var AddEducatorPage = React.createClass({
         }
       });
     }else{
-      Meteor.call("updateEducator", educator, ( error, result )=>{
+      Meteor.call("updateEducator", educator.uniqueId, educator, ( error, result )=>{
         if( error ) {
-          onSaveError(educator);
+          onSaveError(error);
         } else {
           onSaveSuccess(educator);
         }
       });
     }
+  },
+
+  _clearForm(){
+    this.setState({
+      first_name: '',
+      last_name: '',
+      phone: '',
+      department: '',
+      uniqueId: null,
+      loading: false
+    });
   },
 
   render() {

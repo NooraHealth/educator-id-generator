@@ -41,6 +41,7 @@ var SearchableList = React.createClass({
           key={ item.key }
           title={ item.title }
           value={ item.value }
+          onSelect={ that.props.onSelect }
         />
       )
     });

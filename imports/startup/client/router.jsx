@@ -20,11 +20,17 @@ FlowRouter.route('/', {
   }
 });
 
-FlowRouter.route('/addEducator', {
-  action: function(){
+FlowRouter.route('/addEducator/:educatorToEditId?', {
+  name: "addEducator",
+  action: function( params ){
+    console.log("params");
+    console.log(params);
     mount( MainLayout, {
       nav_components: <BackButton key='back_button'/>,
-      content: <AddEducatorContainer key='add_educator_page'/>
+      content: <AddEducatorContainer
+        key='add_educator_page'
+        educatorToEditId= {params.educatorToEditId}
+        />
     });
   }
 });

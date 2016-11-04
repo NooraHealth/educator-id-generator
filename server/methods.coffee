@@ -6,11 +6,12 @@
 Meteor.methods
 
   "insertEducator": ( educator )->
-    console.log "inserting educator"
     facility = Facilities.findOne { name: educator.facility_name }
     educator.facility_salesforce_id = facility.salesforce_id
-    console.log educator
     return Educators.insert educator
+
+  "updateEducator": ( uniqueId, fields )->
+    Educators.update { uniqueId: uniqueId }, { $set: fields }
 
   "getUniqueId": ( facilityName )->
     console.log "Getting a unique Id"

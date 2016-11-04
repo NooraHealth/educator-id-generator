@@ -17,18 +17,15 @@ var ListItem = React.createClass({
     }
   },
 
-  // handleSelect( type ){
-  //   const onSelect = this.props.onSelect;
-  //   return function() {
-  //     onSelect( that.props.value );
-  //   }
-  // },
+  _handleClick(e){
+    this.props.onSelect(this.props.value);
+  },
 
   render(){
     var { title, after, onSelect } = this.props;
     return (
       <div className="ui segment item"
-        onClick={ onSelect }
+        onClick={ this._handleClick }
       >
         <div className="content">
           <div className="header">

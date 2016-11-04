@@ -20,11 +20,18 @@ export default AddEducatorContainer = createContainer(( params ) => {
     return filtered;
   };
 
+  console.log("educatorToEditId");
+  console.log(params);
+  console.log(FlowRouter.getParam("id"));
+  let educator = null;
+  if( params.educatorToEditId !== undefined ){
+    educator =  Educators.findOne({ uniqueId: params.educatorToEditId });
+  }
   return {
     loading: ! handle.ready(),
     departments: _getDepartments( Educators.find({ facility_name: AppConfig.getFacilityName() }).fetch() ),
     currentFacilityName: AppConfig.getFacilityName(),
-    educatorToEdit: Educators.findOne({ uniqueId: "T143"})
+    educatorToEdit: educator
   };
 }, AddEducatorPage);
 

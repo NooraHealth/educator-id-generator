@@ -26,8 +26,6 @@ var Search = React.createClass({
       const activeResult = $(this.search).find(".result.active");
       const text = $(this.search).find(".result.active").text();
       const acceptedKeyCodes = [ 13, 40, 38 ];
-      console.log(activeResult);
-      console.log(text);
       if(
         acceptedKeyCodes.indexOf(e.keyCode) != -1 &&
         activeResult.length == 1 &&

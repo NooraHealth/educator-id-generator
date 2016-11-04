@@ -17,15 +17,17 @@ var SearchEducatorsPage = React.createClass({
     }
   },
 
-  _onSelect(){
-
+  _onSelect(uniqueId) {
+    console.log("SELETED");
+    console.log(uniqueId);
+    FlowRouter.go("addEducator", { educatorToEditId: uniqueId });
   },
 
   render() {
     const items = this.props.educators.map( function( educator ){
       return {
-        value: educator.first_name,
-        key: educator._id,
+        value: educator.uniqueId,
+        key: educator.uniqueId,
         title: educator.first_name + " " + educator.last_name + " ID: " + educator.uniqueId
       };
     });
