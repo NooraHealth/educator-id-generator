@@ -40,9 +40,6 @@ var Search = React.createClass({
   componentDidUpdate( prevProps, prevState ) {
     const shouldUpdateSearch = JSON.stringify( this.props.source ) !== JSON.stringify(prevProps.source)
     if(shouldUpdateSearch){
-      console.log("updating the searchh");
-      console.log(prevProps.source);
-      console.log(this.props.source);
       $(this.search)
         .search({
           source: this.props.source,
@@ -69,6 +66,11 @@ var Search = React.createClass({
     if(e.target && e.target.value !== undefined ) {
       onChange(e.target.value);
     }
+  },
+
+  handleFocus(){
+    console.log("focus event");
+    $(this.search).search("query");
   },
 
   render(){
@@ -102,6 +104,7 @@ var Search = React.createClass({
             type="text"
             value={ value }
             onBlur={ this.handleClick.bind(this, onChange) }
+            onFocus={ this.handleFocus }
             onChange={ this.handleChange.bind(this, onChange) }
             ref={ (input) => this.input = input }
             />
