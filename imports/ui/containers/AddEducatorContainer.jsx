@@ -23,7 +23,8 @@ export default AddEducatorContainer = createContainer(( params ) => {
   return {
     loading: ! handle.ready(),
     departments: _getDepartments( Educators.find({ facility_name: AppConfig.getFacilityName() }).fetch() ),
-    currentFacilityName: AppConfig.getFacilityName()
+    currentFacilityName: AppConfig.getFacilityName(),
+    educatorToEdit: Educators.findOne({ uniqueId: "T143"})
   };
 }, AddEducatorPage);
 
