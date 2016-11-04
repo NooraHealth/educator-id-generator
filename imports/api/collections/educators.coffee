@@ -36,6 +36,10 @@ EducatorsSchema = new SimpleSchema
     type: Number
     defaultValue: ""
     optional: true
+  needs_update:
+    type: Boolean
+    optional: true
+    defaultValue: false
   uniqueId:
     type: String
     label: "Unique Id"
