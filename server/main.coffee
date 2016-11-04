@@ -3,3 +3,4 @@
 { Facilities } = require '../imports/api/collections/facilities.coffee';
 
 Meteor.startup ()->
+  # Educators.remove {first_name: "Lucy"}
