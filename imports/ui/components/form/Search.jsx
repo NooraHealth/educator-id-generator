@@ -30,24 +30,30 @@ var Search = React.createClass({
         acceptedKeyCodes.indexOf(e.keyCode) != -1 &&
         activeResult.length == 1 &&
         text != this.props.value ){
-          console.log("changing due to keypress");
           this.props.onChange( text );
-      }
+        }
     }).bind(this);
 
     $(this.input).keyup(changeInputValue);
   },
 
-  componentDidUpdate() {
-    $(this.search)
-      .search({
-        source: this.props.source,
-        searchFields: [
-          'title'
-        ],
-        searchFullText: false,
-        minCharacters: 0
-      });
+  componentDidUpdate( prevProps, prevState ) {
+    const shouldUpdateSearch = JSON.stringify( this.props.source ) !== JSON.stringify(prevProps.source)
+    if(shouldUpdateSearch){
+      console.log("updating the searchh");
+      console.log(prevProps.source);
+      console.log(this.props.source);
+      $(this.search)
+        .search({
+          source: this.props.source,
+          searchFields: [
+            'title'
+          ],
+          searchFullText: false,
+          minCharacters: 0
+        });
+      $(this.search).search("clear cache");
+    }
   },
 
   handleClick( onChange, e ){
@@ -100,7 +106,7 @@ var Search = React.createClass({
             ref={ (input) => this.input = input }
             />
         </div>
-        <div className="results"></div>
+        <div className="results" ref={(results)=> this.results = results}></div>
       </div>
     );
   }
