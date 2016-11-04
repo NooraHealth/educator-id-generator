@@ -168,7 +168,7 @@ var AddEducatorPage = React.createClass({
 
   render() {
 
-    let submitText = "GET EDUCATOR ID";
+    let submitText = "SAVE EDUCATOR";
     if( this.state.loading )
       submitText = "...loading..."
     var source = this.props.departments.map( function(dept){

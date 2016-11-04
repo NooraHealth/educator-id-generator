@@ -20,9 +20,6 @@ export default AddEducatorContainer = createContainer(( params ) => {
     return filtered;
   };
 
-  console.log("educatorToEditId");
-  console.log(params);
-  console.log(FlowRouter.getParam("id"));
   let educator = null;
   if( params.educatorToEditId !== undefined ){
     educator =  Educators.findOne({ uniqueId: params.educatorToEditId });

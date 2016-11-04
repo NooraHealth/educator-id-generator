@@ -28,7 +28,9 @@ var SearchEducatorsPage = React.createClass({
       return {
         value: educator.uniqueId,
         key: educator.uniqueId,
-        title: educator.first_name + " " + educator.last_name + " ID: " + educator.uniqueId
+        title: educator.first_name + " " + educator.last_name,
+        description: "ID: " + educator.uniqueId + " PHONE: " + educator.phone + " DEPARTMENT: " + educator.department,
+        icon: "edit icon"
       };
     });
 

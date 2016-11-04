@@ -10,7 +10,9 @@ var SearchableList = React.createClass({
     items: React.PropTypes.shape({
       value: React.PropTypes.string,
       key: React.PropTypes.string,
-      title: React.PropTypes.string
+      title: React.PropTypes.string,
+      icon: React.PropTypes.string,
+      description: React.PropTypes.string
     }),
     onSelect: React.PropTypes.func,
     searchBarPlaceholder: React.PropTypes.string
@@ -41,6 +43,8 @@ var SearchableList = React.createClass({
           key={ item.key }
           title={ item.title }
           value={ item.value }
+          icon={ item.icon }
+          description={ item.description }
           onSelect={ that.props.onSelect }
         />
       )
