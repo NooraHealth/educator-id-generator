@@ -23,8 +23,6 @@ FlowRouter.route('/', {
 FlowRouter.route('/addEducator/:educatorToEditId?', {
   name: "addEducator",
   action: function( params ){
-    console.log("params");
-    console.log(params);
     mount( MainLayout, {
       nav_components: <BackButton key='back_button'/>,
       content: <AddEducatorContainer

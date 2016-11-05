@@ -2,10 +2,16 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import { AddEducatorPage } from '../pages/AddEducator.jsx';
 import { Educators } from '../../api/collections/educators.coffee';
+import { ConditionOperations } from '../../api/collections/condition_operations.coffee';
 import { AppConfig } from '../../api/AppConfig.coffee';
 
 export default AddEducatorContainer = createContainer(( params ) => {
-  var handle = Meteor.subscribe("educators.all");
+  var educators_handle = Meteor.subscribe("educators.all");
+  var condition_operations_handle = Meteor.subscribe("condition_operations.all");
+
+  this._getConditionOperations = function( facilityName ) {
+    return ConditionOperations.find({ facility_name: facilityName }).fetch();
+  };
 
   this._getDepartments = function( educators ) {
     departments = educators.map( function( educator ){
@@ -25,8 +31,9 @@ export default AddEducatorContainer = createContainer(( params ) => {
     educator =  Educators.findOne({ uniqueId: params.educatorToEditId });
   }
   return {
-    loading: ! handle.ready(),
+    loading: !(educators_handle.ready() && condition_operations_handle.ready()) ,
     departments: _getDepartments( Educators.find({ facility_name: AppConfig.getFacilityName() }).fetch() ),
+    facilityConditionOperations: _getConditionOperations( AppConfig.getFacilityName() ),
     currentFacilityName: AppConfig.getFacilityName(),
     educatorToEdit: educator
   };

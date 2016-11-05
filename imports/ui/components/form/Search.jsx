@@ -17,7 +17,7 @@ var Search = React.createClass({
     return {
       value: "",
       icon: "",
-      onChange: null
+      onChange: function(){}
     }
   },
 
@@ -43,8 +43,6 @@ var Search = React.createClass({
                         prevProps.source !== null &&
                         JSON.stringify( this.props.source ) !== JSON.stringify(prevProps.source);
     if(shouldUpdateSearch){
-      console.log("updaitng search to");
-      console.log(this.props.source);
       this._initializeSearch()
     }
   },

@@ -4,12 +4,14 @@ import React from 'react';
 import { Form } from '../components/form/base/Form.jsx';
 import { EducatorsSchema } from '../../api/collections/educators.coffee';
 import { SelectFacilityContainer } from '../containers/SelectFacilityContainer.jsx';
+import { SelectConditionOperations } from '../components/select_condition_operation/SelectConditionOperations.jsx';
 
 var AddEducatorPage = React.createClass({
 
   propTypes: {
     currentFacilityName: React.PropTypes.string,
     departments: React.PropTypes.array,
+    facilityConditionOperations: React.PropTypes.array,
     educatorToEdit: React.PropTypes.object
   },
 
@@ -17,6 +19,7 @@ var AddEducatorPage = React.createClass({
     return {
       currentFacilityName: "",
       departments: [],
+      conditionOperations: [],
       educatorToEdit: {}
     }
   },
@@ -30,6 +33,7 @@ var AddEducatorPage = React.createClass({
         last_name: educator.last_name,
         phone: educator.phone.toString(),
         department: educator.department,
+        condition_operations: educator.condition_operations,
         uniqueId: educator.uniqueId,
         loading: false
       }
@@ -38,9 +42,96 @@ var AddEducatorPage = React.createClass({
       last_name: '',
       phone: '',
       department: '',
+      condition_operations: {},
       uniqueId: null,
       loading: false
     };
+  },
+
+  render() {
+    let submitText = "SAVE EDUCATOR";
+    if( this.state.loading )
+      submitText = "...loading..."
+    const source = this.props.departments.map( function(dept){
+        return { title: dept };
+    });
+
+    return (
+      <div>
+        <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
+          <SelectFacilityContainer/>
+          <SelectConditionOperations
+            conditionOperations={ this.props.facilityConditionOperations }
+            selectedOperations={ this.state.condition_operations }
+            onSelectionChange={ this._handleConditionOperationSelection }
+          />
+          <Form.Search
+            key= 'educator_department'
+            placeholder="Department"
+            icon="search icon"
+            value={ this.state.department }
+            onChange={ this._handleChange("department") }
+            source={ source }
+          />
+          <Form.Input
+            type='text'
+            key= 'educator_first_name'
+            placeholder="First Name"
+            icon="doctor icon"
+            value={ this.state.first_name }
+            onChange={ this._handleChange("first_name") }
+          />
+          <Form.Input
+            type='text'
+            key= 'educator_last_name'
+            placeholder="Last Name"
+            icon="doctor icon"
+            value={ this.state.last_name }
+            onChange={ this._handleChange("last_name") }
+
+          />
+          <Form.Input
+              type='tel'
+              key= 'educator_phone'
+              value={ this.state.phone }
+              placeholder="Phone"
+              icon="call icon"
+              onChange={ this._handleChange("phone") }
+            />
+        </Form>
+      </div>
+    )
+  },
+
+  _clearForm(){
+    this.setState({
+      first_name: '',
+      last_name: '',
+      phone: '',
+      department: '',
+      condition_operations: [],
+      uniqueId: null,
+      loading: false
+    });
+  },
+
+  // _handleConditionOperationActivationToggled(){
+  //
+  // },
+
+  _handleConditionOperationSelection( selectedOperations ){
+    console.log(selectedOperations);
+    let oldState = this.state.condition_operations;
+    let newState = {};
+    for( let i = 0; i < selectedOperations.length; i++ ){
+      const operation = selectedOperations[i];
+      if( oldState[operation] == undefined ) {
+        newState[operation] = { active: false };
+      } else {
+        newState[operation] = oldState[operation];
+      }
+    }
+    this.setState({ condition_operations: newState })
   },
 
   _onSubmit() {
@@ -49,6 +140,7 @@ var AddEducatorPage = React.createClass({
     const phone = this.state.phone;
     const department = this.state.department;
     const uniqueId = this.state.uniqueId;
+    const condition_operations = this.state.condition_operations;
     const facilityName = this.props.currentFacilityName;
     const that = this;
 
@@ -57,6 +149,7 @@ var AddEducatorPage = React.createClass({
       last_name: last_name,
       phone: phone,
       department: department,
+      condition_operations: condition_operations,
       uniqueId: uniqueId,
       facility_name: facilityName,
     };
@@ -95,9 +188,6 @@ var AddEducatorPage = React.createClass({
   },
 
   _saveEducator(educator) {
-    console.log("About to save this educator");
-    console.log(educator);
-
     const that = this;
     const showPopup = ( options, callback )=> {
       Meteor.setTimeout( ()=> {
@@ -153,68 +243,6 @@ var AddEducatorPage = React.createClass({
         }
       });
     }
-  },
-
-  _clearForm(){
-    this.setState({
-      first_name: '',
-      last_name: '',
-      phone: '',
-      department: '',
-      uniqueId: null,
-      loading: false
-    });
-  },
-
-  render() {
-
-    let submitText = "SAVE EDUCATOR";
-    if( this.state.loading )
-      submitText = "...loading..."
-    var source = this.props.departments.map( function(dept){
-        return { title: dept };
-    });
-    return (
-      <div>
-        <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
-          <SelectFacilityContainer/>
-          <Form.Search
-            key= 'educator_department'
-            placeholder="Department"
-            icon="search icon"
-            value={ this.state.department }
-            onChange={ this._handleChange("department") }
-            source={ source }
-          />
-          <Form.Input
-            type='text'
-            key= 'educator_first_name'
-            placeholder="First Name"
-            icon="doctor icon"
-            value={ this.state.first_name }
-            onChange={ this._handleChange("first_name") }
-          />
-          <Form.Input
-            type='text'
-            key= 'educator_last_name'
-            placeholder="Last Name"
-            icon="doctor icon"
-            value={ this.state.last_name }
-            onChange={ this._handleChange("last_name") }
-
-          />
-          <Form.Input
-              type='tel'
-              key= 'educator_phone'
-              value={ this.state.phone }
-              placeholder="Phone"
-              icon="call icon"
-              onChange={ this._handleChange("phone") }
-
-            />
-        </Form>
-      </div>
-    )
   }
 });
 

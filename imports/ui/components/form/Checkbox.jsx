@@ -1,4 +1,3 @@
-'use strict';
 
 var Checkbox = React.createClass({
   mixins: [ GetValueLink ],
@@ -15,13 +14,13 @@ var Checkbox = React.createClass({
     return {
       title: "",
       valueLink: null
-    } 
+    }
   },
 
   handleChange( event ){
     this._getValueLink(this.props).requestChange(event.target.value);
   },
-  
+
   shouldComponentUpdate( nextProps, nextState ){
     if(this._getValueLink(this.props).value == this._getValueLink(nextProps).value)
       return false

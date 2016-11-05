@@ -16,6 +16,9 @@ EducatorsSchema = new SimpleSchema
   department:
     type: String
     defaultValue: ""
+  condition_operations:
+    type: Object
+    defaultValue: {}
   facility_salesforce_id:
     type: String
     defaultValue: ""
