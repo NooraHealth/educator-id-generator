@@ -103,6 +103,7 @@ var AddEducatorPage = React.createClass({
             options={ this.props.facilityConditionOperations }
             selectedOperations={ this.state.condition_operations }
             onSelectionChange={ this._handleConditionOperationSelection }
+            onActivationChange={ this._handleConditionOperationActivationChanged }
           />
         </Form>
       </div>
@@ -119,6 +120,14 @@ var AddEducatorPage = React.createClass({
       uniqueId: null,
       loading: false
     });
+  },
+
+  _handleConditionOperationActivationChanged( operation, value ){
+    console.log("actiuvation toggled ");
+    console.log(value);
+    let operationState = this.state.condition_operations;
+    operationState[operation][value] = value;
+    this.setState({ condition_operations: operationState })
   },
 
   _handleConditionOperationSelection( selectedOperations ){
