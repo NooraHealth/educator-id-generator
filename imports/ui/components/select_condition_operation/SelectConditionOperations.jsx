@@ -4,7 +4,7 @@ import { MultiSelectDropdown } from '../form/MultiSelectDropdown.jsx'
 
 const SelectConditionOperations  = React.createClass({
   propTypes: {
-    conditionOperations: React.PropTypes.array,
+    options: React.PropTypes.array,
     selectedOperations: React.PropTypes.object,
     onSelectionChange: React.PropTypes.func
   },
@@ -24,19 +24,21 @@ const SelectConditionOperations  = React.createClass({
   },
 
   render () {
-    const options = this.props.conditionOperations.map(function( operation ){
+    const options = this.props.options.map(function( operation ){
       return operation.name;
     });
     let selectedOperationsComponents = [];
     for(operation in this.props.selectedOperations){
-      selectedOperationsComponents.push(<div className="ui segment item">{ operation }</div>);
+      selectedOperationsComponents.push(<div key={operation} className="ui segment item">{ operation }</div>);
     }
+    let selected = Object.keys(this.props.selectedOperations);
     return (
       <div>
         <MultiSelectDropdown
-          multiple="{ selected }"
           options={ options }
-          placeholder="Add To Condition Operations"
+          selected={ selected }
+          label="Add Condition Operations"
+          placeholder="Condition Operations"
           onChange={ this.props.onSelectionChange }
           />
         <div className="ui segments middle aligned selection list">

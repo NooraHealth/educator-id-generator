@@ -19,7 +19,7 @@ var AddEducatorPage = React.createClass({
     return {
       currentFacilityName: "",
       departments: [],
-      conditionOperations: [],
+      conditionOperations: {},
       educatorToEdit: {}
     }
   },
@@ -47,6 +47,12 @@ var AddEducatorPage = React.createClass({
       loading: false
     };
   },
+  componentDidUpdate(prevProps, prevState) {
+    //If the facility changed, clear the selected condition operations
+    if( this.props.currentFacilityName !== prevProps.currentFacilityName){
+      this.setState({ condition_operations: {} })
+    }
+  },
 
   render() {
     let submitText = "SAVE EDUCATOR";
@@ -60,11 +66,6 @@ var AddEducatorPage = React.createClass({
       <div>
         <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
           <SelectFacilityContainer/>
-          <SelectConditionOperations
-            conditionOperations={ this.props.facilityConditionOperations }
-            selectedOperations={ this.state.condition_operations }
-            onSelectionChange={ this._handleConditionOperationSelection }
-          />
           <Form.Search
             key= 'educator_department'
             placeholder="Department"
@@ -98,6 +99,11 @@ var AddEducatorPage = React.createClass({
               icon="call icon"
               onChange={ this._handleChange("phone") }
             />
+          <SelectConditionOperations
+            options={ this.props.facilityConditionOperations }
+            selectedOperations={ this.state.condition_operations }
+            onSelectionChange={ this._handleConditionOperationSelection }
+          />
         </Form>
       </div>
     )
@@ -115,12 +121,7 @@ var AddEducatorPage = React.createClass({
     });
   },
 
-  // _handleConditionOperationActivationToggled(){
-  //
-  // },
-
   _handleConditionOperationSelection( selectedOperations ){
-    console.log(selectedOperations);
     let oldState = this.state.condition_operations;
     let newState = {};
     for( let i = 0; i < selectedOperations.length; i++ ){
@@ -131,6 +132,7 @@ var AddEducatorPage = React.createClass({
         newState[operation] = oldState[operation];
       }
     }
+    console.log(newState);
     this.setState({ condition_operations: newState })
   },
 
