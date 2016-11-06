@@ -23,15 +23,19 @@ var Checkbox = React.createClass({
     const onChange = this.props.onChange;
     $(this.checkbox).checkbox({
       onChange: ()=> {
-        let checked = $(this.checkbox).checkbox("is checked");
+        const checked = $(this.checkbox).checkbox("is checked");
         onChange( this.props.value, checked );
       }
     });
+    console.log(this.props.checked);
+    let behavior = ( this.props.checked )? "set checked": "set unchecked";
+    $(this.checkbox).checkbox(behavior);
   },
 
   componentDidUpdate(prevProps, prevState) {
     if( this.props.checked !== prevProps.checked ){
-      $(this.checkbox).checkbox("set checked", this.props.checked);
+    let behavior = ( this.props.checked )? "set checked": "set unchecked";
+    $(this.checkbox).checkbox(behavior);
     }
   },
 

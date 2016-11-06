@@ -18,7 +18,8 @@ EducatorsSchema = new SimpleSchema
     defaultValue: ""
   condition_operations:
     type: Object
-    defaultValue: {}
+    blackbox: true
+    optional: true
   facility_salesforce_id:
     type: String
     defaultValue: ""

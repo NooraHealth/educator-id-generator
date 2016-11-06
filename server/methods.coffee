@@ -7,9 +7,12 @@
 Meteor.methods
 
   "insertEducator": ( educator )->
+    console.log educator
     facility = Facilities.findOne { name: educator.facility_name }
     educator.facility_salesforce_id = facility.salesforce_id
     EducatorsSchema.clean(educator)
+    console.log("added this educator")
+    console.log educator
     return Educators.insert educator
 
   "updateEducator": ( educator )->
@@ -24,4 +27,5 @@ Meteor.methods
 
   "getUniqueId": ( facilityName )->
     console.log "Getting a unique Id"
+    console.log facilityName
     return generateUniqueId facilityName

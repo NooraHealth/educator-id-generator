@@ -31,15 +31,16 @@ const SelectConditionOperations  = React.createClass({
       return operation.name;
     });
     let selectedOperationsComponents = [];
-    for(operation in this.props.selectedOperations){
+    for(key in this.props.selectedOperations){
+      let isActive = this.props.selectedOperations[key].active;
       selectedOperationsComponents.push(
-        <div key={operation} className="ui segment item">
-          { operation }
+        <div key={ key } className="ui segment item">
+          { key }
           <Checkbox
             label='Is Active'
             onChange={ this.props.onActivationChange }
-            value={ operation }
-            checked={operation.active}
+            value={ key }
+            checked={isActive}
             />
         </div>);
     }

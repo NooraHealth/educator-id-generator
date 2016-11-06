@@ -116,17 +116,15 @@ var AddEducatorPage = React.createClass({
       last_name: '',
       phone: '',
       department: '',
-      condition_operations: [],
+      condition_operations: {},
       uniqueId: null,
       loading: false
     });
   },
 
-  _handleConditionOperationActivationChanged( operation, value ){
-    console.log("actiuvation toggled ");
-    console.log(value);
+  _handleConditionOperationActivationChanged( operation, isActive ){
     let operationState = this.state.condition_operations;
-    operationState[operation][value] = value;
+    operationState[operation].active = isActive;
     this.setState({ condition_operations: operationState })
   },
 
@@ -141,7 +139,6 @@ var AddEducatorPage = React.createClass({
         newState[operation] = oldState[operation];
       }
     }
-    console.log(newState);
     this.setState({ condition_operations: newState })
   },
 
@@ -233,7 +230,7 @@ var AddEducatorPage = React.createClass({
             title: "Sorry!",
             text: "There has been an error retrieving a unique ID"
           });
-          _this.setState({ loading: false });
+          that.setState({ loading: false });
         } else {
           educator.uniqueId = uniqueId;
           Meteor.call( "insertEducator", educator, ( error, result ) => {
