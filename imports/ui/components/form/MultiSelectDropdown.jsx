@@ -4,8 +4,18 @@ var MultiSelectDropdown = React.createClass({
 
   propTypes: {
     placeholder: React.PropTypes.string,
-    options: React.PropTypes.array,
-    selected: React.PropTypes.array,
+    options: React.PropTypes.arrayOf(( options, index )=> {
+      return new SimpleSchema({
+        value: { type:String },
+        name: { type:String }
+      }).validate(options[index]);
+    }),
+    selected: React.PropTypes.arrayOf(( options, index )=> {
+      return new SimpleSchema({
+        value: { type:String },
+        name: { type:String }
+      }).validate(options[index]);
+    }),
     onChange: React.PropTypes.func
   },
 
@@ -22,22 +32,29 @@ var MultiSelectDropdown = React.createClass({
     const onChange = this.props.onChange;
     $(this.dropdown).dropdown({
       onChange: function(value, text, selectedItem) {
+        console.log("selected in onchange");
+        console.log(value);
+        console.log(text);
+        console.log(selectedItem);
         onChange(value);
       }
     });
-    $(this.dropdown).dropdown("set exactly", this.props.selected);
+    const values = this.props.selected.map((selected)=>{ return selected.value });
+    $(this.dropdown).dropdown("set exactly", values);
   },
 
   componentDidUpdate(prevProps, prevState) {
     if( JSON.stringify(this.props.selected) !== JSON.stringify(prevProps.selected)){
+      console.log("Setting dropdown to ");
+      console.log(this.props.selected);
       $(this.dropdown).dropdown("set exactly", this.props.selected);
     }
   },
 
   render(){
     const optionElems = this.props.options.map(function(option, i){
-      const key = "operation-" + i;
-      return <option value={option} key={key}>{option}</option>
+      const key = "operation-" + option.value;
+      return <option value={option.value} key={key}>{option.name}</option>
     });
 
     return (

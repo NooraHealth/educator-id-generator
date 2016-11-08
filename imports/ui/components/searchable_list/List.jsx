@@ -7,12 +7,14 @@ import { Input } from '../form/Input.jsx';
 var SearchableList = React.createClass({
 
   propTypes: {
-    items: React.PropTypes.shape({
-      value: React.PropTypes.string,
-      key: React.PropTypes.string,
-      title: React.PropTypes.string,
-      icon: React.PropTypes.string,
-      description: React.PropTypes.string
+    items: React.PropTypes.arrayOf((items, index)=> {
+      return new SimpleSchema({
+        value: { type:String },
+        key: { type:String },
+        title: { type:String },
+        icon: { type:String },
+        description: { type:String }
+      }).validate(items[index]);
     }),
     onSelect: React.PropTypes.func,
     searchBarPlaceholder: React.PropTypes.string

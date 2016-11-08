@@ -5,46 +5,64 @@ import { Checkbox } from '../form/Checkbox.jsx'
 
 const SelectConditionOperations  = React.createClass({
   propTypes: {
-    options: React.PropTypes.array,
-    selectedOperations: React.PropTypes.object,
+    options: React.PropTypes.arrayOf(( operations, index )=> {
+      return new SimpleSchema({
+        id: { type:String },
+        name: { type:String },
+        is_active: { type:Boolean }
+      }).validate(operations[index]);
+    }),
+    selectedOperations: React.PropTypes.arrayOf(( operations, index )=>{
+      return new SimpleSchema({
+        id: { type:String },
+        name: { type:String },
+        is_active: { type:Boolean }
+      }).validate(operations[index]);
+    }),
     onSelectionChange: React.PropTypes.func,
     onActivationChange: React.PropTypes.func
   },
 
   defaultProps() {
     return {
-      conditionOperations: [],
-      selectedOperations: {},
+      options: [],
+      selectedOperations: [],
       onSelectionChange: function(){},
       onActivationChange: function(){}
     }
   },
 
-  getInitialState() {
-    return {
-      searchBarValue: ""
-    };
-  },
-
   render () {
-    const options = this.props.options.map(function( operation ){
-      return operation.name;
+    let options = this.props.options.map((option)=> {
+        return {
+          value: option.id,
+          name: option.name
+        }
     });
     let selectedOperationsComponents = [];
-    for(key in this.props.selectedOperations){
-      let isActive = this.props.selectedOperations[key].active;
+    for(let i= 0; i < this.props.selectedOperations.length; i++){
+      let isActive = this.props.selectedOperations[i].is_active;
+      let id = this.props.selectedOperations[i].id;
+      let name = this.props.selectedOperations[i].name;
       selectedOperationsComponents.push(
-        <div key={ key } className="ui segment item">
-          { key }
+        <div key={ id } className="ui segment item">
+          { name }
           <Checkbox
             label='Is Active'
             onChange={ this.props.onActivationChange }
-            value={ key }
-            checked={isActive}
+            value={ id }
+            checked={ isActive }
             />
         </div>);
     }
-    let selected = Object.keys(this.props.selectedOperations);
+    let selected = this.props.selectedOperations.map((op)=>{
+      return {
+        value: op.id,
+        name: op.name
+      }
+    });
+    console.log(selected);
+    console.log(selected.length);
     return (
       <div>
         <MultiSelectDropdown
@@ -52,14 +70,25 @@ const SelectConditionOperations  = React.createClass({
           selected={ selected }
           label="Add Condition Operations"
           placeholder="Condition Operations"
-          onChange={ this.props.onSelectionChange }
+          onChange={ this._onOperationSelectionChange }
           />
         <div className="ui segments middle aligned selection list">
           { selectedOperationsComponents }
         </div>
       </div>
     )
+  },
+
+  _onOperationSelectionChange( ids ){
+    let optionsSelected = [];
+    for (var i = 0; i < this.props.options.length; i++) {
+      if ( ids.indexOf(this.props.options[i].id) !== -1 ) {
+        optionsSelected.push(this.props.options[i]);
+      }
+    }
+    this.props.onSelectionChange( optionsSelected );
   }
+
 });
 
 export { SelectConditionOperations };

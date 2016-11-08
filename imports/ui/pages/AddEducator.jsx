@@ -1,8 +1,11 @@
-'use strict';
+  'use strict';
 
 import React from 'react';
+import update from 'immutability-helper';
 import { Form } from '../components/form/base/Form.jsx';
+import { Educators } from '../../api/collections/educators.coffee';
 import { EducatorsSchema } from '../../api/collections/educators.coffee';
+import { ConditionOperationsSchema } from '../../api/collections/condition_operations.coffee';
 import { SelectFacilityContainer } from '../containers/SelectFacilityContainer.jsx';
 import { SelectConditionOperations } from '../components/select_condition_operation/SelectConditionOperations.jsx';
 
@@ -11,15 +14,19 @@ var AddEducatorPage = React.createClass({
   propTypes: {
     currentFacilityName: React.PropTypes.string,
     departments: React.PropTypes.array,
-    facilityConditionOperations: React.PropTypes.array,
-    educatorToEdit: React.PropTypes.object
+    facilityConditionOperations: React.PropTypes.arrayOf(( operations, index )=> {
+      return ConditionOperationsSchema.validate(operations[index]);
+    }),
+    educatorToEdit: React.PropTypes.objectOf((educator)=>{
+      return EducatorsSchema.validate(educator);
+    })
   },
 
   defaultProps() {
     return {
       currentFacilityName: "",
       departments: [],
-      conditionOperations: {},
+      facilityConditionOperations: [],
       educatorToEdit: {}
     }
   },
@@ -42,7 +49,7 @@ var AddEducatorPage = React.createClass({
       last_name: '',
       phone: '',
       department: '',
-      condition_operations: {},
+      condition_operations: [],
       uniqueId: null,
       loading: false
     };
@@ -50,7 +57,8 @@ var AddEducatorPage = React.createClass({
   componentDidUpdate(prevProps, prevState) {
     //If the facility changed, clear the selected condition operations
     if( this.props.currentFacilityName !== prevProps.currentFacilityName){
-      this.setState({ condition_operations: {} })
+      console.log("Setting condition operations to[]");
+      this.setState({ condition_operations: [] })
     }
   },
 
@@ -60,6 +68,13 @@ var AddEducatorPage = React.createClass({
       submitText = "...loading..."
     const source = this.props.departments.map( function(dept){
         return { title: dept };
+    });
+    const operationOptions = this.props.facilityConditionOperations.map((operation) =>{
+      return {
+        id: operation._id,
+        name: operation.name,
+        is_active: false
+      }
     });
 
     return (
@@ -100,7 +115,7 @@ var AddEducatorPage = React.createClass({
               onChange={ this._handleChange("phone") }
             />
           <SelectConditionOperations
-            options={ this.props.facilityConditionOperations }
+            options={ operationOptions }
             selectedOperations={ this.state.condition_operations }
             onSelectionChange={ this._handleConditionOperationSelection }
             onActivationChange={ this._handleConditionOperationActivationChanged }
@@ -116,30 +131,36 @@ var AddEducatorPage = React.createClass({
       last_name: '',
       phone: '',
       department: '',
-      condition_operations: {},
+      condition_operations: [],
       uniqueId: null,
       loading: false
     });
   },
 
-  _handleConditionOperationActivationChanged( operation, isActive ){
-    let operationState = this.state.condition_operations;
-    operationState[operation].active = isActive;
-    this.setState({ condition_operations: operationState })
+  _handleConditionOperationActivationChanged( opId, isActive ){
+    console.log("activation chagned!!!");
+    let operations = this.state.condition_operations;
+    let newOperations = []
+    for (var i = 0; i < operations.length; i++) {
+      if( operations[i].id === opId ){
+        operations[i].is_active = isActive;
+        newOperations.push(operations[i]);
+      }
+    }
+    this.setState({ condition_operations: newOperations })
   },
 
   _handleConditionOperationSelection( selectedOperations ){
-    let oldState = this.state.condition_operations;
-    let newState = {};
-    for( let i = 0; i < selectedOperations.length; i++ ){
-      const operation = selectedOperations[i];
-      if( oldState[operation] == undefined ) {
-        newState[operation] = { active: false };
-      } else {
-        newState[operation] = oldState[operation];
-      }
-    }
-    this.setState({ condition_operations: newState })
+    let operations = this.state.condition_operations;
+    console.log("Trying to set to this");
+    console.log(selectedOperations);
+    console.log(operations);
+    let newOperations = update(operations, {$set: selectedOperations});
+    console.log("NEW OPERATIONS!!");
+    console.log(operations);
+    // this.setState({ condition_operations: newOperations })
+    // console.log(this.state.condition_operations);
+    console.log(this.state.condition_operations.length);
   },
 
   _onSubmit() {

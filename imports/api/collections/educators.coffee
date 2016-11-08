@@ -7,6 +7,9 @@ Educators = new Mongo.Collection Meteor.settings.public.educators_collection
 BackupEducators = new Mongo.Collection "backup_educators"
 
 EducatorsSchema = new SimpleSchema
+  _id:
+    type: String
+    optional: true
   last_name:
     type: String
     defaultValue: ""
@@ -16,9 +19,14 @@ EducatorsSchema = new SimpleSchema
   department:
     type: String
     defaultValue: ""
-  condition_operations:
-    type: Object
-    blackbox: true
+  "condition_operations.$.is_active":
+    type: Boolean
+  "condition_operations.$.name":
+    type: String
+  "condition_operations.$.id":
+    type: String
+  "condition_operations.$.date_began_teaching_classes":
+    type: String
     optional: true
   facility_salesforce_id:
     type: String

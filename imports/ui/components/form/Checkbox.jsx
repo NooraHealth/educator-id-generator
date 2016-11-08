@@ -34,8 +34,8 @@ var Checkbox = React.createClass({
 
   componentDidUpdate(prevProps, prevState) {
     if( this.props.checked !== prevProps.checked ){
-    let behavior = ( this.props.checked )? "set checked": "set unchecked";
-    $(this.checkbox).checkbox(behavior);
+      let behavior = ( this.props.checked )? "set checked": "set unchecked";
+      $(this.checkbox).checkbox(behavior);
     }
   },
 
