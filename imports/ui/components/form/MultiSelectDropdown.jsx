@@ -11,7 +11,12 @@ var MultiSelectDropdown = React.createClass({
         name: { type:String }
       }).validate(options[index]);
     }),
-    selected: React.PropTypes.instanceOf(Immutable.List),
+    selected: React.PropTypes.arrayOf(( options, index )=> {
+      return new SimpleSchema({
+        value: { type:String },
+        name: { type:String }
+      }).validate(options[index]);
+    }),
     onChange: React.PropTypes.func
   },
 
@@ -36,6 +41,9 @@ var MultiSelectDropdown = React.createClass({
       }
     });
     const values = this.props.selected.map((selected)=>{ return selected.value });
+    console.log("VALUES");
+    console.log(values);
+    console.log(this.props.selected);
     $(this.dropdown).dropdown("set exactly", values);
   },
 
@@ -61,7 +69,7 @@ var MultiSelectDropdown = React.createClass({
           ref={ (elem)=> this.dropdown = elem }
           multiple=""
           >
-          <option value="">{this.props.placeholder}</option>
+          <option value="">{ this.props.placeholder }</option>
           { optionElems }
         </select>
       </div>

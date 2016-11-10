@@ -60,18 +60,17 @@ class Educator extends BaseEducator
 if Meteor.isServer
   Meteor.methods
     "educator.upsert": ( uniqueId, educator )->
-      console.log educator
       facility = Facilities.findOne { name: educator.facility_name }
       educator.facility_salesforce_id = facility.salesforce_id
       EducatorsSchema.clean(educator)
       EducatorsSchema.validate(educator);
+      console.log "Saving this educator "
+      console.log educator
       return Educators.upsert { uniqueId: educator.uniqueId }, { $set: educator }
 
     "getUniqueId": ( facilityName )->
       generateUniqueId = ( facilityName )->
-          console.log "Generating unique Id"
           result = UniqueID.findOne({_id: Meteor.settings.UNIQUE_ID_DOC_ID})
-          console.log result
           UniqueID.update { _id: Meteor.settings.UNIQUE_ID_DOC_ID }, { $inc:{ currentUniqueID: 1 }}
 
           getInitials = ( name )->

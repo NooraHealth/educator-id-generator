@@ -102,7 +102,7 @@ var AddEducatorPage = React.createClass({
             />
           <SelectConditionOperations
             options={ operationOptions }
-            selectedOperations={ this.state.educator.condition_operations }
+            selected={ this.state.educator.condition_operations.toArray() }
             onSelectionChange={ this._handleConditionOperationSelection }
             onActivationChange={ this._handleConditionOperationActivationChanged }
           />

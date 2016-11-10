@@ -2,7 +2,6 @@
 import React, { PropTypes } from 'react';
 import { MultiSelectDropdown } from '../form/MultiSelectDropdown.jsx';
 import { Checkbox } from '../form/Checkbox.jsx';
-import Immutable from 'immutable';
 
 const SelectConditionOperations  = React.createClass({
   propTypes: {
@@ -13,7 +12,13 @@ const SelectConditionOperations  = React.createClass({
         is_active: { type: Boolean }
       }).validate(operations[index]);
     }),
-    selectedOperations: React.PropTypes.instanceOf(Immutable.List),
+    selected: React.PropTypes.arrayOf(( operations, index )=> {
+      return new SimpleSchema({
+        id: { type:String },
+        name: { type:String },
+        is_active: { type: Boolean }
+      }).validate(operations[index]);
+    }),
     onSelectionChange: React.PropTypes.func,
     onActivationChange: React.PropTypes.func
   },
@@ -21,7 +26,7 @@ const SelectConditionOperations  = React.createClass({
   defaultProps() {
     return {
       options: [],
-      selectedOperations: [],
+      selected: [],
       onSelectionChange: function(){},
       onActivationChange: function(){}
     }
@@ -34,11 +39,18 @@ const SelectConditionOperations  = React.createClass({
           name: option.name
         }
     });
+    let selected = this.props.selected.map((option)=> {
+        return {
+          value: option.id,
+          name: option.name
+        }
+    });
+
     let selectedOperationsComponents = [];
-    for(let i= 0; i < this.props.selectedOperations.size; i++){
-      let isActive = this.props.selectedOperations.get(i).is_active;
-      let id = this.props.selectedOperations.get(i).id;
-      let name = this.props.selectedOperations.get(i).name;
+    for(let i= 0; i < this.props.selected.length; i++){
+      let isActive = this.props.selected[i].is_active;
+      let id = this.props.selected[i].id;
+      let name = this.props.selected[i].name;
       selectedOperationsComponents.push(
         <div key={ id } className="ui segment item">
           { name }
@@ -50,17 +62,12 @@ const SelectConditionOperations  = React.createClass({
             />
         </div>);
     }
-    let selected = this.props.selectedOperations.map((op)=>{
-      return {
-        value: op.id,
-        name: op.name
-      }
-    });
+
     return (
       <div>
         <MultiSelectDropdown
           options={ options }
-          selected={ selected }
+          selected={ selected  }
           label="Add Condition Operations"
           placeholder="Condition Operations"
           onChange={ this._onOperationSelectionChange }
