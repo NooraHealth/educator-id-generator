@@ -135,10 +135,13 @@ var AddEducatorPage = React.createClass({
 
   _handleConditionOperationSelection( selectedOperations ){
     let operations = this.state.educator.condition_operations.clear();
+    console.log(selectedOperations);
     for (var i = 0; i < selectedOperations.length; i++) {
-      operations = this.state.educator.condition_operations.push(selectedOperations[i]);
+      operations = operations.push(selectedOperations[i]);
     }
     const educator = this.state.educator.set("condition_operations", operations)
+    console.log(educator.condition_operations);
+    console.log(educator);
     this.setState({ educator: educator });
   },
 

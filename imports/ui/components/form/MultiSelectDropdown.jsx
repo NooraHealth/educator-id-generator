@@ -41,17 +41,13 @@ var MultiSelectDropdown = React.createClass({
       }
     });
     const values = this.props.selected.map((selected)=>{ return selected.value });
-    console.log("VALUES");
-    console.log(values);
-    console.log(this.props.selected);
     $(this.dropdown).dropdown("set exactly", values);
   },
 
   componentDidUpdate(prevProps, prevState) {
     if( JSON.stringify(this.props.selected) !== JSON.stringify(prevProps.selected)){
-      console.log("Setting dropdown to ");
-      console.log(this.props.selected);
-      $(this.dropdown).dropdown("set exactly", this.props.selected);
+      const values = this.props.selected.map((selected)=>{ return selected.value });
+      $(this.dropdown).dropdown("set exactly", values);
     }
   },
 
