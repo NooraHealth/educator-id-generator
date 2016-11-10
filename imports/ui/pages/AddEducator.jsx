@@ -28,16 +28,19 @@ var AddEducatorPage = React.createClass({
   },
 
   getInitialState() {
+    const educator = this.props.educator.set("facility_name", this.props.currentFacilityName);
+    console.log(this.props.currentFacilityName);
+    console.log(educator.facility_name);
+    console.log(educator);
     return {
       loading: false,
-      educator: this.props.educator
+      educator: educator
     }
   },
 
   componentDidUpdate(prevProps, prevState) {
     //If the facility changed, clear the selected condition operations
     if( this.props.currentFacilityName !== prevProps.currentFacilityName){
-      console.log("Setting condition operations to[]");
       let educator = this.state.educator.set("facility_name", this.props.currentFacilityName );
       let conditionOperations = this.state.educator.condition_operations.clear()
       educator = educator.set("condition_operations", conditionOperations);
@@ -109,8 +112,10 @@ var AddEducatorPage = React.createClass({
   },
 
   _clearForm(){
+    let educator = new Educator();
+    educator = educator.set("facility_name", this.props.currentFacilityName);
     this.setState({
-      educator: new Educator(),
+      educator: educator,
       loading: false
     });
   },
@@ -120,11 +125,8 @@ var AddEducatorPage = React.createClass({
     for (var i = 0; i < this.state.educator.condition_operations.size; i++) {
       if( this.state.educator.condition_operations.get(i).id === opId ){
         let operation = operations.get(i);
-        console.log(operation);
         operation.is_active = isActive;
-        console.log(operation);
         operations = operations.set(i, operation);
-        console.log(operations);
       }
     }
     const educator = this.state.educator.set("condition_operations", operations)
@@ -200,7 +202,7 @@ var AddEducatorPage = React.createClass({
         title: "Error inserting educator into database"
       });
     }
-    educator.save().then( results => onSaveSuccess(results), error => onSaveError(error))
+    this.state.educator.save().then( results => onSaveSuccess(results), error => onSaveError(error))
 
   }
 });

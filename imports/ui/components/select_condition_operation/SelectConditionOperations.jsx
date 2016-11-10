@@ -35,7 +35,6 @@ const SelectConditionOperations  = React.createClass({
         }
     });
     let selectedOperationsComponents = [];
-    console.log(this.props.selectedOperations);
     for(let i= 0; i < this.props.selectedOperations.size; i++){
       let isActive = this.props.selectedOperations.get(i).is_active;
       let id = this.props.selectedOperations.get(i).id;
@@ -57,8 +56,6 @@ const SelectConditionOperations  = React.createClass({
         name: op.name
       }
     });
-    console.log(selected);
-    console.log(selected.length);
     return (
       <div>
         <MultiSelectDropdown
