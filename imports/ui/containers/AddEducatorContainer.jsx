@@ -2,6 +2,7 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import { AddEducatorPage } from '../pages/AddEducator.jsx';
 import { Educators } from '../../api/collections/educators.coffee';
+import { Educator } from '../../api/Educators.coffee';
 import { ConditionOperations } from '../../api/collections/condition_operations.coffee';
 import { AppConfig } from '../../api/AppConfig.coffee';
 
@@ -35,7 +36,7 @@ export default AddEducatorContainer = createContainer(( params ) => {
     departments: _getDepartments( Educators.find({ facility_name: AppConfig.getFacilityName() }).fetch() ),
     facilityConditionOperations: _getConditionOperations( AppConfig.getFacilityName() ),
     currentFacilityName: AppConfig.getFacilityName(),
-    educatorToEdit: educator
+    educator: new Educator(educator)
   };
 }, AddEducatorPage);
 

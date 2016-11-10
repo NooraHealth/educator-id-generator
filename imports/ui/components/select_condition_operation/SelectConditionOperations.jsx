@@ -1,7 +1,8 @@
 
-import React, { PropTypes } from 'react'
-import { MultiSelectDropdown } from '../form/MultiSelectDropdown.jsx'
-import { Checkbox } from '../form/Checkbox.jsx'
+import React, { PropTypes } from 'react';
+import { MultiSelectDropdown } from '../form/MultiSelectDropdown.jsx';
+import { Checkbox } from '../form/Checkbox.jsx';
+import Immutable from 'immutable';
 
 const SelectConditionOperations  = React.createClass({
   propTypes: {
@@ -9,16 +10,10 @@ const SelectConditionOperations  = React.createClass({
       return new SimpleSchema({
         id: { type:String },
         name: { type:String },
-        is_active: { type:Boolean }
+        is_active: { type: Boolean }
       }).validate(operations[index]);
     }),
-    selectedOperations: React.PropTypes.arrayOf(( operations, index )=>{
-      return new SimpleSchema({
-        id: { type:String },
-        name: { type:String },
-        is_active: { type:Boolean }
-      }).validate(operations[index]);
-    }),
+    selectedOperations: React.PropTypes.instanceOf(Immutable.List),
     onSelectionChange: React.PropTypes.func,
     onActivationChange: React.PropTypes.func
   },
@@ -40,10 +35,11 @@ const SelectConditionOperations  = React.createClass({
         }
     });
     let selectedOperationsComponents = [];
-    for(let i= 0; i < this.props.selectedOperations.length; i++){
-      let isActive = this.props.selectedOperations[i].is_active;
-      let id = this.props.selectedOperations[i].id;
-      let name = this.props.selectedOperations[i].name;
+    console.log(this.props.selectedOperations);
+    for(let i= 0; i < this.props.selectedOperations.size; i++){
+      let isActive = this.props.selectedOperations.get(i).is_active;
+      let id = this.props.selectedOperations.get(i).id;
+      let name = this.props.selectedOperations.get(i).name;
       selectedOperationsComponents.push(
         <div key={ id } className="ui segment item">
           { name }

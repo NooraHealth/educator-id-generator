@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import Immutable from 'immutable';
 
 var MultiSelectDropdown = React.createClass({
 
@@ -10,12 +11,7 @@ var MultiSelectDropdown = React.createClass({
         name: { type:String }
       }).validate(options[index]);
     }),
-    selected: React.PropTypes.arrayOf(( options, index )=> {
-      return new SimpleSchema({
-        value: { type:String },
-        name: { type:String }
-      }).validate(options[index]);
-    }),
+    selected: React.PropTypes.instanceOf(Immutable.List),
     onChange: React.PropTypes.func
   },
 

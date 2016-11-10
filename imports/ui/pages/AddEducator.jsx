@@ -1,10 +1,8 @@
   'use strict';
 
 import React from 'react';
-import update from 'immutability-helper';
 import { Form } from '../components/form/base/Form.jsx';
-import { Educators } from '../../api/collections/educators.coffee';
-import { EducatorsSchema } from '../../api/collections/educators.coffee';
+import { Educator } from '../../api/Educators.coffee';
 import { ConditionOperationsSchema } from '../../api/collections/condition_operations.coffee';
 import { SelectFacilityContainer } from '../containers/SelectFacilityContainer.jsx';
 import { SelectConditionOperations } from '../components/select_condition_operation/SelectConditionOperations.jsx';
@@ -17,9 +15,7 @@ var AddEducatorPage = React.createClass({
     facilityConditionOperations: React.PropTypes.arrayOf(( operations, index )=> {
       return ConditionOperationsSchema.validate(operations[index]);
     }),
-    educatorToEdit: React.PropTypes.objectOf((educator)=>{
-      return EducatorsSchema.validate(educator);
-    })
+    educator: React.PropTypes.instanceOf(Educator)
   },
 
   defaultProps() {
@@ -27,38 +23,25 @@ var AddEducatorPage = React.createClass({
       currentFacilityName: "",
       departments: [],
       facilityConditionOperations: [],
-      educatorToEdit: {}
+      educator: new Educator()
     }
   },
 
   getInitialState() {
-    const educator = this.props.educatorToEdit;
-    if(educator !== null){
-      return {
-        first_name: educator.first_name,
-        unique_id: educator.uniqueId,
-        last_name: educator.last_name,
-        phone: educator.phone.toString(),
-        department: educator.department,
-        condition_operations: educator.condition_operations,
-        uniqueId: educator.uniqueId,
-        loading: false
-      }
-    } else return {
-      first_name: '',
-      last_name: '',
-      phone: '',
-      department: '',
-      condition_operations: [],
-      uniqueId: null,
-      loading: false
-    };
+    return {
+      loading: false,
+      educator: this.props.educator
+    }
   },
+
   componentDidUpdate(prevProps, prevState) {
     //If the facility changed, clear the selected condition operations
     if( this.props.currentFacilityName !== prevProps.currentFacilityName){
       console.log("Setting condition operations to[]");
-      this.setState({ condition_operations: [] })
+      let educator = this.state.educator.set("facility_name", this.props.currentFacilityName );
+      let conditionOperations = this.state.educator.condition_operations.clear()
+      educator = educator.set("condition_operations", conditionOperations);
+      this.setState({ educator: educator });
     }
   },
 
@@ -85,7 +68,7 @@ var AddEducatorPage = React.createClass({
             key= 'educator_department'
             placeholder="Department"
             icon="search icon"
-            value={ this.state.department }
+            value={ this.state.educator.department }
             onChange={ this._handleChange("department") }
             source={ source }
           />
@@ -94,7 +77,7 @@ var AddEducatorPage = React.createClass({
             key= 'educator_first_name'
             placeholder="First Name"
             icon="doctor icon"
-            value={ this.state.first_name }
+            value={ this.state.educator.first_name }
             onChange={ this._handleChange("first_name") }
           />
           <Form.Input
@@ -102,21 +85,21 @@ var AddEducatorPage = React.createClass({
             key= 'educator_last_name'
             placeholder="Last Name"
             icon="doctor icon"
-            value={ this.state.last_name }
+            value={ this.state.educator.last_name }
             onChange={ this._handleChange("last_name") }
 
           />
           <Form.Input
               type='tel'
               key= 'educator_phone'
-              value={ this.state.phone }
+              value={ this.state.educator.phone }
               placeholder="Phone"
               icon="call icon"
               onChange={ this._handleChange("phone") }
             />
           <SelectConditionOperations
             options={ operationOptions }
-            selectedOperations={ this.state.condition_operations }
+            selectedOperations={ this.state.educator.condition_operations }
             onSelectionChange={ this._handleConditionOperationSelection }
             onActivationChange={ this._handleConditionOperationActivationChanged }
           />
@@ -127,65 +110,39 @@ var AddEducatorPage = React.createClass({
 
   _clearForm(){
     this.setState({
-      first_name: '',
-      last_name: '',
-      phone: '',
-      department: '',
-      condition_operations: [],
-      uniqueId: null,
+      educator: new Educator(),
       loading: false
     });
   },
 
   _handleConditionOperationActivationChanged( opId, isActive ){
-    console.log("activation chagned!!!");
-    let operations = this.state.condition_operations;
-    let newOperations = []
-    for (var i = 0; i < operations.length; i++) {
-      if( operations[i].id === opId ){
-        operations[i].is_active = isActive;
-        newOperations.push(operations[i]);
+    let operations = this.state.educator.condition_operations;
+    for (var i = 0; i < this.state.educator.condition_operations.size; i++) {
+      if( this.state.educator.condition_operations.get(i).id === opId ){
+        let operation = operations.get(i);
+        console.log(operation);
+        operation.is_active = isActive;
+        console.log(operation);
+        operations = operations.set(i, operation);
+        console.log(operations);
       }
     }
-    this.setState({ condition_operations: newOperations })
+    const educator = this.state.educator.set("condition_operations", operations)
+    this.setState({ educator: educator });
   },
 
   _handleConditionOperationSelection( selectedOperations ){
-    let operations = this.state.condition_operations;
-    console.log("Trying to set to this");
-    console.log(selectedOperations);
-    console.log(operations);
-    let newOperations = update(operations, {$set: selectedOperations});
-    console.log("NEW OPERATIONS!!");
-    console.log(operations);
-    // this.setState({ condition_operations: newOperations })
-    // console.log(this.state.condition_operations);
-    console.log(this.state.condition_operations.length);
+    let operations = this.state.educator.condition_operations.clear();
+    for (var i = 0; i < selectedOperations.length; i++) {
+      operations = this.state.educator.condition_operations.push(selectedOperations[i]);
+    }
+    const educator = this.state.educator.set("condition_operations", operations)
+    this.setState({ educator: educator });
   },
 
   _onSubmit() {
-    const first_name = this.state.first_name;
-    const last_name = this.state.last_name;
-    const phone = this.state.phone;
-    const department = this.state.department;
-    const uniqueId = this.state.uniqueId;
-    const condition_operations = this.state.condition_operations;
-    const facilityName = this.props.currentFacilityName;
     const that = this;
-
-    let educator = {
-      first_name: first_name,
-      last_name: last_name,
-      phone: phone,
-      department: department,
-      condition_operations: condition_operations,
-      uniqueId: uniqueId,
-      facility_name: facilityName,
-    };
-
     try {
-      EducatorsSchema.clean(educator, { getAutoValues: false });
-      EducatorsSchema.validate(educator);
       swal({
         type: "info",
         closeOnConfirm: true,
@@ -198,7 +155,7 @@ var AddEducatorPage = React.createClass({
           return;
         }
         that.setState({ loading: true });
-        that._saveEducator( educator );
+        that._saveEducator()
       });
     } catch(error) {
       this.setState({ loading: false });
@@ -212,7 +169,8 @@ var AddEducatorPage = React.createClass({
 
   _handleChange(field) {
     return (value) => {
-      this.setState({ [field]: value});
+      const educator = this.state.educator.set(field, value);
+      this.setState({ educator: educator })
     }
   },
 
@@ -226,7 +184,7 @@ var AddEducatorPage = React.createClass({
 
     const onSaveSuccess = function( educator ){
       const text = "ID: "  + educator.uniqueId;
-      that._clearForm()
+      that._clearForm();
       showPopup({
         type: "success",
         title: "Nurse Educator Saved Successfully",
@@ -242,36 +200,8 @@ var AddEducatorPage = React.createClass({
         title: "Error inserting educator into database"
       });
     }
+    educator.save().then( results => onSaveSuccess(results), error => onSaveError(error))
 
-    if( educator.uniqueId == null ){
-      Meteor.call("getUniqueId", educator.facility_name, function(error, uniqueId){
-        if( error ) {
-          showPopup({
-            type: "error",
-            title: "Sorry!",
-            text: "There has been an error retrieving a unique ID"
-          });
-          that.setState({ loading: false });
-        } else {
-          educator.uniqueId = uniqueId;
-          Meteor.call( "insertEducator", educator, ( error, result ) => {
-            if( error ) {
-              onSaveError(error);
-            } else {
-              onSaveSuccess(educator);
-            }
-          });
-        }
-      });
-    }else{
-      Meteor.call("updateEducator", educator, ( error, result )=>{
-        if( error ) {
-          onSaveError(error);
-        } else {
-          onSaveSuccess(educator);
-        }
-      });
-    }
   }
 });
 
