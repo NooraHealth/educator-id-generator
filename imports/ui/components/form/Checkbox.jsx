@@ -27,7 +27,6 @@ var Checkbox = React.createClass({
         onChange( this.props.value, checked );
       }
     });
-    console.log(this.props.checked);
     let behavior = ( this.props.checked )? "set checked": "set unchecked";
     $(this.checkbox).checkbox(behavior);
   },
@@ -42,7 +41,7 @@ var Checkbox = React.createClass({
   render(){
     var { label, onChange, ...inputProps } = this.props;
     return (
-      <div className="ui right floated checkbox" ref={ (checkbox)=> this.checkbox = checkbox }>
+      <div className="ui left floated checkbox" ref={ (checkbox)=> this.checkbox = checkbox }>
         <input type="checkbox" name="activation"/>
         <label>{ label }</label>
       </div>

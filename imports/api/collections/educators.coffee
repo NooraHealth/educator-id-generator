@@ -21,6 +21,10 @@ EducatorsSchema = new SimpleSchema
     defaultValue: ""
   "condition_operations.$.is_active":
     type: Boolean
+  "condition_operations.$.role_salesforce_id":
+    type: String
+    defaultValue:""
+    optional: true
   "condition_operations.$.name":
     type: String
   "condition_operations.$.id":

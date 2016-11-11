@@ -58,6 +58,7 @@ var AddEducatorPage = React.createClass({
         id: operation._id,
         name: operation.name,
         is_active: false,
+        role_salesforce_id: "",
         date_started: moment().format("YYYY-MM-DD")
       }
     });
@@ -138,8 +139,6 @@ var AddEducatorPage = React.createClass({
   },
 
   _handleConditionOperationDateChange( opId, date ){
-    console.log("Setting date to ");
-    console.log(date);
     this._setConditionOperationField(opId, "date_started", date);
   },
 

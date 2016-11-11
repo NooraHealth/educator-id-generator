@@ -11,7 +11,8 @@ const SelectConditionOperations  = React.createClass({
         id: { type:String },
         name: { type:String },
         is_active: { type: Boolean },
-        date_started: { type: String }
+        date_started: { type: String },
+        role_salesforce_id: { type: String, optional: true}
       }).validate(operations[index]);
     }),
     selected: React.PropTypes.arrayOf(( operations, index )=> {
@@ -19,7 +20,8 @@ const SelectConditionOperations  = React.createClass({
         id: { type:String },
         name: { type:String },
         is_active: { type: Boolean },
-        date_started: { type: String }
+        date_started: { type: String },
+        role_salesforce_id: { type: String }
       }).validate(operations[index]);
     }),
     onSelectionChange: React.PropTypes.func,
@@ -56,19 +58,25 @@ const SelectConditionOperations  = React.createClass({
       let name = this.props.selected[i].name;
       let dateStarted = moment(this.props.selected[i].date_started);
       selectedOperationsComponents.push(
-        <div key={ id } className="ui segment item">
-          { name }
-          <DatePicker
-            selected= { dateStarted }
-            onChange={ this._onDateChange.bind(this, id )  }
-            dateFormat="DD/MM/YYYY"
-            />
-          <Checkbox
-            label='Is Active'
-            onChange={ this.props.onActivationChange }
-            value={ id }
-            checked={ isActive }
-            />
+        <div key={ id } className="ui segment stackable grid item">
+          <h4 className="four wide column">{ name }</h4>
+          <div className="six wide column">
+            <label className="center floated"> Date Started As Educator </label>
+            <DatePicker
+              className="right floated"
+              selected= { dateStarted }
+              onChange={ this._onDateChange.bind(this, id )  }
+              dateFormat="DD/MM/YYYY"
+              />
+          </div>
+          <div className="six wide column">
+            <Checkbox
+              label='Is Active'
+              onChange={ this.props.onActivationChange }
+              value={ id }
+              checked={ isActive }
+              />
+          </div>
         </div>);
     }
 
