@@ -1,5 +1,6 @@
 
 import React, { PropTypes } from 'react';
+import DatePicker from 'react-datepicker';
 import { MultiSelectDropdown } from '../form/MultiSelectDropdown.jsx';
 import { Checkbox } from '../form/Checkbox.jsx';
 
@@ -9,14 +10,16 @@ const SelectConditionOperations  = React.createClass({
       return new SimpleSchema({
         id: { type:String },
         name: { type:String },
-        is_active: { type: Boolean }
+        is_active: { type: Boolean },
+        date_started: { type: String }
       }).validate(operations[index]);
     }),
     selected: React.PropTypes.arrayOf(( operations, index )=> {
       return new SimpleSchema({
         id: { type:String },
         name: { type:String },
-        is_active: { type: Boolean }
+        is_active: { type: Boolean },
+        date_started: { type: String }
       }).validate(operations[index]);
     }),
     onSelectionChange: React.PropTypes.func,
@@ -51,9 +54,15 @@ const SelectConditionOperations  = React.createClass({
       let isActive = this.props.selected[i].is_active;
       let id = this.props.selected[i].id;
       let name = this.props.selected[i].name;
+      let dateStarted = moment(this.props.selected[i].date_started);
       selectedOperationsComponents.push(
         <div key={ id } className="ui segment item">
           { name }
+          <DatePicker
+            selected= { dateStarted }
+            onChange={ this._onDateChange.bind(this, id )  }
+            dateFormat="DD/MM/YYYY"
+            />
           <Checkbox
             label='Is Active'
             onChange={ this.props.onActivationChange }
@@ -87,7 +96,12 @@ const SelectConditionOperations  = React.createClass({
       }
     }
     this.props.onSelectionChange( optionsSelected );
+  },
+
+  _onDateChange( value, moment ){
+    this.props.onDateChange(value, moment.format("YYYY-MM-DD"));
   }
+
 
 });
 

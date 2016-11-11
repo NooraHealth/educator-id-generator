@@ -33,8 +33,6 @@ class Educator extends BaseEducator
       if educator.uniqueId
         resolve educator.uniqueId
       else
-        console.log "Getting the unique id of "
-        console.log educator
         Meteor.call "getUniqueId", educator.facility_name, (error, uniqueId)->
           if error
             reject "Error retrieving unique id #{error}"

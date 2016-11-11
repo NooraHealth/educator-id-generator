@@ -1,8 +1,8 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'run', 'dec' ]
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'run', 'de' ]
 2 info using npm@2.15.8
 3 info using node@v4.4.7
-4 verbose stack Error: missing script: dec
+4 verbose stack Error: missing script: de
 4 verbose stack     at run (/usr/local/lib/node_modules/npm/lib/run-script.js:142:19)
 4 verbose stack     at /usr/local/lib/node_modules/npm/lib/run-script.js:58:5
 4 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/read-package-json/read-json.js:356:5
@@ -14,10 +14,10 @@
 4 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:380:3)
 5 verbose cwd /Users/user/Documents/NooraHealth/educator-id-generator
 6 error Darwin 16.0.0
-7 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "dec"
+7 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "de"
 8 error node v4.4.7
 9 error npm  v2.15.8
-10 error missing script: dec
+10 error missing script: de
 11 error If you need help, you may report this error at:
 11 error     <https://github.com/npm/npm/issues>
 12 verbose exit [ 1, true ]

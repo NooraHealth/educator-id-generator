@@ -1,6 +1,7 @@
   'use strict';
 
 import React from 'react';
+import moment from 'moment';
 import { Form } from '../components/form/base/Form.jsx';
 import { Educator } from '../../api/Educators.coffee';
 import { ConditionOperationsSchema } from '../../api/collections/condition_operations.coffee';
@@ -29,9 +30,6 @@ var AddEducatorPage = React.createClass({
 
   getInitialState() {
     const educator = this.props.educator.set("facility_name", this.props.currentFacilityName);
-    console.log(this.props.currentFacilityName);
-    console.log(educator.facility_name);
-    console.log(educator);
     return {
       loading: false,
       educator: educator
@@ -59,7 +57,8 @@ var AddEducatorPage = React.createClass({
       return {
         id: operation._id,
         name: operation.name,
-        is_active: false
+        is_active: false,
+        date_started: moment().format("YYYY-MM-DD")
       }
     });
 
@@ -105,6 +104,7 @@ var AddEducatorPage = React.createClass({
             selected={ this.state.educator.condition_operations.toArray() }
             onSelectionChange={ this._handleConditionOperationSelection }
             onActivationChange={ this._handleConditionOperationActivationChanged }
+            onDateChange={ this._handleConditionOperationDateChange }
           />
         </Form>
       </div>
@@ -120,12 +120,12 @@ var AddEducatorPage = React.createClass({
     });
   },
 
-  _handleConditionOperationActivationChanged( opId, isActive ){
+  _setConditionOperationField( id, field, value ){
     let operations = this.state.educator.condition_operations;
     for (var i = 0; i < this.state.educator.condition_operations.size; i++) {
-      if( this.state.educator.condition_operations.get(i).id === opId ){
+      if( this.state.educator.condition_operations.get(i).id === id ){
         let operation = operations.get(i);
-        operation.is_active = isActive;
+        operation[field] = value;
         operations = operations.set(i, operation);
       }
     }
@@ -133,15 +133,22 @@ var AddEducatorPage = React.createClass({
     this.setState({ educator: educator });
   },
 
+  _handleConditionOperationActivationChanged( opId, isActive ){
+    this._setConditionOperationField(opId, "is_active", isActive);
+  },
+
+  _handleConditionOperationDateChange( opId, date ){
+    console.log("Setting date to ");
+    console.log(date);
+    this._setConditionOperationField(opId, "date_started", date);
+  },
+
   _handleConditionOperationSelection( selectedOperations ){
     let operations = this.state.educator.condition_operations.clear();
-    console.log(selectedOperations);
     for (var i = 0; i < selectedOperations.length; i++) {
       operations = operations.push(selectedOperations[i]);
     }
     const educator = this.state.educator.set("condition_operations", operations)
-    console.log(educator.condition_operations);
-    console.log(educator);
     this.setState({ educator: educator });
   },
 
@@ -206,7 +213,6 @@ var AddEducatorPage = React.createClass({
       });
     }
     this.state.educator.save().then( results => onSaveSuccess(results), error => onSaveError(error))
-
   }
 });
 

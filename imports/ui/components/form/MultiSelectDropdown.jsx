@@ -33,20 +33,16 @@ var MultiSelectDropdown = React.createClass({
     const onChange = this.props.onChange;
     $(this.dropdown).dropdown({
       onChange: function(value, text, selectedItem) {
-        console.log("selected in onchange");
-        console.log(value);
-        console.log(text);
-        console.log(selectedItem);
         onChange(value);
       }
     });
-    const values = this.props.selected.map((selected)=>{ return selected.value });
+    const values = this._getValues(this.props.selected);
     $(this.dropdown).dropdown("set exactly", values);
   },
 
   componentDidUpdate(prevProps, prevState) {
     if( JSON.stringify(this.props.selected) !== JSON.stringify(prevProps.selected)){
-      const values = this.props.selected.map((selected)=>{ return selected.value });
+      const values = this._getValues(this.props.selected);
       $(this.dropdown).dropdown("set exactly", values);
     }
   },
@@ -70,7 +66,12 @@ var MultiSelectDropdown = React.createClass({
         </select>
       </div>
     );
+  },
+
+  _getValues( options ){
+    return options.map((selected)=>{ return selected.value });
   }
+
 });
 
 export { MultiSelectDropdown };

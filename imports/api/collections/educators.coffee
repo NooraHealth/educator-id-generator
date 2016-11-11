@@ -25,7 +25,7 @@ EducatorsSchema = new SimpleSchema
     type: String
   "condition_operations.$.id":
     type: String
-  "condition_operations.$.date_began_teaching_classes":
+  "condition_operations.$.date_started":
     type: String
     optional: true
   facility_salesforce_id:

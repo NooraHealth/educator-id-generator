@@ -6,4 +6,3 @@
 
 Meteor.startup ()->
   # Educators.remove {first_name: "Lucy"}
-  console.log ConditionOperations.find({}).fetch()
