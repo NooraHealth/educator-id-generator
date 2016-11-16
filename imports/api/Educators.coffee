@@ -11,7 +11,7 @@ BaseEducator = Immutable.Record {
   phone: '',
   department: '',
   facility_name: '',
-  salesforce_id: '',
+  contact_salesforce_id: '',
   facility_salesforce_id: '',
   facility_role_salesforce_id: '',
   needs_update: false,
@@ -58,7 +58,11 @@ if Meteor.isServer
       console.log "UPSErT"
       facility = Facilities.findOne { name: educator.facility_name }
       educator.facility_salesforce_id = facility.salesforce_id
+      console.log "Before clean"
+      console.log educator
       EducatorsSchema.clean(educator)
+      console.log "After clean"
+      console.log educator
       EducatorsSchema.validate(educator);
       console.log "Saving this educator "
       console.log educator

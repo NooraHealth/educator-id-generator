@@ -17,7 +17,8 @@ var AddEducatorPage = React.createClass({
     facilityConditionOperations: React.PropTypes.arrayOf(( operations, index )=> {
       return ConditionOperationsSchema.validate(operations[index]);
     }),
-    educator: React.PropTypes.instanceOf(Educator)
+    educator: React.PropTypes.instanceOf(Educator),
+    onMount: React.PropTypes.func
   },
 
   defaultProps() {
@@ -25,7 +26,8 @@ var AddEducatorPage = React.createClass({
       currentFacilityName: "",
       departments: [],
       facilityConditionOperations: [],
-      educator: new Educator()
+      educator: new Educator(),
+      onMount: null
     }
   },
 
@@ -34,6 +36,13 @@ var AddEducatorPage = React.createClass({
     return {
       loading: false,
       educator: educator
+    }
+  },
+
+  componentDidMount() {
+    if (this.props.onMount !== null) {
+      console.log(this.props.onMount);
+      this.props.onMount()
     }
   },
 

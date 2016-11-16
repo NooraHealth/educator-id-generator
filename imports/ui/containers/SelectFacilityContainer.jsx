@@ -10,7 +10,10 @@ export default SelectFacilityContainer = createContainer(() => {
   var handle = Meteor.subscribe("facilities.all");
 
   this._onChange = function(value) {
+    console.log("on change in container");
     AppConfig.setFacilityName( value );
+    console.log("New Facility Name");
+    console.log(AppConfig.getFacilityName());
   };
 
   this._getFacilityNames = function( facilities ) {

@@ -1,4 +1,3 @@
-
 import { createContainer } from 'meteor/react-meteor-data';
 import { AddEducatorPage } from '../pages/AddEducator.jsx';
 import { Educators } from '../../api/collections/educators.coffee';
@@ -32,15 +31,19 @@ export default AddEducatorContainer = createContainer(( params ) => {
     educator =  Educators.findOne({ uniqueId: params.educatorToEditId });
   }
   //ensure the educator and the current facility are synced
-  if (educator && educator.facility_name !== AppConfig.getFacilityName()) {
-    AppConfig.setFacilityName(educator.facility_name);
+  const _onMount = () => {
+    if (educator && educator.facility_name !== AppConfig.getFacilityName()) {
+      AppConfig.setFacilityName(educator.facility_name);
+    }
   }
+
   return {
     loading: !(educators_handle.ready() && condition_operations_handle.ready()) ,
     departments: _getDepartments( Educators.find({ facility_name: AppConfig.getFacilityName() }).fetch() ),
     facilityConditionOperations: _getConditionOperations( AppConfig.getFacilityName() ),
     currentFacilityName: AppConfig.getFacilityName(),
-    educator: new Educator(educator)
+    educator: new Educator(educator),
+    onMount: _onMount
   };
 }, AddEducatorPage);
 
