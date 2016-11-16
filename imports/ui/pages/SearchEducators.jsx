@@ -18,8 +18,6 @@ var SearchEducatorsPage = React.createClass({
   },
 
   _onSelect(uniqueId) {
-    console.log("SELETED");
-    console.log(uniqueId);
     FlowRouter.go("addEducator", { educatorToEditId: uniqueId });
   },
 
@@ -30,6 +28,7 @@ var SearchEducatorsPage = React.createClass({
         key: educator.uniqueId,
         title: educator.first_name + " " + educator.last_name,
         description: "ID: " + educator.uniqueId + " PHONE: " + educator.phone + " DEPARTMENT: " + educator.department,
+        to_search: educator.first_name + " " + educator.last_name + " " + educator.uniqueId,
         icon: "edit icon"
       };
     });

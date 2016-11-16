@@ -29,6 +29,8 @@ EducatorsSchema = new SimpleSchema
     type: String
   "condition_operations.$.id":
     type: String
+  "condition_operations.$.operation_salesforce_id":
+    type: String
   "condition_operations.$.date_started":
     type: String
     optional: true

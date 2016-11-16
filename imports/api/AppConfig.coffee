@@ -11,6 +11,9 @@ class AppConfig
       Session.set "current_facility_name", name
 
     getFacilityName: ->
+      name = Session.get "current_facility_name"
+      if name == undefined
+        @setFacilityName ""
       Session.get "current_facility_name"
 
 

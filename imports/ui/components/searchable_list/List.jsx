@@ -12,6 +12,7 @@ var SearchableList = React.createClass({
         value: { type:String },
         key: { type:String },
         title: { type:String },
+        to_search: { type:String },
         icon: { type:String },
         description: { type:String }
       }).validate(items[index]);
@@ -57,7 +58,7 @@ var SearchableList = React.createClass({
   render(){
     const search = this.state.search.toLowerCase();
     var filtered = this.props.items.filter(function( item ){
-      let text = item.title + item.after;
+      let text = item.to_search;
       return text.toLowerCase().indexOf(search) > -1;
     });
 

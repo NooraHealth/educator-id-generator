@@ -12,6 +12,7 @@ const SelectConditionOperations  = React.createClass({
         name: { type:String },
         is_active: { type: Boolean },
         date_started: { type: String },
+        operation_salesforce_id: { type: String, optional: true },
         role_salesforce_id: { type: String, optional: true}
       }).validate(operations[index]);
     }),
@@ -20,8 +21,9 @@ const SelectConditionOperations  = React.createClass({
         id: { type:String },
         name: { type:String },
         is_active: { type: Boolean },
+        operation_salesforce_id: { type: String, optional: true },
         date_started: { type: String },
-        role_salesforce_id: { type: String }
+        role_salesforce_id: { type: String, optional: true }
       }).validate(operations[index]);
     }),
     onSelectionChange: React.PropTypes.func,
@@ -77,7 +79,8 @@ const SelectConditionOperations  = React.createClass({
               checked={ isActive }
               />
           </div>
-        </div>);
+        </div>
+      );
     }
 
     return (

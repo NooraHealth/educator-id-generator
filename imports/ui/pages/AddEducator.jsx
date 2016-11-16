@@ -2,6 +2,7 @@
 
 import React from 'react';
 import moment from 'moment';
+import Immutable from 'immutable'
 import { Form } from '../components/form/base/Form.jsx';
 import { Educator } from '../../api/Educators.coffee';
 import { ConditionOperationsSchema } from '../../api/collections/condition_operations.coffee';
@@ -57,6 +58,7 @@ var AddEducatorPage = React.createClass({
       return {
         id: operation._id,
         name: operation.name,
+        operation_salesforce_id: operation.salesforce_id,
         is_active: false,
         role_salesforce_id: "",
         date_started: moment().format("YYYY-MM-DD")
@@ -122,6 +124,7 @@ var AddEducatorPage = React.createClass({
   },
 
   _setConditionOperationField( id, field, value ){
+    console.log("Setting " + id + " field: " + field + " to value: " + value);
     let operations = this.state.educator.condition_operations;
     for (var i = 0; i < this.state.educator.condition_operations.size; i++) {
       if( this.state.educator.condition_operations.get(i).id === id ){
@@ -131,6 +134,7 @@ var AddEducatorPage = React.createClass({
       }
     }
     const educator = this.state.educator.set("condition_operations", operations)
+    console.log(educator);
     this.setState({ educator: educator });
   },
 
@@ -143,11 +147,21 @@ var AddEducatorPage = React.createClass({
   },
 
   _handleConditionOperationSelection( selectedOperations ){
-    let operations = this.state.educator.condition_operations.clear();
+    let currentOperations = this.state.educator.condition_operations;
+    let newOperations = Immutable.List();
     for (var i = 0; i < selectedOperations.length; i++) {
-      operations = operations.push(selectedOperations[i]);
+      newOperations = newOperations.push(selectedOperations[i]);
+      for (var j = 0; j < currentOperations.size; j++) {
+        console.log("Checking if ");
+        if(currentOperations.get(j).id == selectedOperations[i].id){
+          console.log("pushing the current operation");
+          newOperations = newOperations.set(i, currentOperations.get(j));
+        }
+      }
     }
-    const educator = this.state.educator.set("condition_operations", operations)
+    console.log("These are the new opeartions");
+    console.log(newOperations);
+    const educator = this.state.educator.set("condition_operations", newOperations);
     this.setState({ educator: educator });
   },
 

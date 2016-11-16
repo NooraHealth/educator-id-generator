@@ -12,7 +12,6 @@ BaseEducator = Immutable.Record {
   department: '',
   facility_name: '',
   salesforce_id: '',
-  salesforce_id: '',
   facility_salesforce_id: '',
   facility_role_salesforce_id: '',
   needs_update: false,
@@ -34,6 +33,7 @@ class Educator extends BaseEducator
         resolve educator.uniqueId
       else
         Meteor.call "getUniqueId", educator.facility_name, (error, uniqueId)->
+          console.log "Getting the uniqe id"
           if error
             reject "Error retrieving unique id #{error}"
           else
@@ -47,9 +47,6 @@ class Educator extends BaseEducator
         educator = educator.set "needs_update", true
         educator = educator.set "uniqueId", id
         Meteor.call "educator.upsert", educator.uniqueId, educator.toJS(), ( error, results )->
-          console.log "upserted "
-          console.log results
-          console.log error
           if error then reject error else resolve educator
       , ( error )->
         reject error
@@ -58,6 +55,7 @@ class Educator extends BaseEducator
 if Meteor.isServer
   Meteor.methods
     "educator.upsert": ( uniqueId, educator )->
+      console.log "UPSErT"
       facility = Facilities.findOne { name: educator.facility_name }
       educator.facility_salesforce_id = facility.salesforce_id
       EducatorsSchema.clean(educator)
