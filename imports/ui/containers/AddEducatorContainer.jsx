@@ -31,6 +31,10 @@ export default AddEducatorContainer = createContainer(( params ) => {
   if( params.educatorToEditId !== undefined ){
     educator =  Educators.findOne({ uniqueId: params.educatorToEditId });
   }
+  //ensure the educator and the current facility are synced
+  if (educator && educator.facility_name !== AppConfig.getFacilityName()) {
+    AppConfig.setFacilityName(educator.facility_name);
+  }
   return {
     loading: !(educators_handle.ready() && condition_operations_handle.ready()) ,
     departments: _getDepartments( Educators.find({ facility_name: AppConfig.getFacilityName() }).fetch() ),

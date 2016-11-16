@@ -159,8 +159,6 @@ var AddEducatorPage = React.createClass({
         }
       }
     }
-    console.log("These are the new opeartions");
-    console.log(newOperations);
     const educator = this.state.educator.set("condition_operations", newOperations);
     this.setState({ educator: educator });
   },
