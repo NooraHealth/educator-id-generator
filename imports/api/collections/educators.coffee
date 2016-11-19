@@ -62,6 +62,14 @@ EducatorsSchema = new SimpleSchema
     type: String
     label: "Unique Id"
     optional: true
+  export_error:
+    type: Boolean
+    optional: true
+    defaultValue: false
+  update_error:
+    type: Boolean
+    optional: true
+    defaultValue: false
 
 Educators.attachSchema EducatorsSchema
 BackupEducators.attachSchema EducatorsSchema

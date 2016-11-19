@@ -117,7 +117,6 @@ class SalesforceInterface
           reject(err)
         else
           console.log "success creating facility role #{educator.contact_salesforce_id}"
-          Educators.update { _id: educator._id }, { $set: { facility_role_salesforce_id: ret.id }}
           resolve(ret.id)
 
       #insert into the Salesforce database
@@ -189,11 +188,13 @@ class SalesforceInterface
       return that.exportFacilityRole educator
     ).then(( facilityRoleSalesforceId )->
       educator.facility_role_salesforce_id = facilityRoleSalesforceId
+      educator.export_error = false
       Educators.update { uniqueId: educator.uniqueId }, {$set: educator }
       console.log "Success exporting " + educator.first_name
     ,(err) ->
-      console.log "error upserting educators"
+      console.log "error exporting educators"
       console.log err
+      Educators.update { uniqueId: educator.uniqueId }, {$set: { export_error: true }}
     )
 
   updateInSalesforce: ( educator )->
@@ -205,11 +206,13 @@ class SalesforceInterface
       return that.updateFacilityRole educator
     ).then(( facilityRoleSalesforceId )->
       educator.facility_role_salesforce_id = facilityRoleSalesforceId
+      educator.update_error = false
       Educators.update { uniqueId: educator.uniqueId }, {$set: educator }
       console.log "Success updating " + educator.first_name
     ,(err) ->
       console.log "error upserting educators"
       console.log err
+      Educators.update { uniqueId: educator.uniqueId }, {$set: { update_error: true }}
     )
 
 module.exports.SalesforceInterface = SalesforceInterface
