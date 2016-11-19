@@ -12,8 +12,7 @@ class SalesforceInterface
     Salesforce.login Meteor.settings.SF_USER, Meteor.settings.SF_PASS, Meteor.settings.SF_TOKEN
 
   importFacilities: ->
-    facilities = Meteor.call("fetchFacilitiesFromSalesforce");
-    console.log facilities
+    facilities = @fetchFacilitiesFromSalesforce()
     for facility in facilities
       if not Facilities.findOne { salesforce_id: facility.Id }
         Facilities.insert {
@@ -23,7 +22,7 @@ class SalesforceInterface
         }
 
   importConditionOperations: ->
-    operations = Meteor.call("fetchConditionOperationsFromSalesforce");
+    operations = @fetchConditionOperationsFromSalesforce()
     for operation in operations
       if not ConditionOperations.findOne { salesforce_id: operation.Id }
         facility = operation.Facility__r
@@ -36,7 +35,7 @@ class SalesforceInterface
         console.log ConditionOperations.find({}).fetch()
 
   importEducators: ->
-    records = Meteor.call("fetchEducatorsFromSalesforce")
+    records = @fetchEducatorsFromSalesforce()
     for record in records
       educator = record.Contact__r
       facility = record.Facility__r
