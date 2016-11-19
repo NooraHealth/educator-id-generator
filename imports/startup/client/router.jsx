@@ -11,10 +11,12 @@ import { SearchEducatorsContainer } from '../../ui/containers/SearchEducatorsCon
 import { AddEducatorContainer } from '../../ui/containers/AddEducatorContainer.jsx';
 
 import { BackButton } from '../../ui/components/Headers/BackButton.jsx';
+import { SyncMenu } from '../../ui/components/Headers/SyncMenu.jsx';
 
 FlowRouter.route('/', {
   action: function(){
     mount( MainLayout, {
+      nav_components: <SyncMenu key='sync_menu'/>,
       content: <HomePage key='homepage'/>
     });
   }

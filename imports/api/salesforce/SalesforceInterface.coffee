@@ -213,16 +213,4 @@ class SalesforceInterface
       console.log err
     )
 
-  importFacilities = ->
-    console.log "IMPORTING FACILITIES"
-    Meteor.call "importFacilities"
-
-  importConditionOperations = ->
-    console.log "IMPORTING CONDITION OPERATIONS"
-    Meteor.call "importConditionOperations"
-
-  importEducators = ->
-    console.log "IMPORTING THE EDUCATORS"
-    Meteor.call "importEducators"
-
 module.exports.SalesforceInterface = SalesforceInterface
