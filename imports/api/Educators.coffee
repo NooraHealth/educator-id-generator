@@ -44,28 +44,37 @@ class Educator extends BaseEducator
     return new Promise ( resolve, reject )->
       educator.getUniqueId()
       .then( ( id )->
-        educator = educator.set "needs_update", true
         educator = educator.set "uniqueId", id
         Meteor.call "educator.upsert", educator.uniqueId, educator.toJS(), ( error, results )->
-          if error then reject error else resolve educator
+          if error
+            reject error
+          else
+            isUpdate = results.insertedId is undefined
+            Meteor.call "syncWithSalesforce", isUpdate, id
+            resolve educator
       , ( error )->
         reject error
       )
 
 if Meteor.isServer
+  { SalesforceInterface } = require './salesforce/SalesforceInterface.coffee'
+
   Meteor.methods
+    "syncWithSalesforce": ( isUpdate, uniqueId ) ->
+      educator = Educators.findOne {uniqueId: uniqueId}
+      toSalesforce = new SalesforceInterface()
+      if isUpdate
+        console.log "updating educator in salesforce "
+        toSalesforce.updateInSalesforce educator
+      else
+        console.log "exporting to salesforce "
+        toSalesforce.exportToSalesforce educator
+
     "educator.upsert": ( uniqueId, educator )->
-      console.log "UPSErT"
       facility = Facilities.findOne { name: educator.facility_name }
       educator.facility_salesforce_id = facility.salesforce_id
-      console.log "Before clean"
-      console.log educator
       EducatorsSchema.clean(educator)
-      console.log "After clean"
-      console.log educator
       EducatorsSchema.validate(educator);
-      console.log "Saving this educator "
-      console.log educator
       return Educators.upsert { uniqueId: educator.uniqueId }, { $set: educator }
 
     "getUniqueId": ( facilityName )->
