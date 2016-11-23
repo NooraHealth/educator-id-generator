@@ -1,48 +1,52 @@
-'use strict';
+
+import React, { PropTypes } from 'react'
 
 var Checkbox = React.createClass({
-  mixins: [ GetValueLink ],
 
   propTypes: {
-    title: React.PropTypes.string,
-    valueLink: React.PropTypes.shape({
-      value: React.PropTypes.bool,
-      requestChange: React.PropTypes.func
-    })
+    label: React.PropTypes.string,
+    value: React.PropTypes.string,
+    onChange: React.PropTypes.func,
+    checked: React.PropTypes.bool
   },
 
   defaultProps(){
     return {
-      title: "",
-      valueLink: null
-    } 
+      label: "",
+      value: "",
+      onChange: function(){},
+      checked: false
+    }
   },
 
-  handleChange( event ){
-    this._getValueLink(this.props).requestChange(event.target.value);
+  componentDidMount() {
+    const onChange = this.props.onChange;
+    $(this.checkbox).checkbox({
+      onChange: ()=> {
+        const checked = $(this.checkbox).checkbox("is checked");
+        onChange( this.props.value, checked );
+      }
+    });
+    let behavior = ( this.props.checked )? "set checked": "set unchecked";
+    $(this.checkbox).checkbox(behavior);
   },
-  
-  shouldComponentUpdate( nextProps, nextState ){
-    if(this._getValueLink(this.props).value == this._getValueLink(nextProps).value)
-      return false
-    else
-      return true
+
+  componentDidUpdate(prevProps, prevState) {
+    if( this.props.checked !== prevProps.checked ){
+      let behavior = ( this.props.checked )? "set checked": "set unchecked";
+      $(this.checkbox).checkbox(behavior);
+    }
   },
 
   render(){
-    var { title, valueLink, handleChange, ...inputProps } = this.props;
+    var { label, onChange, ...inputProps } = this.props;
     return (
-      <label className="label-checkbox item-content">
-        <input { ...inputProps } checkedLink={ valueLink } type="checkbox"/>
-        <div className="item-media">
-          <i className="icon icon-form-checkbox"></i>
-        </div>
-        <div className="item-inner">
-          <div className="item-title">{ title }</div>
-        </div>
-      </label>
+      <div className="ui left floated checkbox" ref={ (checkbox)=> this.checkbox = checkbox }>
+        <input type="checkbox" name="activation"/>
+        <label>{ label }</label>
+      </div>
     );
   }
 });
 
-this.Form.Checkbox = Checkbox;
+module.exports.Checkbox = Checkbox;

@@ -1,110 +1,193 @@
-'use strict';
+  'use strict';
 
-import { Form } from '../components/form/base/Form.jsx';
 import React from 'react';
-import { App } from '../../api/App.coffee';
-import { EducatorsSchema } from '../../api/collections/educators.coffee';
-import { CurrentFacilityInfo } from '../components/shared/currentFacilityInfo.jsx';
+import moment from 'moment';
+import Immutable from 'immutable'
+import { Form } from '../components/form/base/Form.jsx';
+import { Educator } from '../../api/Educators.coffee';
+import { ConditionOperationsSchema } from '../../api/collections/condition_operations.coffee';
+import { SelectFacilityContainer } from '../containers/SelectFacilityContainer.jsx';
+import { SelectConditionOperations } from '../components/select_condition_operation/SelectConditionOperations.jsx';
 
 var AddEducatorPage = React.createClass({
 
   propTypes: {
-    currentFacilityId: React.PropTypes.string,
-    currentFacilityName: React.PropTypes.string
+    currentFacilityName: React.PropTypes.string,
+    departments: React.PropTypes.array,
+    facilityConditionOperations: React.PropTypes.arrayOf(( operations, index )=> {
+      return ConditionOperationsSchema.validate(operations[index]);
+    }),
+    educator: React.PropTypes.instanceOf(Educator),
+    onMount: React.PropTypes.func
   },
 
   defaultProps() {
     return {
-      currentFacilityId: "",
-      currentFacilityName: ""
+      currentFacilityName: "",
+      departments: [],
+      facilityConditionOperations: [],
+      educator: new Educator(),
+      onMount: null
     }
   },
 
   getInitialState() {
+    const educator = this.props.educator.set("facility_name", this.props.currentFacilityName);
     return {
-      first_name: '',
-      last_name: '',
-      phone: '',
-      department: '',
+      loading: false,
+      educator: educator
+    }
+  },
+
+  componentDidMount() {
+    if (this.props.onMount !== null) {
+      console.log(this.props.onMount);
+      this.props.onMount()
+    }
+  },
+
+  componentDidUpdate(prevProps, prevState) {
+    //If the facility changed, clear the selected condition operations
+    if( this.props.currentFacilityName !== prevProps.currentFacilityName){
+      let educator = this.state.educator.set("facility_name", this.props.currentFacilityName );
+      let conditionOperations = this.state.educator.condition_operations.clear()
+      educator = educator.set("condition_operations", conditionOperations);
+      this.setState({ educator: educator });
+    }
+  },
+
+  render() {
+    let submitText = "SAVE EDUCATOR";
+    if( this.state.loading )
+      submitText = "...loading..."
+    const source = this.props.departments.map( function(dept){
+        return { title: dept };
+    });
+    const operationOptions = this.props.facilityConditionOperations.map((operation) =>{
+      return {
+        id: operation._id,
+        name: operation.name,
+        operation_salesforce_id: operation.salesforce_id,
+        is_active: false,
+        role_salesforce_id: "",
+        date_started: moment().format("YYYY-MM-DD")
+      }
+    });
+
+    return (
+      <div>
+        <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
+          <SelectFacilityContainer/>
+          <Form.Search
+            key= 'educator_department'
+            placeholder="Department"
+            icon="search icon"
+            value={ this.state.educator.department }
+            onChange={ this._handleChange("department") }
+            source={ source }
+          />
+          <Form.Input
+            type='text'
+            key= 'educator_first_name'
+            placeholder="First Name"
+            icon="doctor icon"
+            value={ this.state.educator.first_name }
+            onChange={ this._handleChange("first_name") }
+          />
+          <Form.Input
+            type='text'
+            key= 'educator_last_name'
+            placeholder="Last Name"
+            icon="doctor icon"
+            value={ this.state.educator.last_name }
+            onChange={ this._handleChange("last_name") }
+
+          />
+          <Form.Input
+              type='tel'
+              key= 'educator_phone'
+              value={ this.state.educator.phone }
+              placeholder="Phone"
+              icon="call icon"
+              onChange={ this._handleChange("phone") }
+            />
+          <SelectConditionOperations
+            options={ operationOptions }
+            selected={ this.state.educator.condition_operations.toArray() }
+            onSelectionChange={ this._handleConditionOperationSelection }
+            onActivationChange={ this._handleConditionOperationActivationChanged }
+            onDateChange={ this._handleConditionOperationDateChange }
+          />
+        </Form>
+      </div>
+    )
+  },
+
+  _clearForm(){
+    let educator = new Educator();
+    educator = educator.set("facility_name", this.props.currentFacilityName);
+    this.setState({
+      educator: educator,
       loading: false
-    };
+    });
+  },
+
+  _setConditionOperationField( id, field, value ){
+    console.log("Setting " + id + " field: " + field + " to value: " + value);
+    let operations = this.state.educator.condition_operations;
+    for (var i = 0; i < this.state.educator.condition_operations.size; i++) {
+      if( this.state.educator.condition_operations.get(i).id === id ){
+        let operation = operations.get(i);
+        operation[field] = value;
+        operations = operations.set(i, operation);
+      }
+    }
+    const educator = this.state.educator.set("condition_operations", operations)
+    console.log(educator);
+    this.setState({ educator: educator });
+  },
+
+  _handleConditionOperationActivationChanged( opId, isActive ){
+    this._setConditionOperationField(opId, "is_active", isActive);
+  },
+
+  _handleConditionOperationDateChange( opId, date ){
+    this._setConditionOperationField(opId, "date_started", date);
+  },
+
+  _handleConditionOperationSelection( selectedOperations ){
+    let currentOperations = this.state.educator.condition_operations;
+    let newOperations = Immutable.List();
+    for (var i = 0; i < selectedOperations.length; i++) {
+      newOperations = newOperations.push(selectedOperations[i]);
+      for (var j = 0; j < currentOperations.size; j++) {
+        console.log("Checking if ");
+        if(currentOperations.get(j).id == selectedOperations[i].id){
+          console.log("pushing the current operation");
+          newOperations = newOperations.set(i, currentOperations.get(j));
+        }
+      }
+    }
+    const educator = this.state.educator.set("condition_operations", newOperations);
+    this.setState({ educator: educator });
   },
 
   _onSubmit() {
-    this.setState({ loading: true });
-    const first_name = this.state.first_name;
-    const last_name = this.state.last_name;
-    const phone = this.state.phone;
-    const department = this.state.department;
-    const facilityId = this.props.currentFacilityId;
-    const facilityName = this.props.currentFacilityName;
-    var _this = this;
-
-    let educator = {
-      first_name: first_name,
-      last_name: last_name,
-      phone: phone,
-      department: department,
-      facility_name: facilityName,
-      facility_salesforce_id: facilityId
-    };
-
+    const that = this;
     try {
-      EducatorsSchema.clean(educator);
-      EducatorsSchema.validate(educator);
       swal({
         type: "info",
         closeOnConfirm: true,
-        showLoaderOnConfirm: true,
         showCancelButton: true,
         text: "Are you sure you want to register this educator?",
         title: "Confirm"
       }, function( isConfirm ) {
         if( !isConfirm ) {
-          _this.setState({ loading: false });
+          that.setState({ loading: false });
           return;
         }
-
-        const showPopup = ( options, callback )=> {
-          Meteor.setTimeout( ()=> {
-            console.log("About to show the popup!!!");
-            swal(options, callback);
-          }, 100 );
-        };
-
-        //Meteor.setTimeout(function(){ swal("SOMETHING"); }, 1000);
-        Meteor.call("getUniqueId", facilityName, function(error, uniqueId){
-          if( error ) {
-            showPopup({
-              type: "error",
-              title: "Sorry!",
-              text: "There has been an error retrieving a unique ID"
-            });
-            _this.setState({ loading: false });
-          } else {
-            educator.uniqueId = uniqueId;
-            Meteor.call( "insertEducator", educator, ( error, id ) => {
-              if( error ) {
-                showPopup({
-                  type: "error",
-                  text: error.message,
-                  title: "Error inserting educator into database"
-                });
-                _this.setState({ loading: false });
-              } else {
-                const text = "Nurse Educator ID: "  + uniqueId;
-                console.log("About to make a swal " + text);
-                showPopup({
-                  type: "success",
-                  title: text
-                }, function() {
-                  _this.setState({ loading: false });
-                  FlowRouter.go("/");
-                });
-              }
-            });
-          }
-        });
+        that.setState({ loading: true });
+        that._saveEducator()
       });
     } catch(error) {
       this.setState({ loading: false });
@@ -116,59 +199,40 @@ var AddEducatorPage = React.createClass({
     }
   },
 
-  handleChange(field) {
-    return (event) => {
-      this.setState({ [field]: event.target.value});
+  _handleChange(field) {
+    return (value) => {
+      const educator = this.state.educator.set(field, value);
+      this.setState({ educator: educator })
     }
   },
 
-  componentDidMount() {
-    App.getF7App().addView("#add_educator_view");
-  },
+  _saveEducator(educator) {
+    const that = this;
+    const showPopup = ( options, callback )=> {
+      Meteor.setTimeout( ()=> {
+        swal(options, callback);
+      }, 100 );
+    };
 
-  render() {
+    const onSaveSuccess = function( educator ){
+      const text = "ID: "  + educator.uniqueId;
+      that._clearForm();
+      showPopup({
+        type: "success",
+        title: "Nurse Educator Saved Successfully",
+        text: text
+      });
+    };
 
-    let submitText = "GET EDUCATOR ID";
-    if( this.state.loading )
-      submitText = "...loading..."
-
-    return (
-      <div id="add_educator_view" className="view view-main">
-        <Form onSubmit={ this._onSubmit } submitButtonContent={ submitText } disabled={ this.state.loading } >
-          <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
-          <Form.Input
-            type='text'
-            key= 'educator_first_name'
-            placeholder="First Name"
-            value={ this.state.first_name }
-            onChange={ this.handleChange("first_name") }
-          />
-          <Form.Input
-            type='text'
-            key= 'educator_last_name'
-            placeholder="Last Name"
-            value={ this.state.last_name }
-            onChange={ this.handleChange("last_name") }
-
-          />
-          <Form.Input
-            type='tel'
-            key= 'educator_phone'
-            value={ this.state.phone }
-            placeholder="Phone"
-            onChange={ this.handleChange("phone") }
-
-          />
-          <Form.Input
-            type='text'
-            key= 'educator_department'
-            placeholder="Department"
-            value={ this.state.department }
-            onChange={ this.handleChange("department") }
-          />
-        </Form>
-      </div>
-    )
+    const onSaveError = function(error) {
+      that.setState({ loading: false });
+      showPopup({
+        type: "error",
+        text: error.message,
+        title: "Error inserting educator into database"
+      });
+    }
+    this.state.educator.save().then( results => onSaveSuccess(results), error => onSaveError(error))
   }
 });
 

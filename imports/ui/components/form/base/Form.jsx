@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { Input } from '../Input.jsx';
+import { Search } from '../Search.jsx';
 
 var Form = React.createClass({
   propTypes: {
-    onSubmit: React.PropTypes.func, 
+    onSubmit: React.PropTypes.func,
     submitButtonContent: React.PropTypes.string,
     disabled: React.PropTypes.bool
   },
@@ -24,22 +25,19 @@ var Form = React.createClass({
     let onSubmit = this.props.onSubmit;
     let submitButtonContent = this.props.submitButtonContent;
     let children = React.Children.map( this.props.children, function( child ){
-      return <div><hr/><li> {child} </li></div>
+      return <div className="field"> {child} </div>
     });
 
     return (
-      <div className="list-block inset">
-        <ul>
-          { children }
-        </ul>
-        <p><a key='submitbutton' className="button button-round button-fill button-big" onClick={ onSubmit } disabled={ this.props.disabled }>{ this.props.submitButtonContent }</a></p>
+      <div className="ui form">
+        { children }
+        <p><button type="submit" key='submitbutton' className="ui fluid blue button" onClick={ onSubmit } disabled={ this.props.disabled }>{ this.props.submitButtonContent }</button></p>
       </div>
     )
   }
 });
-  
 
 Form.Input = Input;
+Form.Search = Search;
 
 export { Form };
-

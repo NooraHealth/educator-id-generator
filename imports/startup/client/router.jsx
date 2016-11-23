@@ -8,48 +8,29 @@ import { HomePage } from '../../ui/pages/Home.jsx';
 import { AddEducatorPage } from '../../ui/pages/AddEducator.jsx';
 import { SelectFacilityContainer } from '../../ui/containers/SelectFacilityContainer.jsx';
 import { SearchEducatorsContainer } from '../../ui/containers/SearchEducatorsContainer.jsx';
+import { AddEducatorContainer } from '../../ui/containers/AddEducatorContainer.jsx';
 
-import { Logo } from '../../ui/components/Headers/Logo.jsx';
 import { BackButton } from '../../ui/components/Headers/BackButton.jsx';
+import { SyncMenu } from '../../ui/components/Headers/SyncMenu.jsx';
 
 FlowRouter.route('/', {
   action: function(){
-    currentFacilityId = Session.get("current_facility_id");
-    currentFacilityName = Session.get("current_facility_name");
-    console.log("currentFacilityName");
-    console.log(currentFacilityName);
-    console.log(currentFacilityId);
-    if( !currentFacilityId || currentFacilityId === "")
-      FlowRouter.go("/selectFacility");
-
     mount( MainLayout, {
-      header: <Logo key='logo'/>,
-      content: <HomePage key='homepage'
-        currentFacilityName={ currentFacilityName }
-        currentFacilityId={ currentFacilityId }
-      />
+      nav_components: <SyncMenu key='sync_menu'/>,
+      content: <HomePage key='homepage'/>
     });
   }
 });
 
-FlowRouter.route('/addEducator', {
-  action: function(){
-    currentFacilityId = Session.get("current_facility_id");
-    currentFacilityName = Session.get("current_facility_name");
+FlowRouter.route('/addEducator/:educatorToEditId?', {
+  name: "addEducator",
+  action: function( params ){
     mount( MainLayout, {
-      header: <BackButton key='back_button'/>,
-      content: <AddEducatorPage key='add_educator_page'
-        currentFacilityName={ currentFacilityName }
-        currentFacilityId={ currentFacilityId }
-      />
-    });
-  }
-});
-
-FlowRouter.route('/selectFacility', {
-  action: function(){
-    mount( MainLayout, {
-      content: <SelectFacilityContainer/>
+      nav_components: <BackButton key='back_button'/>,
+      content: <AddEducatorContainer
+        key='add_educator_page'
+        educatorToEditId= {params.educatorToEditId}
+        />
     });
   }
 });
@@ -59,11 +40,8 @@ FlowRouter.route('/searchEducators', {
     currentFacilityId = Session.get("current_facility_id");
     currentFacilityName = Session.get("current_facility_name");
     mount( MainLayout, {
-      header: <BackButton key='back_button'/>,
-      content: <SearchEducatorsContainer
-        currentFacilityName={ currentFacilityName }
-        currentFacilityId={ currentFacilityId }
-    />
+      nav_components: <BackButton key='back_button'/>,
+      content: <SearchEducatorsContainer/>
     });
   }
 });

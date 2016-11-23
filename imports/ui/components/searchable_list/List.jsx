@@ -2,15 +2,20 @@
 
 import React from 'react';
 import { ListItem } from './ListItem.jsx';
-import { SearchBar } from './SearchBar.jsx';
+import { Input } from '../form/Input.jsx';
 
 var SearchableList = React.createClass({
-                                        
+
   propTypes: {
-    items: React.PropTypes.shape({
-      value: React.PropTypes.string,
-      key: React.PropTypes.string,
-      title: React.PropTypes.string
+    items: React.PropTypes.arrayOf((items, index)=> {
+      return new SimpleSchema({
+        value: { type:String },
+        key: { type:String },
+        title: { type:String },
+        to_search: { type:String },
+        icon: { type:String },
+        description: { type:String }
+      }).validate(items[index]);
     }),
     onSelect: React.PropTypes.func,
     searchBarPlaceholder: React.PropTypes.string
@@ -29,21 +34,21 @@ var SearchableList = React.createClass({
     }
   },
 
-  _handleChange( event ){
-    this.setState({ search: event.target.value });
+  _handleChange( value ){
+    this.setState({ search: value });
   },
 
   _getListItems( items ){
-    var that = this;
-    let components = items.map( function( item ){
-
+    const that = this;
+    const components = items.map( function( item ){
       return (
         < ListItem
           key={ item.key }
           title={ item.title }
-          after={ item.after }
           value={ item.value }
-          onSelect={ that.props.onSelect.bind(that, item.value, item.title) }
+          icon={ item.icon }
+          description={ item.description }
+          onSelect={ that.props.onSelect }
         />
       )
     });
@@ -53,43 +58,27 @@ var SearchableList = React.createClass({
   render(){
     const search = this.state.search.toLowerCase();
     var filtered = this.props.items.filter(function( item ){
-      text = item.title + item.after;
+      let text = item.to_search;
       return text.toLowerCase().indexOf(search) > -1;
     });
 
     var components = this._getListItems(filtered);
     return (
       <div>
-        <div className='list-block inset'>
-          <ul>
-            <li>
-              <div className="item-content">
-                <div className="item-media"><i className="fa fa-search fa-2x"></i></div>
-                <div className="item-inner">
-                  <div className="item-input">
-                    <SearchBar
-                      type='text'
-                      classes='col-75'
-                      placeholder={ this.props.searchBarPlaceholder }
-                      onChange={ this._handleChange }
-                      />
-                  </div>
-                </div>
-              </div>
-            </li>
-            <hr/>
-          </ul>
-        </div>
-
-        <div className="list-block">
-          <ul>
+        <h1 className='ui header'>{ this.props.header }</h1>
+          <Input
+            type='text'
+            placeholder={ this.props.searchBarPlaceholder }
+            onChange={ this._handleChange }
+            icon='search icon'
+            />
+          <div className="ui segments middle aligned selection list">
             { components }
-          </ul>
-        </div>
+          </div>
       </div>
 
-    ) 
-  
+    )
+
   }
 });
 

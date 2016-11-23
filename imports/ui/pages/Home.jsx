@@ -2,11 +2,10 @@
 
 //import { React } from 'react';
 import React from 'react';
-import { CurrentFacilityInfo } from '../components/shared/currentFacilityInfo.jsx';
 
-var HomePage = React.createClass({
+const HomePage = React.createClass({
 
-  propTypes: { 
+  propTypes: {
     currentFacilityName: React.PropTypes.string
   },
 
@@ -18,17 +17,16 @@ var HomePage = React.createClass({
 
   render(){
     return (
-      <div className="list-block inset">
-        <CurrentFacilityInfo name={ this.props.currentFacilityName }/>
-        <p><a 
+      <div>
+        <p><a
           href="/addEducator"
-          className="button button-round button-fill large-button"
+          className="fluid ui blue button"
           > Add Educator
         </a></p>
 
-        <p><a 
+        <p><a
           href="/searchEducators"
-          className="button button-round button-fill large-button"
+          className="fluid ui blue button"
           > Search Educators
         </a></p>
       </div>
@@ -37,4 +35,3 @@ var HomePage = React.createClass({
 });
 
 export { HomePage };
-

@@ -5,46 +5,42 @@ import React from 'react';
 
 var ListItem = React.createClass({
 
-  propTypes: { 
+  propTypes: {
     title: React.PropTypes.string,
-    after: React.PropTypes.string,
     value: React.PropTypes.string,
-    onSelect: React.PropTypes.func
+    icon: React.PropTypes.string,
+    description: React.PropTypes.string
   },
 
   defaultProps() {
     return {
       title: "",
-      after: "",
       value: "",
-      onSelect: null
-    }
-  },
-  
-  handleSelect( type ){
-    var that = this
-    return function() {
-      that.props.onSelect( that.props.value );
+      icon: "",
+      description: ""
     }
   },
 
+  _handleClick(e){
+    this.props.onSelect(this.props.value);
+  },
+
   render(){
-    var { title, after, onSelect } = this.props;
+    var { title, after, onSelect, icon, description } = this.props;
     return (
-      <li>
-        <div className="item-content"
-          onClick={ onSelect }   
-        >
-          <div className="item-inner">
-            <div className="item-title">
-              { title }
-            </div>
-            <div className="item-after">
-              { after }
-            </div>
+      <div className="ui segment item"
+        onClick={ this._handleClick }
+      >
+        <i className={ icon }></i>
+        <div className="content">
+          <div className="header">
+            { title }
+          </div>
+          <div className="description">
+            { description }
           </div>
         </div>
-      </li>
+      </div>
     );
   }
 });

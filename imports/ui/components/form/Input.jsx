@@ -5,7 +5,7 @@ import React from 'react';
 
 var Input = React.createClass({
 
-  propTypes: { 
+  propTypes: {
     value: React.PropTypes.string,
     icon: React.PropTypes.string,
     onChange: React.PropTypes.func
@@ -19,16 +19,22 @@ var Input = React.createClass({
     }
   },
 
+  _handleChange(onChange, e) {
+    if(e.target && e.target.value !== undefined) {
+      onChange(e.target.value);
+    }
+  },
+
   render(){
     var { title, icon, value, onChange, ...inputProps } = this.props;
     return (
-      <div className="item-content">
-        <div className="item-media"><i className={ icon }></i></div>
-        <div className="item-inner">
-          <div className="item-input">
-            <input { ...inputProps } value={ value } onChange={ onChange } />
-          </div>
-        </div>
+      <div className="ui fluid left icon input" >
+        <i className={ icon }></i>
+        <input
+          { ...inputProps }
+          value={ value }
+          onInput={ this._handleChange.bind(this, onChange) }
+        />
       </div>
     );
   }
