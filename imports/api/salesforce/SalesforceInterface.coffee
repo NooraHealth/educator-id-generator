@@ -73,33 +73,33 @@ class SalesforceInterface
       FROM Facility_Role__c WHERE Role_With_Noora_Program__c = 'Trainee'"
     return result?.response?.records
 
-  exportConditionOperationRoles: ( educators )->
-    roles = educators.map( (educator) ->
-      return educator.condition_operations
-    )
+  exportConditionOperationRoles: ( educator )->
+    return new Promise (resolve, reject)->
 
-    mapped = roles.map ( role )->
-      return {
-        educator: role.educator
-        operation_role: {
-          "Name" : getOperationRoleName(educator)
-          "Department__c": educator.is_active,
-          "Facility__c": educator.facility_salesforce_id,
+      roles = educator.condition_operations.map ( role )->
+        return {
+          "Name" : role.name,
+          "Is_Active__c": role.is_active,
+          "Condition_Operation__c": role.operation_salesforce_id,
           "Contact__c": educator.contact_salesforce_id,
+          "Date_Began_Teaching_Classes__c": role.date_started,
           "RecordTypeId": "012j0000000udTH"
         }
-      }
 
-    callback = Meteor.bindEnvironment ( educator, err, ret ) ->
-      if err
-        console.log "Error inserting facility role into Salesforce"
-        console.log err
-      else
-        Educators.update { _id: educator._id }, { $set: { facility_role_salesforce_id: ret.id }}
+      updatedRoles = []
+      callback = Meteor.bindEnvironment ( role, err, ret ) ->
+        if err
+          console.log "Error inserting facility role into Salesforce"
+          console.log err
+        else
+          role.role_salesforce_id = ret.id
+        updatedRoles.push role
+        if updatedRoles.length == educator.condition_operations.length
+          resolve updatedRoles
 
-    #insert into the Salesforce database
-    for role in mapped
-      Salesforce.sobject("Condition_Operation_Role__c").create role.operation_role, callback.bind(this, role.educator)
+      #insert into the Salesforce database
+      for role, i in roles
+        Salesforce.sobject("Condition_Operation_Role__c").create role, callback.bind(this, educator.condition_operations[i])
 
   exportFacilityRole: ( educator )->
     return new Promise (resolve, reject)->
@@ -189,9 +189,13 @@ class SalesforceInterface
       return that.exportFacilityRole educator
     ).then(( facilityRoleSalesforceId )->
       educator.facility_role_salesforce_id = facilityRoleSalesforceId
+      return that.exportConditionOperationRoles(educator)
+    ).then((condition_operations)->
+      educator.condition_operations = condition_operations
       educator.export_error = false
+      console.log "ThE EDUCATOR"
+      console.log educator
       Educators.update { uniqueId: educator.uniqueId }, {$set: educator }
-      console.log "Success exporting " + educator.first_name
     ,(err) ->
       console.log "error exporting educators"
       console.log err
