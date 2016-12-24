@@ -13,6 +13,7 @@ EducatorsSchema = new SimpleSchema
   last_name:
     type: String
     defaultValue: ""
+    optional: true
   first_name:
     type: String
     defaultValue: ""
