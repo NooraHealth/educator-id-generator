@@ -24,11 +24,13 @@ var SearchEducatorsPage = React.createClass({
   render() {
     const items = this.props.educators.map( function( educator ){
       let firstName = (educator.first_name !== undefined)? educator.first_name: "";
+      let lastName = (educator.last_name !== undefined)? educator.last_name: "";
+      let department = (educator.department !== undefined)? educator.department: "";
       return {
         value: educator.uniqueId,
         key: educator.uniqueId,
-        title: firstName + " " + educator.last_name,
-        description: "ID: " + educator.uniqueId + " PHONE: " + educator.phone + " DEPARTMENT: " + educator.department,
+        title: firstName + " " + lastName,
+        description: "ID: " + educator.uniqueId + " PHONE: " + educator.phone + " DEPARTMENT: " + department,
         to_search: educator.first_name + " " + educator.last_name + " " + educator.uniqueId,
         icon: "edit icon"
       };
