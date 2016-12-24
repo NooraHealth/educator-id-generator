@@ -77,8 +77,9 @@ class SalesforceInterface
         resolve([])
 
       roles = educator.condition_operations.map ( role )->
+        name = getOperationRoleName( educator, role )
         return {
-          "Name" : role.name,
+          "Name" : name,
           "Is_Active__c": role.is_active,
           "Condition_Operation__c": role.operation_salesforce_id,
           "Contact__c": educator.contact_salesforce_id,
@@ -216,7 +217,7 @@ class SalesforceInterface
         firstName = ""
 
       salesforceContact = {
-        "LastName" : lastName,
+        "LastName" : lastName or "",
         "FirstName" : firstName or "",
         "MobilePhone" : educator.phone or 0,
         "Department" : educator.department or "",
