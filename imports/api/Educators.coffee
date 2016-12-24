@@ -8,7 +8,7 @@ Immutable = require 'immutable'
 BaseEducator = Immutable.Record {
   first_name: '',
   last_name: '',
-  phone: null,
+  phone: 0,
   department: '',
   facility_name: '',
   contact_salesforce_id: '',
