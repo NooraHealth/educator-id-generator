@@ -1,5 +1,6 @@
 *.swp
 *.swo
+.ds_store
 /server/startup.coffee
 .uploads/
 settings.json
