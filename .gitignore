@@ -6,7 +6,6 @@
 settings.json
 settings_dev.json
 settings_production.json
-package.json
 public/
 mup.json
 mup.js
