@@ -9,6 +9,8 @@ class SalesforceInterface
 
   constructor: ->
     login = Salesforce.login Meteor.settings.SF_USER, Meteor.settings.SF_PASS, Meteor.settings.SF_TOKEN
+    console.log "login"
+    console.log login
 
   importFacilities: ->
     facilities = @fetchFacilitiesFromSalesforce()

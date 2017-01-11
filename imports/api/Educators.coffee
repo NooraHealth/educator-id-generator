@@ -72,6 +72,8 @@ if Meteor.isServer
 
     "educator.upsert": ( uniqueId, educator )->
       facility = Facilities.findOne { name: educator.facility_name }
+      if not facility
+        throw new Meteor.Error "Facility Does Not Exist", "That facility is not in the database. Ensure that the facility exists in Salesforce and has been synced with the app"
       educator.facility_salesforce_id = facility.salesforce_id
       EducatorsSchema.clean(educator)
       EducatorsSchema.validate(educator);
@@ -79,6 +81,8 @@ if Meteor.isServer
 
     "getUniqueId": ( facilityName )->
       generateUniqueId = ( facilityName )->
+          console.log UniqueID.find({}).fetch()
+          console.log Meteor.settings.UNIQUE_ID_DOC_ID
           result = UniqueID.findOne({_id: Meteor.settings.UNIQUE_ID_DOC_ID})
           UniqueID.update { _id: Meteor.settings.UNIQUE_ID_DOC_ID }, { $inc:{ currentUniqueID: 1 }}
 
