@@ -3,8 +3,9 @@
 # Educator
 ###
 
+{ UniqueID } = require "./unique_id"
+
 Educators = new Mongo.Collection Meteor.settings.public.educators_collection
-BackupEducators = new Mongo.Collection "backup_educators"
 
 EducatorsSchema = new SimpleSchema
   _id:
@@ -17,7 +18,7 @@ EducatorsSchema = new SimpleSchema
   first_name:
     type: String
     defaultValue: ""
-    optional:true
+    optional: true
   department:
     type: String
     defaultValue: ""
@@ -48,7 +49,7 @@ EducatorsSchema = new SimpleSchema
   contact_salesforce_id:
     type: String
     defaultValue: ""
-    optional: true
+    unique:true
   facility_name:
     type: String
     defaultValue: ""
@@ -75,8 +76,6 @@ EducatorsSchema = new SimpleSchema
     defaultValue: false
 
 Educators.attachSchema EducatorsSchema
-BackupEducators.attachSchema EducatorsSchema
 
 module.exports.Educators = Educators
 module.exports.EducatorsSchema = EducatorsSchema
-module.exports.BackupEducators = BackupEducators

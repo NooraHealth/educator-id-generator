@@ -133,6 +133,7 @@ class SalesforceInterface
   #     for role, i in roles
   #       Salesforce.sobject("Condition_Operation_Role__c").update role, "Id", callback.bind(this, educator.condition_operations[i])
   #
+
   deleteConditionOperationRoles: ( educator )->
     return new Promise ( resolve, reject )->
       result = Salesforce.sobject("Condition_Operation_Role__c").find(
@@ -211,7 +212,6 @@ class SalesforceInterface
       facility = Facilities.findOne {
         salesforce_id: educator.facility_salesforce_id
       }
-      console.log "Upserting this educator"
       lastName = educator.last_name
       firstName = educator.first_name
       if not lastName or lastName is ""
@@ -227,6 +227,8 @@ class SalesforceInterface
         "Trainee_ID__c": educator.uniqueId,
         "RecordTypeId": Meteor.settings.CONTACT_RECORD_TYPE
       }
+      console.log "salesforce contact"
+      console.log salesforceContact
 
       callback = Meteor.bindEnvironment ( err, ret ) ->
         if err
@@ -240,6 +242,8 @@ class SalesforceInterface
           resolve(salesforceId)
 
       #insert into the Salesforce database
+      console.log "Upserting"
+      console.log salesforceContact
       Salesforce.sobject("Contact").upsert salesforceContact, "Trainee_ID__c", callback
 
   exportToSalesforce: ( educator )->

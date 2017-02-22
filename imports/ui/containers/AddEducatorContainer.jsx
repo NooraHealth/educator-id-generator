@@ -42,6 +42,7 @@ export default AddEducatorContainer = createContainer(( params ) => {
     departments: _getDepartments( Educators.find({ facility_name: AppConfig.getFacilityName() }).fetch() ),
     facilityConditionOperations: _getConditionOperations( AppConfig.getFacilityName() ),
     currentFacilityName: AppConfig.getFacilityName(),
+    facilitySalesforceId: AppConfig.getFacilityId(),
     educator: new Educator(educator),
     onMount: _onMount
   };

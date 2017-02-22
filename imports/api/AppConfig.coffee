@@ -1,4 +1,6 @@
 
+{ Facilities } = require './collections/facilities.coffee'
+
 class AppConfig
   @get: ->
     @privateApp ?= new PrivateClass()
@@ -16,5 +18,12 @@ class AppConfig
         @setFacilityName ""
       Session.get "current_facility_name"
 
+    getFacilityId: ->
+      console.log "Getting the facility name"
+      name = this.getFacilityName()
+      console.log "NAME #{name}"
+      facility = Facilities.findOne({ name: name });
+      console.log facility?.salesforce_id
+      return facility?.salesforce_id
 
 module.exports.AppConfig = AppConfig.get()

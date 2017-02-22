@@ -7,4 +7,9 @@ UniqueIDCollection = new SimpleSchema
 
 UniqueID.attachSchema UniqueIDCollection
 
+UniqueID.allow {
+  update: ()->
+    return true
+}
+
 module.exports.UniqueID = UniqueID

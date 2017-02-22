@@ -26,63 +26,103 @@ class Educator extends BaseEducator
       condition_operations: Immutable.List properties && properties.condition_operations
     });
 
-  getUniqueId: ->
-    educator = this
-    return new Promise ( resolve, reject )->
-      if educator.uniqueId
-        resolve educator.uniqueId
-      else
-        Meteor.call "getUniqueId", educator.facility_name, (error, uniqueId)->
-          console.log "Getting the uniqe id"
-          if error
-            reject "Error retrieving unique id #{error}"
-          else
-            resolve uniqueId
-
   save: ->
-    educator = this
+    educator = this.toJS()
     return new Promise ( resolve, reject )->
-      educator.getUniqueId()
-      .then( ( id )->
-        educator = educator.set "uniqueId", id
-        Meteor.call "educator.upsert", educator.uniqueId, educator.toJS(), ( error, results )->
-          if error
-            reject error
-          else
-            isUpdate = results.insertedId is undefined
-            Meteor.call "syncWithSalesforce", isUpdate, id
-            resolve educator
-      , ( error )->
-        reject error
-      )
+      functionCall = if educator.uniqueId then "educator.update" else "educator.insert"
+
+      try
+        EducatorsSchema.clean(educator)
+        EducatorsSchema.validate(educator)
+      catch error
+        console.log "ERROR validating the educator"
+        console.log educator
+        reject( error )
+        return
+
+      console.log educator
+      console.log "Getting the function call: " + functionCall
+      Meteor.call functionCall, educator, ( error, results )->
+        if error
+          reject error
+        else
+          console.log "The results!!"
+          console.log results
+          resolve results
 
 if Meteor.isServer
   { SalesforceInterface } = require './salesforce/SalesforceInterface.coffee'
 
   Meteor.methods
-    "syncWithSalesforce": ( isUpdate, uniqueId ) ->
-      educator = Educators.findOne {uniqueId: uniqueId}
+    "educator.insert": ( educator ) ->
+      console.log "Going to insert the educator"
       toSalesforce = new SalesforceInterface()
-      if isUpdate
-        console.log "updating educator in salesforce "
-        toSalesforce.updateInSalesforce educator
-      else
-        console.log "exporting to salesforce "
-        toSalesforce.exportToSalesforce educator
+      promise = Promise.resolve(Meteor.call "getUniqueId", educator)
+      return promise.then(( uniqueId )->
+        educator.uniqueId = uniqueId
+        console.log "This is the uniqueId"
+        console.log uniqueId
+        return toSalesforce.upsertEducator(educator)
+      ).then(( salesforceId )->
+        console.log salesforceId
+        educator.contact_salesforce_id = salesforceId
+        console.log "About to insert into Mongodb"
+        console.log educator
+        return Promise.resolve Educators.insert educator
+      ).then( (id)->
+        educator = Educators.findOne { _id: id }
+        return toSalesforce.exportFacilityRole educator, false
+      ).then(( facilityRoleSalesforceId )->
+        educator.facility_role_salesforce_id = facilityRoleSalesforceId
+        return toSalesforce.exportConditionOperationRoles educator
+      ).then((condition_operations)->
+        educator.condition_operations = condition_operations
+        educator.export_error = false
+        return Promise.resolve Educators.update { uniqueId: educator.uniqueId }, {$set: educator }
+      ).then( ->
+        console.log "Educator fully inserted and synced"
+        return educator
+      ,(err) ->
+        console.log "error exporting educators"
+        console.log err
+        Educators.update { uniqueId: educator.uniqueId }, {$set: { export_error: true }}
+        throw err
+      )
 
-    "educator.upsert": ( uniqueId, educator )->
-      facility = Facilities.findOne { name: educator.facility_name }
-      if not facility
-        throw new Meteor.Error "Facility Does Not Exist", "That facility is not in the database. Ensure that the facility exists in Salesforce and has been synced with the app"
-      educator.facility_salesforce_id = facility.salesforce_id
-      EducatorsSchema.clean(educator)
-      EducatorsSchema.validate(educator);
-      return Educators.upsert { uniqueId: educator.uniqueId }, { $set: educator }
+    "educator.update": ( educator ) ->
+      console.log "Going to update educator "
+      toSalesforce = new SalesforceInterface()
+      promise = toSalesforce.upsertEducator(educator)
+      promise.then( ->
+      #   educator.contact_salesforce_id = salesforceId
+      #   console.log "contact updated"
+      #   return Promise.resolve Educators.update { uniqueId: educator.uniqueId }, {$set: educator }
+      # ).then( ->
+        return toSalesforce.updateFacilityRole educator
+      ).then(( facilityRoleSalesforceId )->
+        educator.facility_role_salesforce_id = facilityRoleSalesforceId
+        console.log "facility role updated"
+        console.log facilityRoleSalesforceId
+        return toSalesforce.deleteConditionOperationRoles educator.condition_operations
+      ).then( ()->
+        console.log "deleted the condition operations"
+        return toSalesforce.exportConditionOperationRoles educator
+      ).then((condition_operations)->
+        educator.condition_operations = condition_operations
+        educator.update_error = false
+        return Promise.resolve Educators.update { uniqueId: educator.uniqueId }, {$set: educator }
+      ).then( ()->
+        console.log "Educator fully updated and synced with salesforce"
+        return educator
+      ,(err) ->
+        console.log "error upserting educators"
+        console.log err
+        Educators.update { uniqueId: educator.uniqueId }, {$set: { update_error: true }}
+        throw err
+      )
 
-    "getUniqueId": ( facilityName )->
+    "getUniqueId": ( educator )->
       generateUniqueId = ( facilityName )->
-          console.log UniqueID.find({}).fetch()
-          console.log Meteor.settings.UNIQUE_ID_DOC_ID
           result = UniqueID.findOne({_id: Meteor.settings.UNIQUE_ID_DOC_ID})
           UniqueID.update { _id: Meteor.settings.UNIQUE_ID_DOC_ID }, { $inc:{ currentUniqueID: 1 }}
 
@@ -95,6 +135,6 @@ if Meteor.isServer
           initials = getInitials( facilityName )
           return initials.join("") + result.currentUniqueID
 
-      return generateUniqueId facilityName
+      return generateUniqueId educator.facility_name
 
 module.exports.Educator = Educator

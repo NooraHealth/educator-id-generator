@@ -32,7 +32,8 @@ var AddEducatorPage = React.createClass({
   },
 
   getInitialState() {
-    const educator = this.props.educator.set("facility_name", this.props.currentFacilityName);
+    let educator = this.props.educator.set("facility_name", this.props.currentFacilityName);
+    educator = educator.set("facility_salesforce_id", this.props.facilitySalesforceId);
     return {
       loading: false,
       educator: educator
@@ -41,16 +42,18 @@ var AddEducatorPage = React.createClass({
 
   componentDidMount() {
     if (this.props.onMount !== null) {
-      console.log(this.props.onMount);
       this.props.onMount()
     }
   },
 
   componentDidUpdate(prevProps, prevState) {
-    //If the facility changed, clear the selected condition operations
-    if( this.props.currentFacilityName !== prevProps.currentFacilityName){
-      let educator = this.state.educator.set("facility_name", this.props.currentFacilityName );
+    const changedFacilityName = this.props.currentFacilityName !== prevProps.currentFacilityName;
+    const changedFacilityId = this.props.facilitySalesforceId !== prevProps.facilitySalesforceId;
+    if( changedFacilityId || changedFacilityName ){
+      console.log("Setting the infor");
       let conditionOperations = this.state.educator.condition_operations.clear()
+      let educator = this.state.educator.set("facility_name", this.props.currentFacilityName );
+      educator = educator.set("facility_salesforce_id", this.props.facilitySalesforceId);
       educator = educator.set("condition_operations", conditionOperations);
       this.setState({ educator: educator });
     }
@@ -126,6 +129,7 @@ var AddEducatorPage = React.createClass({
   _clearForm(){
     let educator = new Educator();
     educator = educator.set("facility_name", this.props.currentFacilityName);
+    educator = educator.set("facility_salesforce_id", this.props.facilitySalesforceId);
     this.setState({
       educator: educator,
       loading: false
@@ -190,6 +194,7 @@ var AddEducatorPage = React.createClass({
         that._saveEducator()
       });
     } catch(error) {
+      console.log("Error updating class");
       this.setState({ loading: false });
       swal({
         type: "error",

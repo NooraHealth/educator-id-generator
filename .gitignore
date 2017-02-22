@@ -1,13 +1,1 @@
-*.swp
-*.swo
-.ds_store
-/server/startup.coffee
-.uploads/
-settings.json
-settings_dev.json
-settings_production.json
-public/
-mup.json
-mup.js
-mupx.json
-packages/.DS_store
+../configuration-files/gitignore
