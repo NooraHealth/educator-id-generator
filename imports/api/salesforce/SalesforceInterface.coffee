@@ -242,8 +242,6 @@ class SalesforceInterface
           resolve(salesforceId)
 
       #insert into the Salesforce database
-      console.log "Upserting"
-      console.log salesforceContact
       Salesforce.sobject("Contact").upsert salesforceContact, "Trainee_ID__c", callback
 
   exportToSalesforce: ( educator )->
