@@ -12,3 +12,11 @@ Meteor.methods
   "syncEducators": ->
     salesforceInterface = new SalesforceInterface()
     salesforceInterface.importEducators()
+
+  "syncAttendance": ->
+    salesforceInterface = new SalesforceInterface()
+    salesforceInterface.importAttendance()
+
+  "syncClassEducators": ->
+    salesforceInterface = new SalesforceInterface()
+    salesforceInterface.importClassEducatorRoles()

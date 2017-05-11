@@ -45,7 +45,7 @@ var SyncMenu = React.createClass({
       this.setState({ loading: false });
     });
   },
-  
+
   _fetchFacilities(){
     this.setState({ loading: true });
     Meteor.call("syncFacilities", (err, results)=>{
